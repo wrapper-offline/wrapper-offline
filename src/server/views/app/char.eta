@@ -1,16 +1,46 @@
 <link rel="stylesheet" type="text/css" href="/pages/css/flash.css">
 
+<section id="cc_buttonbar">
+	<div id="buttonbar_left">
+		<input id="title_input" type="text" value="Untitled"/>
+	</div>
+	<div id="buttonbar_middle">
+		<button class="ico_btn" onclick="Page.special.cc.undo()" data-tooltip="Undo">
+			<i class="ico undo"></i>
+		</button>
+		<button class="ico_btn" onclick="Page.special.cc.redo()" data-tooltip="Redo">
+			<i class="ico redo"></i>
+		</button>
+		<button class="ico_btn" onclick="Page.special.cc.switchBodyShape()" data-tooltip="Change body type">
+			<i class="ico coat"></i>
+		</button>
+		<button class="ico_btn" onclick="Page.special.cc.randomize()" data-tooltip="Randomize">
+			<i class="ico dice"></i>
+		</button>
+		<button class="ico_btn" onclick="Page.special.cc.reset()" data-tooltip="Reset character">
+			<i class="ico arr_reset"></i>
+		</button>
+	</div>
+	<div id="buttonbar_right">
+		<button class="btn btn" onclick="Page.special.cc.preview()">PREVIEW</button>
+		<button class="btn btn_primary" onclick="Page.special.cc.save(Page.special.titleInput.value)">SAVE</button>
+	</div>
+</section>
 <%~ it.object(it.attrs, it.params) %>
 
-<style>
-	body {
-		background: #EEEEEE!important;
-	}
-</style>
+<script src="/pages/js/toonshop/creator/index.js"></script>
+
 <script>
-	function Page() {
-		function characterSaved() {
-			window.location = "/"
-		}
-	}
+Page.setTitle("Character Creator");
+Page.special = {
+	cc: document.getElementById("obj"),
+	titleInput: document.getElementById("title_input")
+};
+Page.runAfter = function ccPage() {
+
+function onCharacterSave() {
+	Page.switchTo("/videos");
+}
+
+};
 </script>

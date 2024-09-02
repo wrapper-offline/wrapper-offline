@@ -91,6 +91,7 @@ group.route("GET", "/cc", async (req, res) => {
 			flashvars,
 			allowScriptAccess: "always",
 			movie: SWF_URL + "/cc.swf",
+			wmode: "transparent"
 		},
 		isExternal: req.query.external || false,
 		object: toObjectString

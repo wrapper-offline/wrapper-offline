@@ -2,10 +2,9 @@
 start wrapper: offline's server
 */
 const fs = require("fs");
+const handler = require("serve-handler");
 const httpz = require("@octanuary/httpz");
 const jsonRoutes = require("../staticInfo/routes.json");
-const nodeStatic = require("node-static");
-const path = require("path");
 const reqBody = require("./middlewares/req.body.js");
 const resRender = require("./middlewares/res.render.js");
 const resTime = require("./middlewares/res.time.js");
@@ -16,7 +15,6 @@ const routes = require("./routes/index.js");
  */
 module.exports = function startServer() {
 	const server = new httpz.Server();
-	const file = new nodeStatic.Server(path.join(__dirname, "../../server"), { cache: 2 });
 
 	server.add(reqBody);
 	server.add(resRender);
@@ -53,17 +51,7 @@ module.exports = function startServer() {
 		}
 		// still no match, try serving a static file
 		if (!res.writableEnded) {
-			if (req.method != "GET" && req.method != "HEAD") {
-				file.serveFile("/404.html", 404, {}, req, res);
-			} else {
-				req.addListener("end", () =>
-					file.serve(req, res, (e) => {
-						if (e && e.status === 404) {
-							file.serveFile("/404.html", 404, {}, req, res);
-						}
-					})
-				).resume();
-			}
+			handler(req, res, {public:"server"});
 		}
 	});
 	server.listen(process.env.SERVER_PORT);

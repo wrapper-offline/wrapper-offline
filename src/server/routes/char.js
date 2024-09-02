@@ -96,7 +96,7 @@ group.route("POST", "/goapi/saveCCCharacter/", (req, res) => {
 	const meta = {
 		type: "char",
 		subtype: 0,
-		title: "Untitled",
+		title: req.body.title,
 		themeId: req.body.themeId
 	};
 	const id = CharModel.save(body, meta);

@@ -29,7 +29,7 @@ const Page = {
 	},
 
 	initEvents: () => {
-		window.addEventListener("popstate", (e) => switchTo(window.location.pathname));
+		window.addEventListener("popstate", (e) => Page.switchTo(window.location.pathname));
 		$(".tab_navigation .tab").on("click", (event) => {
 			const clicked = $(event.target);
 			const num = clicked.attr("data-triggers");
@@ -45,6 +45,10 @@ const Page = {
 				$(pages[num]).show();
 			}
 		});
+	},
+
+	isDarkMode: () => {
+		return localStorage.getItem("DARK_MODE") == "true";
 	},
 
 	toggleDarkMode: () => {

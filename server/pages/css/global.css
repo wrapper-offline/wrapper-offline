@@ -16,7 +16,7 @@ general
 html, body {
 	background: #e6e5f1;
 	color: #505969;
-	font: 16px/1.5 "Sailec", Arial, sans-serif;
+	font: 15px/1.7 "Sailec", Arial, sans-serif;
 	width: 100%;
 	height: 100%;
 }
@@ -37,7 +37,7 @@ main#wo_page {
 	overflow: auto;
 	padding: 25px 20px;
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 50px);
 }
 
 
@@ -66,10 +66,10 @@ html.dark #wo_sidebar {
 	padding: 0 4px;
 }
 #sidebar_top {
-	border-bottom: 1px solid #ceccde;
+	border-bottom: 1px dashed #ceccde;
 }
 #sidebar_bottom {
-	border-top: 1px solid #ceccde;
+	border-top: 1px dashed #ceccde;
 	margin-top: auto;
 }
 html.dark #sidebar_top,
@@ -78,7 +78,7 @@ html.dark #sidebar_bottom {
 }
 /* special elements */
 #logo_container {
-	background: #1e1b2b;
+	background: #15131b;
 	border-right: 1px solid #15131f;
 	border-bottom: 1px solid #433d5d;
 	box-shadow: inset 0 -1px #5d5984;
@@ -134,17 +134,17 @@ html.dark #wrapper_ver {
 	border: 1px solid #c7c4d9;
 	color: #232323;
 	border-radius: 3px;
-	transition: 0.1s ease-out;
+	transition: 0.1s cubic-bezier(0, 0.2, 0, 1);
 	text-decoration: none;
 	display: block;
-	margin: 5px 0;
+	margin: 6px 0;
 	padding: 5px 12px;
 	width: 100%;
 	height: 36px;
 }
 html.dark .sidebar_link {
-	background: #2b2938;
-	border-color: #343242;
+	background: #2b2a37;
+	border-color: #373546;
 	color: #ddd;
 }
 .sidebar_link i {
@@ -206,7 +206,7 @@ header
 **/
 header {
 	/* style */
-	background: #242235;
+	background: #16161d;
 	border-bottom: 1px solid #433d5d;
 	box-shadow: inset 0 -1px #5d5984;
 	color: #fff;
@@ -217,7 +217,7 @@ header {
 	flex-shrink: 0;
 }
 html.dark header {
-	background: #191823;
+	background: #16161d;
 	border-color: #343242;
 	box-shadow: none;
 	padding: 0;
