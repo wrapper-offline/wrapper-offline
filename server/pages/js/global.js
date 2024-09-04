@@ -108,8 +108,8 @@ const Page = {
 
 class Sidebar {
 	constructor() {
-		this.elem = document.getElementById("wo_sidebar");
-		this.sectionPop = document.getElementById("sidebar_populate");	
+		this.elem = document.getElementById("sidebar");
+		this.sectionPop = this.elem.getElementsByClassName("user_custom")[0];	
 		this.addLinks();
 		this.listenEvents();
 	}
@@ -134,7 +134,7 @@ class Sidebar {
 	 * Adds event listeners for all link elements that require them.
 	 */
 	listenEvents() {
-		const links = document.getElementsByClassName("sidebar_link");
+		const links = this.elem.getElementsByClassName("link");
 		for (const link of links) {
 			if (link.getAttribute("data-ignore") !== null) {
 				continue;
@@ -149,20 +149,25 @@ class Sidebar {
 
 	/**
 	 * Creates an element from a link object.
-	 * @param {object} link 
+	 * @param {object} data 
 	 * @returns {HTMLAnchorElement}
 	 */
-	createLinkElement(link) {
-		const elem = document.createElement("a");
-		elem.classList.add("sidebar_link");
-		elem.href = link.location;
-		const icon = document.createElement("i");
-		icon.classList.add("ico", link.icon);
-		elem.appendChild(icon);
-		const text = document.createElement("div");
-		text.classList.add("sb_link_text");
-		text.innerText = link.name;
-		elem.appendChild(text);
+	createLinkElement(data) {
+		const elem = document.createElement("li");
+		elem.classList.add("link");
+			const tog = document.createElement("button");
+			tog.innerText = ">";
+			elem.appendChild(tog);
+			const link = document.createElement("a");
+			link.href = data.location;
+				const icon = document.createElement("i");
+				icon.classList.add("ico", data.icon);
+				link.appendChild(icon);
+				const text = document.createElement("div");
+				text.classList.add("link_text");
+				text.innerText = data.name;
+				link.appendChild(text);
+			elem.appendChild(link);
 		return elem;
 	}
 
@@ -174,8 +179,9 @@ class Sidebar {
 	onLinkClick(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		history.pushState({}, "", e.currentTarget.href);
-		Page.switchTo(e.currentTarget.href);
+		const link = e.currentTarget.getElementsByTagName("a")[0];
+		history.pushState({}, "", link.href);
+		Page.switchTo(link.href);
 	}
 
 	/**

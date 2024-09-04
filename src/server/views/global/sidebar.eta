@@ -1,22 +1,49 @@
-<section id="wo_sidebar">
+<section id="sidebar">
 	<div id="logo_container">
 		<img id="logo_icon" src="/pages/img/logo_icon.svg" alt="Candy Wrappers"/>
 		<img id="logo_wordmark" src="/pages/img/logo_wordmark.svg" alt="Wrapper: Offline"/>
 	</div>
-	<div id="sidebar_top" class="sb_section">
-		<a class="sidebar_link tog" data-toggle="" href="javascript:;"><i class="ico arr_r"></i><div class="sb_link_text">Menu</div></a>
-	</div>
-	<div id="sidebar_populate" class="sb_section"></div>
-	<div id="sidebar_bottom" class="sb_section">
-		<div class="sidebar_group">
-			<a class="sidebar_link" data-ignore
-				href="javascript:require('electron').shell.openExternal('https://github.com/Wrapper-Offline/Wrapper-Offline/wiki');">
-				<i class="ico interr"></i><div class="sb_link_text">FAQ</div></a>
-			<a class="sidebar_link" data-ignore
-				href="javascript:require('electron').shell.openExternal('https://discord.gg/yhGAetN');">
-				<i class="ico speech"></i><div class="sb_link_text">Discord</div></a>
-		</div>
-		<a class="sidebar_link" href="/settings"><i class="ico cog"></i><div class="sb_link_text">Settings</div></a>
+	<ul>
+		<li class="link" data-toggle>
+			<button>
+				<i class="ico arr_r"></i>
+				<div class="link_text">Menu</div>
+			</button>
+		</li>
+	</ul>
+	<ul class="user_custom">
+		<!-- <li class="link" v-for="(link, key, index) in links" :ref="addElemToArray">
+			<button>&gt;</button>
+			<NuxtLink :to="key">
+				<i class="ico" :class="link.icon"></i>
+				<div class="link_text">{{ link.name }}</div>
+			</NuxtLink>
+		</li> -->
+	</ul>
+	<ul>
+		<li class="group">
+			<ul>
+				<li class="link">
+					<a target="_blank"
+						href="https://github.com/Wrapper-Offline/Wrapper-Offline/wiki">
+						<i class="ico interr"></i>
+						<div class="link_text">FAQ</div>
+					</a>
+				</li>
+				<li class="link">
+					<a target="_blank" href="https://discord.gg/yhGAetN">
+						<i class="ico speech"></i>
+						<div class="link_text">Discord</div>
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="link" :ref="addElemToArray">
+			<a href="/settings">
+				<i class="ico cog"></i>
+				<div class="link_text">Settings</div>
+			</a>
+		</li>
 		<span id="wrapper_ver">v<%= it.env.WRAPPER_VER %></span>
-	</div>
+	</ul>
 </section>

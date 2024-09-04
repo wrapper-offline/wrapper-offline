@@ -1,0 +1,230 @@
+:root {
+	--sidebar-open-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
+}
+
+#sidebar {
+	background: #f0eeff;
+	border-right: 1px solid #ceccde;
+	transition: width 0.2s var(--sidebar-open-anim);
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+	padding: 0 6px;
+	width: 250px;
+}
+
+/**
+logo container
+**/
+#sidebar #logo_container {
+	background: #1e1b2b;
+	border-right: 1px solid #15131f;
+	border-bottom: 1px solid #433d5d;
+	transition: width 0.2s var(--sidebar-open-anim);
+	padding: 4px 0 0 0;
+	transform: translateX(-6px);
+	pointer-events: none;
+	width: 250px;
+	height: 50px;
+}
+#sidebar #logo_container #logo_icon,
+#sidebar #logo_container #logo_wordmark {
+	transition: 0.2s var(--sidebar-open-anim);
+	position: absolute;
+	left: 37px;
+	height: 41px;
+}
+
+/**
+sidebar sections *OR* grouped link containers
+**/
+#sidebar ul {
+	list-style: none;
+	margin: 0;
+	padding: 0 4px;
+}
+/* only sections now */
+#sidebar>ul:first-of-type {
+	border-bottom: 1px dashed #ceccde;
+}
+#sidebar>ul:last-of-type {
+	border-top: 1px dashed #ceccde;
+	margin-top: auto;
+}
+
+/* icons */
+#sidebar i {
+	margin-right: 6px;
+}
+
+/* grouped links (faq & discord) */
+#sidebar .group>ul {
+	display: flex;
+	justify-content: space-between;
+	padding: 0;
+}
+#sidebar .group>ul>.link {
+	margin-bottom: 0;
+	width: 49%;
+}
+
+#sidebar .link {
+	background: #f6f5ff;
+	border: 1px solid #c7c4d9;
+	border-radius: 3px;
+	transition: 0.1s ease-out;
+	display: flex;
+	margin: 5px 0;
+	width: 100%;
+	height: 36px;
+}
+/* remove ugly button styling */
+#sidebar .link>button {
+	background: #0000;
+	border: none;
+	color: #232323;
+	cursor: pointer;
+}
+#sidebar .link>a {
+	color: #232323;
+	text-decoration: none;
+	display: flex;
+	padding: 5px 12px;
+	flex-grow: 1;
+	height: 100%;
+}
+
+
+#sidebar .link:hover {
+	background: #ffeaf4;
+	border-color: #e4b0c5;
+}
+#sidebar .link.sel {
+	background: #ffdbe8;
+	border-color: #e686a9;
+	color: #d60955;
+}
+#sidebar .link.sel i {
+	animation: 0.2s iconBounce cubic-bezier(0, 0.8, 0.45, 1.35);
+}
+
+/**
+links that lead to user content
+**/
+
+/* page folders collapse button */
+#sidebar .user_custom .link>button {
+	border-radius: 3px 0 0 3px;
+	font-size: 12px;
+	text-align: left;
+	padding: 5px 5px 5px 8px;
+	height: 100%;
+}
+#sidebar .user_custom .link>button:hover {
+	background: #ffd3e8;
+}
+#sidebar .user_custom .link>a {
+	padding: 5px 6px 5px 3px;
+}
+
+/* sidebar collapse button */
+#sidebar .link[data-toggle]>button {
+	display: flex;
+	padding: 5px 12px;
+	flex-grow: 1;
+	line-height: 24px;
+}
+#sidebar .link[data-toggle]>button i.ico::before {
+	transition: transform 0.2s cubic-bezier(0, 0.8, 0.45, 1.35);
+	transform: scale(-1) translate(0.5px, 0);
+	display: block;
+}
+#sidebar .link[data-toggle]>button:hover {
+	background: #0000
+}
+/* version string */
+#sidebar #wrapper_ver {
+	color: #909090;
+	display: block;
+	font-size: 13px;
+	text-align: center;
+	width: 100%;
+}
+
+/***
+dark mode recoloring
+***/
+html.dark #sidebar {
+	background: #24232f;
+	border-color: #343242;
+}
+html.dark #sidebar #logo_container {
+	background: #14121d;
+	border-right-color: #2b2742;
+	border-bottom-color: #343242;
+}
+
+html.dark #sidebar>ul:first-of-type,
+html.dark #sidebar>ul:last-of-type {
+	border-color: #343242;
+}
+
+html.dark #sidebar .link {
+	background: #2b2a37;
+	border-color: #373546;
+}
+html.dark #sidebar .link>button {
+	color: #ddd;
+}
+html.dark #sidebar .link>a {
+	color: #ddd;
+}
+
+html.dark #sidebar .link:hover {
+	background: #422b3d;
+	border-color: #6b3f56;
+}
+html.dark #sidebar .link.sel {
+	background: #3c2234;
+	border-color: #732a46;
+	color: #fff;
+}
+html.dark #sidebar .user_custom .link>button:hover {
+	background: #573344;
+}
+
+html.dark #sidebar #wrapper_ver {
+	color: #bbb;
+}
+
+/***
+collapsed
+***/
+#sidebar.collapsed {
+	width: 62px;
+}
+/* hide the logo wordmark */
+#sidebar.collapsed #logo_container {
+	width: 62px;
+}
+#sidebar.collapsed #logo_container #logo_icon {
+	left: 10px;
+}
+#sidebar.collapsed #logo_container #logo_wordmark {
+	opacity: 0;
+	left: 0;
+}
+/* display groups vertically */
+#sidebar.collapsed .group>ul {
+	display: block;	
+}
+#sidebar.collapsed .group>ul>.link {
+	width: 100%;
+}
+/* flip the collapse button and hide link text */
+#sidebar.collapsed .link[data-toggle] i.ico::before {
+	transform: scale(1);
+}
+#sidebar.collapsed .link_text {
+	display: none;
+}
