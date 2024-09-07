@@ -12,14 +12,23 @@ i.ico.arr_reset::before {
 i.ico.briefcase::before {
 	content: '\E358';
 }
+i.ico.brush::before {
+	content: '\E235';
+}
 i.ico.coat::before {
 	content: '\E384';
 }
 i.ico.cog::before {
 	content: '\E137';
 }
+i.ico.copy::before {
+	content: '\E319';
+}
 i.ico.dice::before {
 	content: '\E323';
+}
+i.ico.download::before {
+	content: '\E182';
 }
 i.ico.film::before {
 	content: '\E009';
@@ -30,14 +39,23 @@ i.ico.flop::before {
 i.ico.interr::before {
 	content: '\E195';
 }
+i.ico.blist::before {
+	content: '\E158';
+}
 i.ico.person::before {
 	content: '\E004';
+}
+i.ico.play::before {
+	content: '\E174';
 }
 i.ico.redo::before {
 	content: '\E435';
 }
 i.ico.speech::before {
 	content: '\E310';
+}
+i.ico.trash::before {
+	content: '\E017';
 }
 i.ico.undo::before {
 	content: '\E436';

@@ -1,0 +1,7 @@
+<script>
+Page.setTitle("Characters");
+Page.runAfter = function charsPage() {
+	const listElem = document.createElement("char-list");
+	document.getElementById("wo_page").appendChild(listElem);
+};
+</script>

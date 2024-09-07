@@ -6,51 +6,6 @@ const { SWF_URL, STORE_URL, CLIENT_URL } = process.env;
 const group = new httpz.Group();
 
 // flash pages
-group.route("GET", "/creator", async (req, res) => {
-	let flashvars = {
-		appCode: "go",
-		ctc: "go",
-		isEmbed: 1,
-		isLogin: "Y",
-		m_mode: "school",
-		page: "",
-		siteId: "go",
-		tlang: "en_US",
-		ut: 60,
-		// options
-		bs: "adam",
-		original_asset_id: req.query["id"] || "",
-		themeId: "family",
-		// paths
-		apiserver: "/",
-		storePath: STORE_URL + "/<store>",
-		clientThemePath: CLIENT_URL + "/<client_theme>"
-	};
-	Object.assign(flashvars, req.query);
-	if (flashvars.original_asset_id) {
-		const char = CharModel.charXml(flashvars.original_asset_id);
-		flashvars.themeId = CharModel.getThemeId(char);
-		delete flashvars.bs;
-	}
-	res.render("app/char", {
-		title: "Character Creator",
-		attrs: {
-			data: SWF_URL + "/creator.swf",
-			type: "application/x-shockwave-flash", 
-			id: "char_creator", 
-			width: "960", 
-			height: "600", 
-			class: "char_object"
-		},
-		params: {
-			flashvars,
-			allowScriptAccess: "always",
-			movie: SWF_URL + "/creator.swf",
-		},
-		isExternal: req.query.external || false,
-		object: toObjectString
-	});
-});
 group.route("GET", "/cc", async (req, res) => {
 	let flashvars = {
 		appCode: "go",
@@ -92,44 +47,6 @@ group.route("GET", "/cc", async (req, res) => {
 			allowScriptAccess: "always",
 			movie: SWF_URL + "/cc.swf",
 			wmode: "transparent"
-		},
-		isExternal: req.query.external || false,
-		object: toObjectString
-	});
-});
-group.route("GET", "/cc_browser", async (req, res) => {
-	let flashvars = {
-		appCode: "go",
-		ctc: "go",
-		isEmbed: 1,
-		isLogin: "Y",
-		m_mode: "school",
-		page: "",
-		siteId: "go",
-		tlang: "en_US",
-		ut: 60,
-		// options
-		themeId: "family",
-		// paths
-		apiserver: "/",
-		storePath: STORE_URL + "/<store>",
-		clientThemePath: CLIENT_URL + "/<client_theme>"
-	};
-	Object.assign(flashvars, req.query);
-	res.render("app/char", {
-		title: "Character Browser",
-		attrs: {
-			data: SWF_URL + "/cc_browser.swf",
-			type: "application/x-shockwave-flash", 
-			id: "char_creator", 
-			width: "100%", 
-			height: "600", 
-			class: "char_object"
-		},
-		params: {
-			flashvars,
-			allowScriptAccess: "always",
-			movie: SWF_URL + "/cc_browser.swf",
 		},
 		isExternal: req.query.external || false,
 		object: toObjectString
@@ -196,33 +113,33 @@ group.route("GET", "/player", async (req, res) => {
 		object: toObjectString
 	});
 });
-group.route("GET", "/exporter", async (req, res) => {
-	const { isWide, goWatermark } = settings;
-	let flashvars = {
-		autostart: 0,
-		isWide: isWide ? "1" : "0",
-		ut: 60,
-		apiserver: "/",
-		storePath: STORE_URL + "/<store>",
-		clientThemePath: CLIENT_URL + "/<client_theme>",
-	};
-	if (goWatermark == "wix") {
-		flashvars.isWixPaid = 1;
-	}
-	Object.assign(flashvars, req.query);
-	res.render("app/exporter", {
-		attrs: {
-			data: SWF_URL + "/exporter.swf",
-			type: "application/x-shockwave-flash",
-		},
-		params: {
-			flashvars,
-			allowFullScreen: "true",
-			allowScriptAccess: "always",
-		},
-		object: toObjectString
-	});
-});
+// group.route("GET", "/exporter", async (req, res) => {
+// 	const { isWide, goWatermark } = settings;
+// 	let flashvars = {
+// 		autostart: 0,
+// 		isWide: isWide ? "1" : "0",
+// 		ut: 60,
+// 		apiserver: "/",
+// 		storePath: STORE_URL + "/<store>",
+// 		clientThemePath: CLIENT_URL + "/<client_theme>",
+// 	};
+// 	if (goWatermark == "wix") {
+// 		flashvars.isWixPaid = 1;
+// 	}
+// 	Object.assign(flashvars, req.query);
+// 	res.render("app/exporter", {
+// 		attrs: {
+// 			data: SWF_URL + "/exporter.swf",
+// 			type: "application/x-shockwave-flash",
+// 		},
+// 		params: {
+// 			flashvars,
+// 			allowFullScreen: "true",
+// 			allowScriptAccess: "always",
+// 		},
+// 		object: toObjectString
+// 	});
+// });
 
 /**
  * converts an object to a query string

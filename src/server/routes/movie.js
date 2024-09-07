@@ -16,7 +16,7 @@ group.route("*", /\/videomaker\/full\/(\w+)\/tutorial$/, (req, res) => {
 });
 // video list
 group.route("GET", "/dashboard/videos", (req, res) => {
-	res.redirect("/");
+	res.redirect("/videos");
 });
 
 /*

@@ -1,3 +1,4 @@
+const database = require("../../data/database.js");
 const CharModel = require("../models/char.js");
 const fs = require("fs");
 const httpz = require("@octanuary/httpz");
@@ -19,6 +20,22 @@ const bfTypes = {
 };
 const thumbUrl = process.env.THUMB_BASE_URL;
 const group = new httpz.Group();
+
+/*
+list
+*/
+// frontend
+group.route("GET", "/characters", (req, res) => {
+	res.render("characters");	
+});
+// backend
+group.route("GET", "/api/char/list", (req, res) => {
+	let filter = { type: "char" };
+	for (const key in req.query) {
+		filter[key] = req.query[key];
+	}
+	return res.json(database.instance.select("assets", filter));
+});
 
 /*
 load

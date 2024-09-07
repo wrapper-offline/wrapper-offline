@@ -1,0 +1,129 @@
+/**
+list header
+**/
+.list_header {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #b5b2c7;
+    display: flex;
+    margin-bottom: 20px;
+    padding: 4px 0;
+}
+/* theme selector open button */
+.theme_sel_btn {
+    border-radius: 3px;
+	user-select: none;
+	transition: background 0.1s ease-out;
+	cursor: pointer;
+	margin-right: 5px;
+	padding: 3px 10px;
+    height: 30px;
+}
+.theme_sel_btn .ico {
+    line-height: 25px;
+    display: block;
+    float: left;
+    margin-right: 6px;
+}
+.theme_sel_btn img {
+	pointer-events: none;
+    height: 24px;
+}
+.theme_sel_btn:hover {
+	background: #d3d0eb;
+}
+
+html.dark .theme_sel_btn:hover {
+	background: #2a2833;
+}
+
+/**
+character tiles
+**/
+.char {
+	border: 1px solid #c8c5dc;
+    border-radius: 3px;
+    display: inline-flex;
+    margin: 0 5px 10px;
+    padding: 10px 8px;
+    width: calc(20% - 10px);
+	transition: 0.1s ease-out;
+    height: 278px;
+    text-align: center;
+	overflow: hidden;
+	cursor: pointer;
+}
+.char ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+.char img {
+    height: 232px;
+    width: 100%;
+    object-fit: scale-down;
+	display: block;
+    padding-bottom: 8px;
+}
+.char .title {
+	border-top: 1px dashed #b5b2c7;
+	transition: color 0.1s ease-out;
+	font-size: 14px;
+    font-weight: bold;
+    line-height: 2.5;
+}
+.char .hov_actions {
+	pointer-events: none;
+	opacity: 0;
+	transition: 0.15s ease-out;
+	transform: translateY(-15px);
+}
+.char .hov_actions a {
+	color: #444;
+	margin: 0 4px;
+}
+html body .char .hov_actions a:hover {
+	color: #ff40a8;
+}
+
+/***
+hovered
+***/
+.char:hover {
+	background: #ecd9ea;
+	border-color: #e2a5bd;
+	box-shadow: 0 2px 4px #00000010;
+}
+.char:hover .title {
+	border-color: #e2a5bd;
+	color: #0000;
+}
+.char:hover .hov_actions {
+	pointer-events: all;
+	opacity: 1;
+	transform: translateY(-31px);
+}
+
+/***
+dark mode
+***/
+html.dark .list_header {
+	border-color: #33323e;
+}
+html.dark .char {
+	border-color: #2a2933;
+}
+html.dark .char .title {
+	border-color: #312f40;
+}
+html.dark .char .hov_actions a {
+	color: #eee;
+}
+html.dark .char:hover {
+	background: #352432;
+	border-color: #6b3f56;
+}
+html.dark .char:hover .title {
+	border-color: #6b3f56;
+}

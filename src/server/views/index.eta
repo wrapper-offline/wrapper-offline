@@ -9,6 +9,9 @@
 		<link rel="stylesheet" type="text/css" href="/pages/css/list.css"/>
 		<script src="/pages/js/jquery.js"></script>
 		<script src="/pages/js/global.js"></script>
+		<script src="/components/char_list/component.js"></script>
+		<script src="/components/sidebar/component.js"></script>
+		<script src="/components/theme_selector/component.js"></script>
 		<% if (
 			typeof it.rendered == "undefined" ||
 			it.rendered == null
@@ -21,7 +24,7 @@
 	</head>
 
 	<body>
-		<%~ include("./global/sidebar", { env: it.env }) %>
+		<app-sidebar></app-sidebar>
 
 		<section id="wo_page_container">
 			<header>

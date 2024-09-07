@@ -7,11 +7,10 @@ const fs = require("fs");
 const folder = join(__dirname, "../../../server", process.env.STORE_URL);
 const group = new httpz.Group();
 
-/*
-list
-*/
-// themelist page
-group.route("GET", "/create", (req, res) => {
+/**
+ * returns a json representation of the themelist
+ */
+function parseThemeList() {
 	const { truncatedThemeList } = settings;
 	const xmlPath = join(
 		folder,
@@ -29,7 +28,20 @@ group.route("GET", "/create", (req, res) => {
 		}
 		themes.push(theme);
 	}
-	res.render("create", { themeList: themes });
+	return themes;
+}
+
+/*
+list
+*/
+// themelist page
+group.route("GET", "/create", (req, res) => {
+	const themeList = parseThemeList();
+	res.render("create", { themeList });
+});
+group.route("GET", "/api/theme/list", (req, res) => {
+	const themeList = parseThemeList();
+	res.json(themeList);
 });
 group.route("POST", "/goapi/getThemeList/", async (req, res) => {
 	const truncated = settings.truncatedThemeList;

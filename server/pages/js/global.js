@@ -1,26 +1,8 @@
 const Page = {
 	appName: "Wrapper: Offline",
-	sidebarLinks: [
-		{
-			location: "/videos",
-			name: "Videos",
-			icon: "film",
-			default: true
-		},
-		{
-			location: "/starters",
-			name: "Starters",
-			icon: "briefcase"
-		},
-		{
-			location: "/videos",
-			name: "Characters",
-			icon: "person"
-		}
-	],
 
 	init() {
-		if (localStorage.getItem("DARK_MODE") == "true") {
+		if (Page.isDarkMode()) {
 			Page.toggleDarkMode();
 		}
 		Page.initEvents();
@@ -106,91 +88,7 @@ const Page = {
 	runAfter: () => null
 };
 
-class Sidebar {
-	constructor() {
-		this.elem = document.getElementById("sidebar");
-		this.sectionPop = this.elem.getElementsByClassName("user_custom")[0];	
-		this.addLinks();
-		this.listenEvents();
-	}
 
-	static get instance() {
-		if (typeof this._instance == "undefined")
-			this._instance = new Sidebar();
-		return this._instance;
-	}
-
-	/**
-	 * Adds link elements to the populate section of the sidebar.
-	 */
-	addLinks() {
-		for (const link of Page.sidebarLinks) {
-			const elem = this.createLinkElement(link);
-			this.sectionPop.appendChild(elem);
-		}
-	}
-
-	/**
-	 * Adds event listeners for all link elements that require them.
-	 */
-	listenEvents() {
-		const links = this.elem.getElementsByClassName("link");
-		for (const link of links) {
-			if (link.getAttribute("data-ignore") !== null) {
-				continue;
-			}
-			if (link.getAttribute("data-toggle") !== null) {
-				link.addEventListener("click", () => this.onMenuClick());
-				continue;
-			}
-			link.addEventListener("click", this.onLinkClick);
-		}
-	}
-
-	/**
-	 * Creates an element from a link object.
-	 * @param {object} data 
-	 * @returns {HTMLAnchorElement}
-	 */
-	createLinkElement(data) {
-		const elem = document.createElement("li");
-		elem.classList.add("link");
-			const tog = document.createElement("button");
-			tog.innerText = ">";
-			elem.appendChild(tog);
-			const link = document.createElement("a");
-			link.href = data.location;
-				const icon = document.createElement("i");
-				icon.classList.add("ico", data.icon);
-				link.appendChild(icon);
-				const text = document.createElement("div");
-				text.classList.add("link_text");
-				text.innerText = data.name;
-				link.appendChild(text);
-			elem.appendChild(link);
-		return elem;
-	}
-
-	/**
-	 * Called whenever a sidebar link is clicked.
-	 * @param {Event} e 
-	 * @param {string} loc
-	 */
-	onLinkClick(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		const link = e.currentTarget.getElementsByTagName("a")[0];
-		history.pushState({}, "", link.href);
-		Page.switchTo(link.href);
-	}
-
-	/**
-	 * Called whenever the collapse button is clicked. 
-	 */
-	onMenuClick() {
-		this.elem.classList.toggle("collapsed");
-	}
-}
 
 window.addEventListener("load", Page.init);
 

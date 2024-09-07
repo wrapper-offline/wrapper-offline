@@ -1,19 +1,4 @@
 
-<link rel="stylesheet" type="text/css" href="/pages/css/create.css">
-
-<h1>Select a theme</h1>
-
-<% it.themeList.forEach(theme => { %>
-	<div
-		class="theme"
-		style="background-image: url(/pages/img/themes/banners/<%= theme.id %>.webp);"
-		<%~ theme.id ? `data-vm="${theme.id}"` : "" %>
-		<%~ theme.cc_theme_id ? `data-cc="${theme.cc_theme_id}"` : "" %>
-	>
-		<img src="/pages/img/themes/icons/<%= theme.id %>.webp" alt="<%= theme.name %>">
-		<%= theme.name %>
-	</div>
-<% }) %>
 <div id="char-upload" class="upload_container">
 	<div class="upload_row">
 		<h2>Copy a character</h2>
@@ -46,20 +31,6 @@
 <script>
 Page.setTitle("Create");
 Page.runAfter = function createPage() {
-	const charId = $("input[name='char-id']");
-
-	// filter the list
-	const params = new URLSearchParams(window.location.search);
-	const filter = params.get("filter") || "vl";
-	if (filter == "cc") {
-		$(".theme").not("[data-cc]").hide();
-	} else {
-		$("#char-copy").hide();
-	}
-
-	for (const element of document.getElementsByClassName("theme")) {
-		element.addEventListener("click", redirect);
-	}
 
 	function redirect() {
 		if (filter == "cc") {

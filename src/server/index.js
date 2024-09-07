@@ -51,7 +51,7 @@ module.exports = function startServer() {
 		}
 		// still no match, try serving a static file
 		if (!res.writableEnded) {
-			handler(req, res, {public:"server"});
+			handler(req, res, {public:"server", headers:{"Cache-Control":"no-store"}});
 		}
 	});
 	server.listen(process.env.SERVER_PORT);

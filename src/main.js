@@ -74,6 +74,8 @@ switch (process.platform) {
 app.commandLine.appendSwitch("ppapi-flash-path", path.join(__dirname, pluginName));
 app.commandLine.appendSwitch("ppapi-flash-version", "32.0.0.371");
 
+app.commandLine.appendSwitch("disable-http-cache");
+
 let mainWindow;
 const createWindow = () => {
 	mainWindow = new BrowserWindow({

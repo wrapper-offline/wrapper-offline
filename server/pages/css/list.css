@@ -19,8 +19,7 @@ grid view
 	margin-top: 5px;
 }
 .grid_view>.video {
-	background: #f1f0ff;
-	border: 1px solid #ceccde;
+	border: 1px solid #c8c5dc;
 	border-radius: 3px;
 	transition: 0.1s ease-out;
 	display: inline-flex;
@@ -33,8 +32,7 @@ grid view
 	box-shadow: 0 2px 4px #00000010;
 }
 html.dark .grid_view>.video {
-	background: #262532;
-	border-color: #373546;
+	border-color: #2a2933;
 }
 html.dark .grid_view>.video:hover {
 	background: #422b3d;
@@ -142,23 +140,7 @@ header
 	padding: 0;
 	line-height: 28px;
 }
-#table_view_header input {
-	border: 1px solid #cac9d4;
-	box-shadow: inset 0 1px #1112;
-	border-radius: 4px;
-	color: inherit;
-	font-weight: 500;
-	padding: 0 7px;
-	width: 100%;
-	height: 30px;
-}
-.dark #table_view_header input {
-	background: #2a2a2a;
-	border-color: #212121;
-}
-#table_view_header input:focus {
-	outline: none;
-}
+
 
 
 /**
