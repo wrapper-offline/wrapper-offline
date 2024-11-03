@@ -8,6 +8,7 @@
 	"scripts": {
 		"start": "npx nodemon src/main",
 		"start2": "electron .",
+		"start:server": "node src/server/index",
 		"build": "npx electron-packager . --ignore=^/server",
 		"postinstall": "node scripts/fixModules.js",
 		"test": "mocha"
@@ -29,7 +30,8 @@
 			"_CACHÉ/",
 			"_EXPORTS/",
 			"_LOGS/",
-			"_SAVED/"
+			"_SAVED/",
+			"src/server/public/"
 		],
 		"execMap": {
 			"js": "electron ."
@@ -65,7 +67,8 @@
 		"electron-packager": "^15.5.1",
 		"js-base64": "^3.7.2",
 		"mocha": "^10.0.0",
-		"supertest": "^6.2.3"
+		"supertest": "^6.2.3",
+		"vite-node": "^2.1.1"
 	},
 	"repository": {
 		"type": "git",

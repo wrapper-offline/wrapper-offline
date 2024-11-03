@@ -1,0 +1,152 @@
+/***
+this css has flash page styling
+***/
+
+/**
+general stuff
+**/
+main#wo_page { padding: 0 }
+
+
+
+section#cc_buttonbar {
+    background: #f6f5ff;
+    border-bottom: 1px solid #ceccde;
+    display: flex;
+    justify-content: space-between;
+	padding: 4px 20px;
+	height: 47px;
+}
+.dark section#cc_buttonbar {
+	background: #1c1b23;
+	border-color: #343242;
+}
+
+
+input[type="text"] {
+    background: #0000;
+    border: none;
+    border-bottom: 2px solid #0000;
+	transition: border-color 0.1s ease-out;
+    padding: 0 1px;
+    margin-top: 6px;
+    display: block;
+    width: auto;
+    height: 26px;
+}
+input[type="text"]:hover {
+    border-color: #e4b5c7;
+}
+input[type="text"]:focus {
+    outline: none;
+    border-color: #ff3580;
+}
+
+#buttonbar_middle {
+    padding: 3px 0;
+	display: flex;
+}
+.ico_btn {
+    background: #0000;
+    border: none;
+    border-right: 1px solid #d7d6e4;
+    color: #656284;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.ico_btn:last-of-type {
+    border-right: none;
+}
+.ico_btn:hover {
+    color: #000;
+}
+
+.cc_slidingCard {
+    background: #dfdeef;
+    border: 1px solid #cac9da;
+    border-radius: 3px;
+    width: 100%;
+}
+div#typeSelector {
+    border-bottom: 1px solid #cac9da;
+    width: 100%;
+    height: 50px;
+}
+
+/**
+objects
+**/
+.char_object {
+    display: block;
+    margin: 25px 20px 25px 0;
+    width: calc(100% - 20px);
+    height: calc(100% - 97px);
+}
+
+/**
+previewer
+**/
+#previewer,
+#cc_window {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 2;
+}
+#previewer {
+	transform: translate(-50%, -80%);
+	width: 960px;
+}
+#cc_window {
+	transform: translate(-50%, -50%);
+}
+.popup_inside {
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 0 0 60px #000;
+	box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+	margin: 0 auto;
+	position: relative;
+	text-align: center;
+}
+#previewer .popup_inside {
+	width: 640px;
+}
+.popup_heading {
+	color: #505e73;
+	font-size: 21px;
+	font-weight: normal;
+	line-height: 1;
+	text-align: left;
+	padding: 15px 35px;
+	margin: 0;
+}
+#cc-iframe {
+	border: none;
+    width: 960px;
+    height: 600px;
+}
+
+.popup_inside a.close-button {
+	color: #43bca5;
+	line-height: 24px;
+	font-size: 24px;
+	font-weight: bold;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+.popup_inside a.close-button:hover {
+	color: #029a85;
+	text-decoration: none;
+}
+
+.popup_inside .buttons {
+	padding: 14px 0;
+}
+.btn_popup {
+	line-height: 36px;
+	padding: 0 25px;
+	margin: 0 7px;
+}
+

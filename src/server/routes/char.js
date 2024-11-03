@@ -26,7 +26,7 @@ list
 */
 // frontend
 group.route("GET", "/characters", (req, res) => {
-	res.render("characters");	
+	res.sendBase();	
 });
 // backend
 group.route("GET", "/api/char/list", (req, res) => {

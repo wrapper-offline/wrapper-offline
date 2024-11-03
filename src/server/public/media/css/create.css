@@ -1,0 +1,43 @@
+
+/**
+char copy
+**/
+.upload_container {
+	background-color: #f9fafa;
+	box-shadow: 0 1px 5px #0002;
+	border-radius: 3px;
+	margin: 5px;
+	padding: 3px;
+	padding-bottom: 6px;
+	display: inline-flex;
+	width: 302px;
+	height: 203px;
+	flex-direction: column;
+	justify-content: space-evenly;
+	flex-basis: 0;
+}
+html.dark .upload_container {
+	background: #353535;
+}
+.upload_container input {
+	background: #fff;
+	border: 1px solid #cac9d4;
+	box-shadow: inset 0 1px #1112;
+	color: #111;
+	border-radius: 4px;
+	padding: 7px 10px;
+	font-size: 14px;
+}
+html.dark .upload_container input {
+	background: #2a2a2a;
+	border-color: #212121;
+	color: #fff;
+}
+.upload_container .btn {
+	margin: 0;
+	width: unset;
+}
+.upload_container h2 {
+	font-size: 14px;
+	margin: 3px 0;
+}

@@ -1,0 +1,321 @@
+/***
+this css has the general header/footer layout stuff
+***/
+
+@import url("./modern-normalize.css");
+@import url("./icons.css");
+@import url("../../components/char-list/style.css");
+@import url("../../components/popup/style.css");
+@import url("../../components/sidebar/index.css");
+@import url("../../components/theme-selector/style.css");
+
+:root {
+	--primary: #d85e27;
+	--transition: .15s ease;
+}
+
+/**
+general
+**/
+html, body {
+	background: #e4e2f9;
+	color: #505969;
+	font: 15px/1.7 "Sailec", Arial, sans-serif;
+	width: 100%;
+	height: 100%;
+}
+html.dark, html.dark>body {
+	background: #1e1d25;
+	color: #eee;
+}
+body {
+	display: flex; 
+	flex-direction: row;
+	overflow: hidden;
+}
+#wo_page_container {
+	width: 100%;
+}
+main#wo_page {
+	background: #0000;
+	overflow: auto;
+	padding: 25px 20px;
+	width: 100%;
+	height: calc(100% - 50px);
+}
+
+
+input[type="text"] {
+	border: 1px solid #cac9d4;
+	box-shadow: inset 0 1px #1112;
+	border-radius: 4px;
+	color: inherit;
+	font-weight: 500;
+	padding: 0 7px;
+	height: 30px;
+}
+.dark input[type="text"] {
+	background: #2a2a2a;
+	border-color: #212121;
+}
+input[type="text"]:focus {
+	outline: none;
+}
+
+
+
+/**
+header
+**/
+header {
+	/* style */
+	background: #16161d;
+	border-bottom: 1px solid #433d5d;
+	box-shadow: inset 0 -1px #5d5984;
+	color: #fff;
+	text-align: center;
+	/* layout */
+	z-index: 1;
+	display: flex;
+	flex-shrink: 0;
+}
+html.dark header {
+	background: #16161d;
+	border-color: #2e2d39;
+	box-shadow: none;
+	padding: 0;
+	height: 50px;
+}
+/* makes the header a set height when the window is 887px wide */
+@media (min-width: 735px) {
+	header {
+		height: 50px;
+	}
+}
+
+#wo_address_bar {
+	display: flex;
+}
+#wo_address_container {
+	display: flex;
+}
+header .btn {
+	background: #344583;
+}
+header .btn:hover {
+	background: #2f3e75;
+}
+
+
+/**
+buttons
+**/
+.btn {
+	/* style */
+	background: #43bca5;
+	border: none;
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #fff;
+	border-radius: 4px;
+	/* layout */
+	display: inline-block;
+	padding: 5.5px 10px;
+	margin: 9px 5px;
+}
+.btn:hover {
+	background: #029a85;
+	cursor: pointer;
+}
+.dark .btn {
+	background: #333;
+}
+.dark .btn:hover {
+	background: #444;
+}
+/* primary color buttons */
+.btn.btn_primary {
+	background: #e97d3b;
+	width: 160px;
+}
+.btn.btn_primary:hover {
+	background: #dd6522;
+}
+
+
+/**
+header dropdowns
+**/
+/* change button margin/padding to fit dropdown */
+.dropdown_contain { padding: 0; margin: 6px 5px; }
+.dropdown_button { margin: 0; padding: 5.5px 10px; }
+.upload_button { margin: 0; padding: 5.5px 25px; }
+/* make dropdown appear on hover */
+.dropdown_contain:hover>nav {
+	display: block;
+	cursor: default;
+}
+/* the dropdown itself */
+.dropdown_menu {
+	/* style */
+	background-color: #333;
+	border-radius: 4px;
+	/* layout */
+	width: 100%;
+	padding: 10px 0;
+	margin: 0;
+	text-align: left;
+	/* hover stuff */
+	position: relative;
+	float: left;
+	display: none;
+}
+/* dropdown links */
+.dropdown_menu>a {
+	/* style */
+	color: #ddd;
+	text-decoration: none;
+	transition: var(--transition);
+	/* layout */
+	display: block;
+	padding: 2px 20px;
+}
+.dropdown_menu>a:hover {
+	background: #2a2a2a;
+	color: var(--primary);
+	cursor: pointer;
+}
+/* dropdown header and separation */
+.dropdown_menu>h2 {
+	/* style */
+	color: #fff;
+	font-size: 15px;
+	/* layout */
+	margin:0;
+	padding:2px 20px;
+}
+.dropdown_menu>hr {
+	border: 1px solid #222;
+	margin: 10px 0;
+}
+/* movie upload */
+form.hide { display: none }
+
+/**
+tabs
+**/
+.tab_nav_container {
+	margin: auto;
+}
+.tab_navigation {
+	display: flex;
+	margin: 0 auto;
+}
+.tab_nav_container .tab_navigation {
+	border-bottom: 10px solid #fff;
+	box-shadow: 0 4px 3px -2px #0002;
+}
+html.dark .tab_nav_container .tab_navigation {
+	border-color: #282828;
+}
+.tab {
+	background: #e3e7ed;
+	border-right: 1px solid #cfcfcf;
+	box-shadow:
+		inset 0 1px #cfcfcf,
+		inset 0 -1px #c1c1c1,
+		inset 0 -6px 6px -5px #0002;
+	color: #505e73;
+	padding: 7px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 13px;
+	width: 100%;
+}
+.tab:last-of-type {
+	border: none;
+}
+.tab.selected {
+	background: #fff;
+	color: #dd6522;
+	box-shadow: 0 -5px #dd6522;
+}
+html.dark .tab:not(.selected) {
+	background: #242424;
+	border-color: #2a2a2a;
+	box-shadow: inset 0 1px #2a2a2a, inset 0 -1px #222, inset 0 -6px 6px -5px #0002;
+	color: #ddd;
+}
+html.dark .tab.selected {
+	background: #282828;
+	border-color: #222;
+}
+.tab:hover,
+html.dark .tab:hover {
+	color: #dd6522;
+}
+/* pages */
+.tab_page {
+	display: none;
+}
+
+
+/**
+animations
+**/
+@keyframes iconBounce {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.4);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+
+/**
+font importing
+**/
+@font-face {
+	font-family: 'Sailec';
+	font-weight: 100;
+	src: url('.../fonts/Sailec-Thin.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Sailec';
+	font-weight: 200;
+	src: url('../fonts/Sailec-Light.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Sailec';
+	font-weight: 400;
+	src: url('../fonts/Sailec-Regular.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'Sailec';
+	font-weight: 500;
+	src: url('../fonts/Sailec-Medium.woff') format('woff');
+}
+
+/* font weight 500 and font weight 700 (bold) are the same for better integration support */
+@font-face {
+	font-family: 'Sailec';
+	font-weight: 700;
+	src: url('../fonts/Sailec-Medium.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'GlyphiconsRegular';
+	src: url('../fonts/glyphicons-regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}

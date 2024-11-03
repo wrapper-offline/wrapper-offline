@@ -60,10 +60,10 @@ list
 */
 // list pages
 group.route("GET", "/videos", (req, res) => {
-	res.render("list", {filter:"movie"});	
+	res.sendBase();	
 });
 group.route("GET", "/starters", (req, res) => {
-	res.render("list", {filter:"starter"});	
+	res.sendBase();	
 });
 // movies
 group.route("GET", "/api/movie/list", (req, res) => {

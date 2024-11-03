@@ -8,7 +8,7 @@ const group = new httpz.Group();
 page
 */
 group.route("*", "/settings", (req, res) => {
-	res.render("settings", {});
+	res.sendBase();
 });
 
 /*

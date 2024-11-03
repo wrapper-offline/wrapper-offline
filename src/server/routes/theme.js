@@ -37,7 +37,7 @@ list
 // themelist page
 group.route("GET", "/create", (req, res) => {
 	const themeList = parseThemeList();
-	res.render("create", { themeList });
+	res.sendBase();
 });
 group.route("GET", "/api/theme/list", (req, res) => {
 	const themeList = parseThemeList();

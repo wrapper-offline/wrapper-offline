@@ -1,0 +1,79 @@
+<page title="Settings">
+	<tabbed-navigation>
+		<nav-tab name="Behavior">
+			<settings-toggle id="truncatedThemeList">
+				<h3 slot="name">Truncated themelist</h3>
+				<p slot="description">
+					Cuts down the amount of themes that clog up the themelist in the videomaker.<br/>
+					Keeping this off is highly suggested.<br/>
+					However, if you want to see everything the program has to offer, turn this on.
+				</p>
+			</settings-toggle>
+			<settings-toggle id="showWaveforms">
+				<h3 slot="name">Show waveforms</h3>
+				<p slot="description">
+					Cuts down the amount of themes that clog up the themelist in the videomaker.<br/>
+					Keeping this off is highly suggested.<br/>
+					However, if you want to see everything the program has to offer, turn this on.
+				</p>
+				{
+					"id": "showWaveforms",
+					"name": "Show waveforms",
+					"description": "By default, waveforms for audio are generated in the video editor.<br/>While useful, the editor freezes while it generates, which could be too annoying or slow for some.<br/>Turning this off will simply add a repeating pre-made pattern in place of true waveforms."
+				}
+			</settings-toggle>
+			<settings-toggle>
+				{
+					"id": "saveLogFiles",
+					"name": "Save log files",
+					"description": "Saves everything in the console to the _LOGS folder. This may take up a lot of space if left on.<br/><i>Applies on next restart.</i>"
+				}
+			</settings-toggle>
+		</nav-tab>
+		<nav-tab name="Appearance">
+			<settings-toggle local="true">
+				<name>Dark mode</name>
+				<description><i>Does not apply in the Video Maker or Character Creator.</i></description>
+				<id>DARK_MODE</id>
+			</settings-toggle>
+			<settings-choice local="true">
+				<name>Video list layout</name>
+				<description>Switches the layout of the video list.</description>
+				<id>LIST_LAYOUT</id>
+				<choices>
+					<choice name="List" id="list"/>
+					<choice name="Grid" id="grid"/>
+				</choices>
+			</settings-choice>
+			<settings-choice>
+				<name>GoAnimate watermark</name>
+				<description>The Video Player has 5 choices for GoAnimate watermarks.</description>
+				<id>goWatermark</id>
+				<choices>
+					<choice name="GoAnimate" id="default"/>
+					<choice name="Go Make Your Own" id="twoLines"/>
+					<choice name="GoAnimate4Schools" id="g4s"/>
+					<choice name="Free Trial" id="freeTrial"/>
+					<choice name="GoAnimate Wix" id="wix"/>
+				</choices>
+			</settings-choice>
+			<settings-choice>
+				<name>Aspect ratio</name>
+				<description>The Video Maker has 2 choices for aspect ratios, 14:9 and 16:9.<br/>
+					By default it's set to 16:9, however you can choose to use 14:9 instead.</description>
+				<id>isWide</id>
+				<choices>
+					<choice name="14:9" id="false"/>
+					<choice name="16:9" id="true"/>
+				</choices>
+			</settings-choice>
+			<settings-toggle>
+				<name>Auto-hide navbar</name>
+				<description><i>Applies on next restart.</i></description>
+				<id>hideNavbar</id>
+			</settings-toggle>
+		</nav-tab>
+		<nav-tab name="Storage">
+		</nav-tab>
+	</tabbed-navigation>
+</page>

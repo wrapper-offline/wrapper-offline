@@ -7,6 +7,7 @@ const httpz = require("@octanuary/httpz");
 const jsonRoutes = require("../staticInfo/routes.json");
 const reqBody = require("./middlewares/req.body.js");
 const resRender = require("./middlewares/res.render.js");
+const resSendBase = require("./middlewares/res.sendBase.js");
 const resTime = require("./middlewares/res.time.js");
 const routes = require("./routes/index.js");
 
@@ -18,6 +19,7 @@ module.exports = function startServer() {
 
 	server.add(reqBody);
 	server.add(resRender);
+	server.add(resSendBase);
 	server.add(resTime);
 	server.add(routes);
 	// handle 404s
@@ -51,7 +53,7 @@ module.exports = function startServer() {
 		}
 		// still no match, try serving a static file
 		if (!res.writableEnded) {
-			handler(req, res, {public:"server", headers:{"Cache-Control":"no-store"}});
+			handler(req, res, {public:"src/server/public", headers:{"Cache-Control":"no-store"}});
 		}
 	});
 	server.listen(process.env.SERVER_PORT);

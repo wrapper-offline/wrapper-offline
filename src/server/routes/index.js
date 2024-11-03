@@ -14,7 +14,7 @@ const waveform = require("./waveform.js");
 
 const group = new httpz.Group();
 group.route("*", "/", (req, res) => {
-	res.render("list");
+	res.sendBase();
 });
 group.add(asset);
 group.add(char);
