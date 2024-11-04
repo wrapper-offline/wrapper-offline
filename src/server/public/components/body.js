@@ -1,5 +1,5 @@
 import ComponentBase from "./componentBase.js";
-import { html } from "../media/js/lit-core.min.js";
+import { html } from "../media/js/lit-all.min.js";
 import Sidebar from "./sidebar/index.js";
 import PageBase from "../pages/pageBase.js";
 
@@ -52,10 +52,10 @@ class AppBody extends ComponentBase {
 		const html = document.documentElement;
 		if (this.useDarkMode) {
 			html.classList.add("dark");
-			html.style.colorScheme = "dark";
+			// html.style.colorScheme = "dark";
 		} else {
 			html.classList.remove("dark");
-			html.style.colorScheme = null;
+			// html.style.colorScheme = "light";
 		}
 	}
 

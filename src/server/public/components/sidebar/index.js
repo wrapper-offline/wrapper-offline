@@ -1,5 +1,5 @@
 import ComponentBase from "../componentBase.js";
-import { html } from "../../media/js/lit-core.min.js";
+import { html } from "../../media/js/lit-all.min.js";
 
 export default class Sidebar extends ComponentBase {
 	constructor() {
@@ -41,7 +41,7 @@ export default class Sidebar extends ComponentBase {
 				</li>
 			</ul>
 			<ul class="user_custom">
-				<h3>CUSTOM LINKS</h3>
+				<h3>Pinned Links</h3>
 				<!-- insert pin button -->
 				<li class="link pin_btn" data-toggle @click="${this._pin}">
 					<button>

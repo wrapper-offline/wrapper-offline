@@ -153,8 +153,9 @@ app-sidebar .link[data-toggle]>button:hover {
 /* pinned links heading */
 app-sidebar h3 {
 	color: #918fa0;
-	font-size: 12px;
+	font-size: 13px;
     font-weight: bold;
+	text-transform: uppercase;
     margin: 5px 0;
 }
 /* version string */

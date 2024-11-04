@@ -1,4 +1,4 @@
-import { html, render } from "../../media/js/lit-core.min.js";
+import { html, render } from "../../media/js/lit-all.min.js";
 
 export default class PageBase {
     title = "Page Title";
