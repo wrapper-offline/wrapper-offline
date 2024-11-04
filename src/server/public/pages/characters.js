@@ -1,8 +1,10 @@
 import CharList from "../../components/char-list/index.js";
 import { html, render } from "../../media/js/lit-core.min.js";
+import PageBase from "./pageBase.js";
 
-export default class CharactersPage {
+export default class CharactersPage extends PageBase {
     constructor() {
+        super()
         this.title = "Characters";
     }
 

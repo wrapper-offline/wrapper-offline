@@ -26,7 +26,7 @@
 	<body>
 		<app-sidebar></app-sidebar>
 
-		<section id="wo_page_container">
+		<section id="page_container">
 			<header>
 				<div id="wo_address_bar">
 					<div class="address_bar_btns">

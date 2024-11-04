@@ -1,6 +1,7 @@
 import ComponentBase from "./componentBase.js";
 import { html } from "../media/js/lit-core.min.js";
 import Sidebar from "./sidebar/index.js";
+import PageBase from "../pages/pageBase.js";
 
 class AppBody extends ComponentBase {
 	constructor() {
@@ -21,12 +22,13 @@ class AppBody extends ComponentBase {
 	render() {
 		this.sidebar = new Sidebar();
 		this.pageContainer = document.createElement("section");
-		this.pageContainer.id = "wo_page_container";
-			const header = document.createElement("header");
-			this.pageContainer.appendChild(header);
+		this.pageContainer.id = "page_container";
 		return html`
 			${this.sidebar}
-			${this.pageContainer}
+			<div id="app_right">
+				<header></header>
+				${this.pageContainer}
+			</div>
 		`;
 	}
 
@@ -50,8 +52,10 @@ class AppBody extends ComponentBase {
 		const html = document.documentElement;
 		if (this.useDarkMode) {
 			html.classList.add("dark");
+			html.style.colorScheme = "dark";
 		} else {
 			html.classList.remove("dark");
+			html.style.colorScheme = null;
 		}
 	}
 
@@ -71,12 +75,26 @@ class AppBody extends ComponentBase {
 		//main.innerHTML = "<marquee>Loading...</marquee>";
 		//this.sidebar.highlightLink(loc);
 
-		import(`../pages/${loc}.js?t=${new Date().getUTCMilliseconds()}`).then(pageDef => {
-			const page = new (pageDef.default)();
-			this.setTitle(page.title);
-			page.render(this.pageContainer);
-			// this.pageContainer.appendChild();
-		});
+		import(`../pages/${loc}.js?t=${new Date().getUTCMilliseconds()}`).then(
+			/**
+			 * 
+			 * @param {{default: () => any)}} pageDef 
+			 * @returns 
+			 */
+			(pageDef) => {
+				if (!pageDef.default ||
+					typeof pageDef.default != "function") {
+					throw "Received invalid response!";
+				}
+				const page = new (pageDef.default)();
+				if (!page instanceof PageBase) {
+					throw "Received invalid response!";
+				}
+				this.setTitle(page.title);
+				page.render(this.pageContainer);
+				// this.pageContainer.appendChild();
+			}
+		);
 
 		// const xhttp = new XMLHttpRequest();
 		// const self = this;

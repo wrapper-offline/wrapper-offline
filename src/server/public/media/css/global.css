@@ -28,15 +28,18 @@ html.dark, html.dark>body {
 	background: #1e1d25;
 	color: #eee;
 }
-body {
+#body {
 	display: flex; 
 	flex-direction: row;
 	overflow: hidden;
+	height: 100%;
 }
-#wo_page_container {
+
+#app_right {
 	width: 100%;
 }
-main#wo_page {
+
+#page_container {
 	background: #0000;
 	overflow: auto;
 	padding: 25px 20px;
@@ -201,67 +204,6 @@ header dropdowns
 }
 /* movie upload */
 form.hide { display: none }
-
-/**
-tabs
-**/
-.tab_nav_container {
-	margin: auto;
-}
-.tab_navigation {
-	display: flex;
-	margin: 0 auto;
-}
-.tab_nav_container .tab_navigation {
-	border-bottom: 10px solid #fff;
-	box-shadow: 0 4px 3px -2px #0002;
-}
-html.dark .tab_nav_container .tab_navigation {
-	border-color: #282828;
-}
-.tab {
-	background: #e3e7ed;
-	border-right: 1px solid #cfcfcf;
-	box-shadow:
-		inset 0 1px #cfcfcf,
-		inset 0 -1px #c1c1c1,
-		inset 0 -6px 6px -5px #0002;
-	color: #505e73;
-	padding: 7px;
-	text-align: center;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-weight: bold;
-	font-size: 13px;
-	width: 100%;
-}
-.tab:last-of-type {
-	border: none;
-}
-.tab.selected {
-	background: #fff;
-	color: #dd6522;
-	box-shadow: 0 -5px #dd6522;
-}
-html.dark .tab:not(.selected) {
-	background: #242424;
-	border-color: #2a2a2a;
-	box-shadow: inset 0 1px #2a2a2a, inset 0 -1px #222, inset 0 -6px 6px -5px #0002;
-	color: #ddd;
-}
-html.dark .tab.selected {
-	background: #282828;
-	border-color: #222;
-}
-.tab:hover,
-html.dark .tab:hover {
-	color: #dd6522;
-}
-/* pages */
-.tab_page {
-	display: none;
-}
-
 
 /**
 animations
