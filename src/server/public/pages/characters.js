@@ -1,4 +1,4 @@
-import CharList from "../../components/char-list/index.js";
+import "../../components/char-list/index.js";
 import { html, render } from "../../media/js/lit-all.min.js";
 import PageBase from "./pageBase.js";
 

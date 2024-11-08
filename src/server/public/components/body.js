@@ -71,7 +71,7 @@ class AppBody extends ComponentBase {
 	 * switches the page
 	 * @param {string} loc
 	 */
-	switchTo(loc) {
+	switchTo(loc, ok = true) {
 		//main.innerHTML = "<marquee>Loading...</marquee>";
 		//this.sidebar.highlightLink(loc);
 
@@ -94,7 +94,12 @@ class AppBody extends ComponentBase {
 				page.render(this.pageContainer);
 				// this.pageContainer.appendChild();
 			}
-		);
+		).catch(e => {
+			console.error(`Error getting page '${loc}'!`, e);
+			if (ok) {
+				this.switchTo("404", false);
+			}
+		});
 
 		// const xhttp = new XMLHttpRequest();
 		// const self = this;
