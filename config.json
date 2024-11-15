@@ -7,6 +7,9 @@
 	"CHAR_BASE_URL": "./server/characters",
 	"THUMB_BASE_URL": "./server/thumbnails",
 
+	"USERDATA_DIR": "./_USERDATA",
+	"THEME_FOLDER": "./_THEMES",
+
 	"ASSET_FOLDER": "./_ASSETS",
 	"CACHÉ_FOLDER": "./_CACHÉ",
 	"LOG_FOLDER": "./_LOGS",

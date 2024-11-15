@@ -6,14 +6,15 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"start": "npx nodemon src/main",
+		"start": "npx nodemon",
 		"start2": "electron .",
 		"start:server": "node src/server/index",
-		"build": "npx electron-packager . --ignore=^/server",
+		"package": "npx electron-packager . --ignore=^/server",
 		"postinstall": "node scripts/fixModules.js",
-		"test": "mocha"
+		"test": "mocha",
+		"build": "node scripts/build.js"
 	},
-	"main": "./src/main.js",
+	"main": "./src/main/index.js",
 	"engines": {
 		"node": ">=16"
 	},
@@ -42,12 +43,11 @@
 		"@ffprobe-installer/ffprobe": "^1.4.1",
 		"@octanuary/httpz": "^2.0.9",
 		"brotli": "^1.3.3",
-		"electron": "^11.5.0",
-		"eta": "3.2",
 		"file-type": "^16.5.4",
-		"fluent-ffmpeg": "^2.1.2",
+		"fluent-ffmpeg": "^2.1.3",
 		"formidable": "^2.0.1",
 		"js-md5": "^0.7.3",
+		"lit": "^3.2.1",
 		"mime-types": "^2.1.35",
 		"mp3-duration": "^1.1.0",
 		"node-zip": "github:kyriosli/node-zip",
@@ -58,17 +58,19 @@
 		"xmldoc": "^1.1.2"
 	},
 	"devDependencies": {
+		"@chialab/esbuild-plugin-html": "^0.18.2",
 		"@types/brotli": "^1.3.4",
 		"@types/fluent-ffmpeg": "^2.1.24",
 		"@types/formidable": "^3.4.5",
 		"@types/node": "^20.11.13",
 		"@types/node-static": "^0.7.11",
 		"@types/xmldoc": "^1.1.9",
+		"electron": "^11.5.0",
 		"electron-packager": "^15.5.1",
+		"esbuild": "0.24.0",
 		"js-base64": "^3.7.2",
 		"mocha": "^10.0.0",
-		"supertest": "^6.2.3",
-		"vite-node": "^2.1.1"
+		"supertest": "^6.2.3"
 	},
 	"repository": {
 		"type": "git",

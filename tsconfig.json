@@ -1,5 +1,8 @@
 {
 	"compilerOptions": {
+		"esModuleInterop": true,
+		"useDefineForClassFields": false,
+		"experimentalDecorators": true,
 		"typeRoots": [
 			"./src/@types",
 			"./node_modules/@types",
