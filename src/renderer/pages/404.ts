@@ -2,12 +2,13 @@ import { html, render } from "lit";
 import PageBase from "./pageBase.js";
 
 export default class Error404Page extends PageBase {
+	title = "404: File Not Found";
+
     constructor() {
         super();
-        this.title = "404: File Not Found";
     }
 
-    render(parent) {
+    render(parent:HTMLElement) {
         return render(html`
             <h1>Wrapper: Offline</h1>
 			<h2 id="404-file-not-found">404: File Not Found</h2>

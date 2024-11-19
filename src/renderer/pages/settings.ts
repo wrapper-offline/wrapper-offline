@@ -1,13 +1,13 @@
-import PageBase from "./pageBase.js";
 import { html, render } from "lit";
-
+import PageBase from "./pageBase.js";
+import "../components/app_setting";
 import "../components/tabbed-navigation/index.js";
-import "../components/app-setting.js";
 
 export default class SettingsPage extends PageBase {
+	title = "Settings";
+
 	constructor() {
 		super();
-		this.title = "Settings";
 	}
 
 	render(parent) {

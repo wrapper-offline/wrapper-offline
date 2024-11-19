@@ -4,10 +4,6 @@ this css has the general header/footer layout stuff
 
 @import url("./modern-normalize.css");
 @import url("./icons.css");
-@import url("../../components/char-list/style.css");
-@import url("../../components/popup/style.css");
-@import url("../../components/theme-selector/style.css");
-@import url("../../components/app-setting/style.css");
 
 :root {
 	--primary: #d85e27;
@@ -206,58 +202,42 @@ header dropdowns
 form.hide { display: none }
 
 /**
-animations
-**/
-@keyframes iconBounce {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(0.4);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-
-
-/**
 font importing
 **/
 @font-face {
-	font-family: 'Sailec';
+	font-family: "Sailec";
 	font-weight: 100;
-	src: url('../fonts/Sailec-Thin.woff') format('woff');
+	src: url("../fonts/Sailec-Thin.woff") format("woff");
 }
 
 @font-face {
-	font-family: 'Sailec';
+	font-family: "Sailec";
 	font-weight: 200;
-	src: url('../fonts/Sailec-Light.woff') format('woff');
+	src: url("../fonts/Sailec-Light.woff") format("woff");
 }
 
 @font-face {
-	font-family: 'Sailec';
+	font-family: "Sailec";
 	font-weight: 400;
-	src: url('../fonts/Sailec-Regular.woff') format('woff');
+	src: url("../fonts/Sailec-Regular.woff") format("woff");
 }
 
 @font-face {
-	font-family: 'Sailec';
+	font-family: "Sailec";
 	font-weight: 500;
-	src: url('../fonts/Sailec-Medium.woff') format('woff');
+	src: url("../fonts/Sailec-Medium.woff") format("woff");
 }
 
 /* font weight 500 and font weight 700 (bold) are the same for better integration support */
 @font-face {
-	font-family: 'Sailec';
+	font-family: "Sailec";
 	font-weight: 700;
-	src: url('../fonts/Sailec-Medium.woff') format('woff');
+	src: url("../fonts/Sailec-Medium.woff") format("woff");
 }
 
 @font-face {
-	font-family: 'GlyphiconsRegular';
-	src: url('../fonts/glyphicons-regular.woff') format('woff');
+	font-family: "GlyphiconsRegular";
+	src: url("../fonts/glyphicons-regular.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }

@@ -7,18 +7,17 @@ License: MIT
 const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
-import fs from "fs";
-import path from "path";
-
-import settings from "./storage/settings";
+import { createWriteStream } from "fs";
+import { join } from "path";
 import server from "./server/index.js";
+import settings from "./storage/settings";
 
 /*
 log files
 */
 if (settings.saveLogFiles) {
-	const filePath = path.join(env.LOG_FOLDER, new Date().valueOf() + ".txt");
-	const writeStream = fs.createWriteStream(filePath);
+	const filePath = join(env.LOG_FOLDER, new Date().valueOf() + ".txt");
+	const writeStream = createWriteStream(filePath);
 	console.log = console.error = console.warn = function (c) {
 		writeStream.write(c + "\n");
 		process.stdout.write(c + "\n");
@@ -54,7 +53,7 @@ switch (process.platform) {
 		throw new Error("You are running Wrapper: Offline on an unsupported platform.");
 	}
 }
-app.commandLine.appendSwitch("ppapi-flash-path", path.join(__dirname, pluginName));
+app.commandLine.appendSwitch("ppapi-flash-path", join(__dirname, pluginName));
 app.commandLine.appendSwitch("ppapi-flash-version", "32.0.0.371");
 
 app.commandLine.appendSwitch("disable-http-cache");
@@ -65,9 +64,9 @@ const createWindow = () => {
 		width: 1200,
 		height: 700,
 		title: "Wrapper: Offline",
-		icon: path.join(__dirname, "./app/favicon.ico"),
+		icon: join(__dirname, "app/favicon.ico"),
 		webPreferences: {
-			preload: path.join(__dirname, "preload.js"),
+			preload: join(__dirname, "preload.js"),
 			plugins: true,
 			contextIsolation: true
 		}
@@ -77,7 +76,7 @@ const createWindow = () => {
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
 
-	mainWindow.loadFile(path.join(__dirname, "index.html"));
+	mainWindow.loadFile(join(__dirname, "index.html"));
 	mainWindow.on("closed", () => process.exit(0));
 };
 

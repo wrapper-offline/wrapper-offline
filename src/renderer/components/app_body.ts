@@ -5,6 +5,10 @@ import PageBase from "../pages/pageBase.js";
 import Sidebar from "./sidebar";
 import "../media/css/global.css";
 
+import Error404Page from "../pages/404";
+import CharactersPage from "../pages/characters";
+import SettingsPage from "../pages/settings";
+
 @customElement("app-body")
 export class AppBody extends ComponentBase {
 	static DEFAULT_PATH = "/characters";
@@ -12,15 +16,15 @@ export class AppBody extends ComponentBase {
 	routes = [
 		{
 			path: /^\/404$/,
-			import: "404.js"
+			class: Error404Page
 		},
 		{
 			path: /^\/characters$/,
-			import: "characters.js"
+			class: CharactersPage
 		},
 		{
 			path: /^\/settings$/,
-			import: "settings.js"
+			class: SettingsPage
 		}
 	];
 	sidebar: ComponentBase;
@@ -84,32 +88,16 @@ export class AppBody extends ComponentBase {
 		//main.innerHTML = "<marquee>Loading...</marquee>";
 		//this.sidebar.highlightLink(loc);
 
-		const page = this.routes.find(v => v.path.test(window.location.pathname));
+		const page = this.routes.find(v => v.path.test(loc));
 		if (!page) {
 			console.error(`Page '${loc}' does not exist!`);
-			this.switchTo("404");
+			this.switchTo("/404");
 			return;
 		}
-		//import(`../pages/${page.import}.js?t=${new Date().getUTCMilliseconds()}`).then(
-		import(`../pages/${page.import}.js`).then(
-			/**
-			 * 
-			 * @param {{default: () => any)}} pageDef 
-			 * @returns 
-			 */
-			(pageDef) => {
-				if (!pageDef.default ||
-					typeof pageDef.default != "function") {
-					throw "Received invalid response!";
-				}
-				const page = new (pageDef.default)();
-				if (!(page instanceof PageBase)) {
-					throw "Received invalid response!";
-				}
-				this.setTitle(page.title);
-				page.render(this.pageContainer);
-				// this.pageContainer.appendChild();
-			}
-		);
+
+		const pageClass = new (page.class)();
+
+		this.setTitle(pageClass.title);
+		pageClass.render(this.pageContainer);
 	}
 };

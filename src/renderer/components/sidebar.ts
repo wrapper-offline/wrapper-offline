@@ -1,6 +1,9 @@
 import ComponentBase from "./componentBase";
-import { css, html } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { html } from "lit";
+
+import logoIcon from "../media/img/logo_icon.svg";
+import logoWordmark from "../media/img/logo_wordmark.svg";
 import "./sidebar.css";
 
 @customElement("app-sidebar")
@@ -13,14 +16,15 @@ export default class Sidebar extends ComponentBase {
 	}
 
 	render() {
-		console.log("ghiii")
 		if (this._collapsed) {
-			this.classList.add("collapsed");			
+			this.classList.add("collapsed");
+		} else {
+			this.classList.remove("collapsed");
 		}
 		return html`
 			<div id="logo_container">
-				<img id="logo_icon" src="./media/img/logo_icon.svg" alt="Candy"/>
-				<img id="logo_wordmark" src="./media/img/logo_wordmark.svg" alt="Wrapper: Offline"/>
+				<img id="logo_icon" src="${logoIcon}" alt="Candy"/>
+				<img id="logo_wordmark" src="${logoWordmark}" alt="Wrapper: Offline"/>
 			</div>
 			<ul>
 				<li class="link" data-toggle @click="${this._toggle}">

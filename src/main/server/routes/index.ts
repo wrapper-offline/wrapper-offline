@@ -1,17 +1,17 @@
-const httpz = require("@octanuary/httpz");
-const asset = require("./asset.js");
-const char = require("./char.js");
+import httpz from "@octanuary/httpz";
+import asset from "./asset";
+import char from "./char";
 //// commented out because i'm waiting on the studio decomp
 //// before doing any major things, like y'know, an exporter.
-// const exporter = require("./exporter.js");
-// const flash = require("./flash.js");
-const handler = require("serve-handler");
-const movie = require("./movie.js");
-const settings = require("./settings.js");
-const theme = require("./theme.js");
-const tts = require("./tts.js");
-const watermark = require("./watermark.js");
-const waveform = require("./waveform.js");
+// const exporter = require("./exporter");
+// const flash = require("./flash");
+import handler from "serve-handler";
+import movie from "./movie";
+import settings from "./settings";
+import theme from "./theme";
+import tts from "./tts";
+import watermark from "./watermark";
+import waveform from "./waveform";
 
 const group = new httpz.Group();
 group.add(asset);
@@ -36,4 +36,4 @@ group.route("*", "*", (req, res) => {
 	});
 });
 
-module.exports = group;
+export default group;

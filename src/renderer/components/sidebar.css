@@ -173,49 +173,52 @@ dark mode recoloring
 html.dark app-sidebar {
 	background: #24232e;
 	border-color: #2e2d39;
-}
-html.dark app-sidebar #logo_container {
-	background: #14121c;
-	border-right-color: #2e2d39;
-	border-bottom-color: #2e2d39;
-}
 
-html.dark app-sidebar>ul:first-of-type,
-html.dark app-sidebar>ul:last-of-type {
-	border-color: #343242;
-}
+	& #logo_container {
+		background: #14121c;
+		border-right-color: #2e2d39;
+		border-bottom-color: #2e2d39;
+	}
+	
+	&>ul:first-of-type {
+		border-color: #343242;
+	}
+	&>ul:last-of-type {
+		border-color: #343242;
+	}
+	
+	& .link {
+		background: #2b2a37;
+		border-color: #373546;
 
-html.dark app-sidebar .link {
-	background: #2b2a37;
-	border-color: #373546;
-}
-html.dark app-sidebar .link>button {
-	color: #ddd;
-}
-html.dark app-sidebar .link.pin_btn {
-    background: #23222d;
-    box-shadow: inset 0 0 0 1px #1b1a21;
-}
-html.dark app-sidebar .link>a {
-	color: #ddd;
-}
+		&>a {
+			color: #ddd;
+		}
+		&>button {
+			color: #ddd;
+		}
+		&.pin_btn {
+			background: #23222d;
+			box-shadow: inset 0 0 0 1px #1b1a21;
+		}
 
-html.dark app-sidebar .link:hover {
-	background: #422b3d;
-	border-color: #6b3f56;
-}
-html.dark app-sidebar .link.sel {
-	background: #3c2234;
-	border-color: #732a46;
-	color: #fff;
-}
-html.dark app-sidebar .user_custom .link>button:hover {
-	background: #573344;
-}
-
-
-html.dark app-sidebar #wrapper_ver {
-	color: #bbb;
+		&:hover {
+			background: #422b3d;
+			border-color: #6b3f56;
+		}
+		&.sel {
+			background: #3c2234;
+			border-color: #732a46;
+			color: #fff;
+		}
+	}
+	& .user_custom .link>button:hover {
+		background: #573344;
+	}
+	
+	& #wrapper_ver {
+		color: #bbb;
+	}
 }
 
 /***
@@ -223,29 +226,47 @@ collapsed
 ***/
 app-sidebar.collapsed {
 	width: 62px;
+
+	/* hide the logo wordmark */
+	& #logo_container {
+		width: 62px;
+
+		& #logo_icon {
+			left: 10px;
+		}
+		& #logo_wordmark {
+			opacity: 0;
+			left: 0;
+		}
+	}
+	/* display groups vertically */
+	& .group>ul {
+		display: block;	
+
+		&>.link {
+			width: 100%;
+		}
+	}
+	/* flip the collapse button and hide link text */
+	& .link[data-toggle] i.ico::before {
+		transform: scale(1);
+	}
+	& .link_text {
+		display: none;
+	}
 }
-/* hide the logo wordmark */
-app-sidebar.collapsed #logo_container {
-	width: 62px;
-}
-app-sidebar.collapsed #logo_container #logo_icon {
-	left: 10px;
-}
-app-sidebar.collapsed #logo_container #logo_wordmark {
-	opacity: 0;
-	left: 0;
-}
-/* display groups vertically */
-app-sidebar.collapsed .group>ul {
-	display: block;	
-}
-app-sidebar.collapsed .group>ul>.link {
-	width: 100%;
-}
-/* flip the collapse button and hide link text */
-app-sidebar.collapsed .link[data-toggle] i.ico::before {
-	transform: scale(1);
-}
-app-sidebar.collapsed .link_text {
-	display: none;
+
+/**
+animations
+**/
+@keyframes iconBounce {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.4);
+	}
+	100% {
+		transform: scale(1);
+	}
 }
