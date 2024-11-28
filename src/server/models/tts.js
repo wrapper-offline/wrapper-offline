@@ -1,7 +1,7 @@
 const brotli = require("brotli");
-const fileUtil = require("../../utils/fileUtil.js");
+const fileUtil = require("../utils/fileUtil.js");
 const https = require("https");
-const { voices } = require("../../../../resources/staticInfo/voices.json");
+const { voices } = require("../../../resources/staticInfo/voices.json");
 
 /**
  * uses tts demos to generate tts

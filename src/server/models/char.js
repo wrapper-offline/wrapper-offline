@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const database = require("../../storage/database.js");
+const database = require("../../shared/storage/database.js");
 
 /**
  * @typedef {Object} Char

@@ -12,7 +12,8 @@
 		"package": "npx electron-packager . --ignore=^/server",
 		"postinstall": "node scripts/fixModules.js",
 		"test": "mocha",
-		"build": "node scripts/build.js"
+		"build": "node scripts/build.mjs",
+		"build:dev": "node scripts/build.mjs --dev"
 	},
 	"main": "./src/main/index.js",
 	"engines": {

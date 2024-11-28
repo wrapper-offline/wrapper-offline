@@ -1,6 +1,6 @@
 const fs = require("fs");
 const httpz = require("@octanuary/httpz");
-const database = require("../../storage/database.js");
+const database = require("../../shared/storage/database.js");
 const MovieModel = require("../models/movie.js");
 const nodezip = require("node-zip");
 

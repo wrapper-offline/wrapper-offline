@@ -4,8 +4,8 @@ feel so clean like a money machine
 
 const AssetModel = require("../models/asset.js");
 const ffmpeg = require("fluent-ffmpeg");
-const fileTypes = require("../../../../resources/staticInfo/fileTypes.json");
-const fileUtil = require("../../utils/fileUtil.js");
+const fileTypes = require("../../../resources/staticInfo/fileTypes.json");
+const fileUtil = require("../utils/fileUtil.js");
 const { fromFile } = require("file-type");
 const { extensions, mimeTypes } = require("file-type/supported.js");
 const fs = require("fs");

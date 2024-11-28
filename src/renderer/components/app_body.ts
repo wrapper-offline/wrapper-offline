@@ -33,6 +33,7 @@ export class AppBody extends ComponentBase {
 	constructor() {
 		super();
 		this.refreshDarkMode();
+		new EventSource('/esbuild').addEventListener('change', () => location.reload())
 		//window.body = this;
 	}
 

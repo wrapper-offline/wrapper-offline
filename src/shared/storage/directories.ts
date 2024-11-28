@@ -8,7 +8,6 @@ class DirUtil {
 		const requiredPaths = [
 			this.userData,
 			this.asset,
-			this.cache,
 			this.log,
 			this.saved,
 			this.export,
@@ -40,10 +39,6 @@ class DirUtil {
 		return join(this.userData, process.env.ASSET_FOLDER);
 	}
 
-	get cache() {
-		return join(this.userData, process.env.CACHÉ_FOLDER);
-	}
-
 	get export() {
 		return join(this.userData, process.env.EXPORT_FOLDER);
 	}
@@ -60,4 +55,5 @@ class DirUtil {
 		return join(this.userData, process.env.THEME_FOLDER);
 	}
 }
+
 export default DirUtil.instance;

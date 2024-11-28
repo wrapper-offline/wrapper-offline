@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const database = require("../../storage/database.js");
-const Parse = require("../../utils/movieParser.js");
+const database = require("../../shared/storage/database.js");
+const Parse = require("../utils/movieParser.js");
 
 /**
  * @typedef {Object} Movie

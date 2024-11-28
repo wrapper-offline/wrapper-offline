@@ -3,14 +3,21 @@ Wrapper: Offline
 License: MIT
 */
 
-// assign config and env.json stuff to process.env
 const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
 import { createWriteStream } from "fs";
 import { join } from "path";
-import server from "./server/index.js";
-import settings from "./storage/settings";
+import settings from "../shared/storage/settings";
+import { fork } from "child_process";
+
+const IS_DEV = app.commandLine.getSwitchValue("dev") != null;
+
+if (!IS_DEV) {
+	const serverProc = fork(join(__dirname, "./server.js"), ["--dev"]);
+	// serverProc.stdout.on("data", (c) => console.log(c));
+	// serverProc.stderr.on("data", (c) => console.error(c));
+}
 
 /*
 log files
@@ -28,13 +35,10 @@ if (settings.saveLogFiles) {
 	});
 }
 
-// and now we can start the server before electron starts
-server();
-
 /*
 load flash player
 */
-let pluginName;
+let pluginName:string;
 switch (process.platform) {
 	case "win32": {
 		pluginName = "./extensions/pepflashplayer.dll";
@@ -76,7 +80,13 @@ const createWindow = () => {
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
 
-	mainWindow.loadFile(join(__dirname, "index.html"));
+	if (IS_DEV) {
+		const host = app.commandLine.getSwitchValue("host");
+		const port = app.commandLine.getSwitchValue("port");
+		mainWindow.loadURL(`http://${host}:${port}`);
+	} else {
+		mainWindow.loadFile(join(__dirname, "index.html"));
+	}
 	mainWindow.on("closed", () => process.exit(0));
 };
 
@@ -101,7 +111,7 @@ app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") app.quit();
 });
 
-function setMenuBar(mainWindow) {
+function setMenuBar(mainWindow:BrowserWindow) {
 	mainWindow.setAutoHideMenuBar(settings.hideNavbar);
 	Menu.setApplicationMenu(Menu.buildFromTemplate([
 		{

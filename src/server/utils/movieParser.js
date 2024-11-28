@@ -3,9 +3,9 @@ movie parsing
  if you don't know what's going on here, look at the lvm's code
  ffdec does a great job with that
 */
-const AssetModel = require("../server/models/asset.js");
-const CharModel = require("../server/models/char.js");
-const database = require("../storage/database.js");
+const AssetModel = require("../models/asset.js");
+const CharModel = require("../models/char.js");
+const database = require("../../shared/storage/database.js");
 const fileUtil = require("./fileUtil.js");
 const fs = require("fs");
 const nodezip = require("node-zip");

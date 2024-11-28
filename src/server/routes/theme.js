@@ -1,7 +1,7 @@
 const httpz = require("@octanuary/httpz");
 const { join } = require("path");
-const settings = require("../../storage/settings.ts");
-const fileUtil = require("../../utils/fileUtil.js");
+const settings = require("../../shared/storage/settings.ts");
+const fileUtil = require("../utils/fileUtil.js");
 const fs = require("fs");
 
 const folder = join(__dirname, "../../../server", process.env.STORE_URL);

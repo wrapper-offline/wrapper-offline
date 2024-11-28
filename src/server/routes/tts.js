@@ -4,7 +4,7 @@ const tempfile = require("tempfile");
 const AssetModel = require("../models/asset.js");
 const mp3Duration = require("mp3-duration");
 const processVoice = require("../models/tts.js");
-const info = require("../../../../resources/staticInfo/voices.json");
+const info = require("../../../resources/staticInfo/voices.json");
 
 const group = new httpz.Group();
 

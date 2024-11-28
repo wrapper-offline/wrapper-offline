@@ -1,4 +1,4 @@
-const database = require("../../storage/database.js");
+const database = require("../../shared/storage/database.js");
 const CharModel = require("../models/char.js");
 const fs = require("fs");
 const httpz = require("@octanuary/httpz");

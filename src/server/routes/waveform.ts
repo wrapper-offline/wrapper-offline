@@ -1,8 +1,8 @@
-const fs = require("fs");
-const httpz = require("@octanuary/httpz");
-const path = require("path");
-const settings = require("../../storage/settings.ts");
-const WfModel = require("../models/waveform.js");
+import fs from "fs";
+import httpz from "@octanuary/httpz";
+import path from "path";
+import Settings from "../../shared/storage/settings";
+import WfModel from "../models/waveform.js";
 
 const group = new httpz.Group();
 
@@ -10,7 +10,7 @@ const group = new httpz.Group();
 load
 */
 group.route("POST", "/goapi/getWaveform/", async (req, res) => {
-	const SHOW_WAVEFORMS = settings.showWaveforms;
+	const SHOW_WAVEFORMS = Settings.showWaveforms;
 	if (SHOW_WAVEFORMS) {
 		const id = req.body.wfid;
 		if (!id) {
@@ -59,4 +59,4 @@ group.route("POST", "/goapi/saveWaveform/", (req, res) => {
 	}
 });
 
-module.exports = group;
+export default group;

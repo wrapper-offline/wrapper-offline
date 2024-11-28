@@ -1,6 +1,6 @@
-const httpz = require("@octanuary/httpz");
-const https = require("https");
-const settings = require("../../storage/settings.ts");
+import httpz from "@octanuary/httpz";
+import https from "https";
+import Settings from "../../shared/storage/settings";
 
 const group = new httpz.Group();
 
@@ -8,15 +8,14 @@ const group = new httpz.Group();
 list
 */
 group.route("GET", "/api/settings/list", (req, res) => {
-	res.json(settings.getAllSettings());
+	res.json(Settings.getAllSettings());
 });
 
 /*
 update
 */
 group.route("POST", "/api/settings/update", (req, res) => {
-	/** @type {String} */
-	const name = req.body.setting;
+	const name:string = req.body.setting;
 	if (!name) {
 		return res.status(400).json({msg:"Expected parameter 'setting' on the request body."});
 	}
@@ -24,21 +23,20 @@ group.route("POST", "/api/settings/update", (req, res) => {
 		return res.status(400).json({msg:"Expected parameter 'value' on the request body."});
 	}
 	// convert true or false to a boolean, or use the original value if it's neither
-	/** @type {string | boolean} */
-	const value = req.body.value == "true" ? true : 
+	const value:string|boolean = req.body.value == "true" ? true : 
 		req.body.value == "false" ? false : req.body.value;
 
 	// check if the setting exists
 	// this miight be a bad way to program it but i like how it looks
-	if (typeof settings[name] == "undefined" || name == "getAllSettings") {
+	if (typeof Settings[name] == "undefined" || name == "getAllSettings") {
 		console.warn(`r.settings: Attempted #update on invalid setting '${name}'.`);
-		return res.status(400).json({msg:`Expected parameter 'value' for setting '${name}' to have type '${typeof settings[name]}'.`});
+		return res.status(400).json({msg:`Expected parameter 'value' for setting '${name}' to have type '${typeof Settings[name]}'.`});
 	}
-	if (typeof settings[name] != typeof value) {
-		console.warn(`r.settings: Attempted #update on setting '${name}' with type '${typeof value}'. Expected '${typeof settings[name]}'.`);
-		return res.status(400).json({msg:`Expected parameter 'value' for setting '${name}' to have type '${typeof settings[name]}'.`});
+	if (typeof Settings[name] != typeof value) {
+		console.warn(`r.settings: Attempted #update on setting '${name}' with type '${typeof value}'. Expected '${typeof Settings[name]}'.`);
+		return res.status(400).json({msg:`Expected parameter 'value' for setting '${name}' to have type '${typeof Settings[name]}'.`});
 	}
-	settings[name] = value;
+	Settings[name] = value;
 
 	res.end();
 });
@@ -49,7 +47,7 @@ check for updates
 // TODO: move this to the client side
 // because wtf is this shit?? like what??? tf??
 group.route("GET", "/api/settings/get_updates", (req, res) => {
-	const handleError = (err) => {
+	const handleError = (err:Error) => {
 		console.log("Error checking for updates:", err);
 		return res.status(500).end();
 	};
@@ -90,4 +88,4 @@ group.route("GET", "/api/settings/get_updates", (req, res) => {
 	).on("error", handleError);
 });
 
-module.exports = group;
+export default group;

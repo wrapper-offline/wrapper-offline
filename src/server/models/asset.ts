@@ -1,7 +1,7 @@
+import Directories from "../../shared/storage/directories.js";
 import fs from "fs";
+import { generateId, instance as database } from "../../shared/storage/database.js";
 import path from "path";
-import { generateId, instance as database } from "../../storage/database.js";
-import Directories from "../../storage/directories.js";
 
 /**
  * @typedef {Object} Sound

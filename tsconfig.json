@@ -4,7 +4,7 @@
 		"useDefineForClassFields": false,
 		"experimentalDecorators": true,
 		"typeRoots": [
-			"./src/@types",
+			"./src/shared/@types",
 			"./node_modules/@types",
 		]
 	}
