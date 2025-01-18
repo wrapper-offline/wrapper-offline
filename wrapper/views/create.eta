@@ -29,12 +29,6 @@
 					Lil' Peepz
 				</a>
 			</div>
-			<div class="theme" data-has-cc>
-				<a href="#" onclick="redirect('business', 'business')">
-					<img src="/pages/img/themes/business.jpg" alt="Business Friendly">
-					Business Friendly
-				</a>
-			</div>
 			<div class="theme">
 				<a href="#" onclick="redirect('retro')">
 					<img src="/pages/img/themes/retro.jpg" alt="Cartoon Classics">
@@ -105,18 +99,6 @@
 				<a href="#" onclick="redirect('politic')">
 					<img src="/pages/img/themes/politic.png" alt="Politics & Celebrity">
 					<div>Politics & Celebrity</div>
-				</a>
-			</div>
-			<div class="theme">
-				<a href="#" onclick="redirect('bizmodels')">
-					<img src="/pages/img/themes/bizmodels.jpg" alt="Business Models">
-					Business Models
-				</a>
-			</div>
-			<div class="theme">
-				<a href="#" onclick="redirect('sticklybiz')">
-					<img src="/pages/img/themes/sticklybiz.jpg" alt="Stickly Business">
-					Stickly Business
 				</a>
 			</div>
 			<div class="theme">
