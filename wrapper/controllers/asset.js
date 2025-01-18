@@ -251,9 +251,10 @@ group
 					await new Promise((resolve, rej) => {
 						// get the height and width
 						ffmpeg(filepath).ffprobe((e, data) => {
-							if (e) rej(e);
-							info.width = data.streams[0].width;
-							info.height = data.streams[0].height;
+							if (e) return rej(e);
+							// TODO:: find datastream func
+							info.width = (data.streams[0]?.width || data.streams[1]?.width);
+							info.height = (data.streams[0]?.height || data.streams[1]?.height);
 
 							// convert the video to an flv
 							ffmpeg(filepath)

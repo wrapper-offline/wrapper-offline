@@ -1894,7 +1894,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/english/american/25-child-s-girl-voice-ivy.html",
-			"desc": "Ivy (RL)"
+			"desc": "Ivy (Readloud)"
 		},
 		"joey1": {
 			"country": "US",
@@ -1902,7 +1902,7 @@
 			"gender": "M",
 			"source": "readloud",
 			"arg": "/english/american/29-male-voice-joey.html",
-			"desc": "Joey (RL)"
+			"desc": "Joey (Readloud)"
 		},
 		"brian1": {
 			"country": "GB",
@@ -1910,7 +1910,7 @@
 			"gender": "M",
 			"source": "readloud",
 			"arg": "/english/british/1-male-voice-brian.html",
-			"desc": "Brian (RL)"
+			"desc": "Brian (Readloud)"
 		},
 		"kimberly1": {
 			"country": "US",
@@ -1918,7 +1918,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/english/american/33-female-voice-kimberly.html",
-			"desc": "Kimberly (RL)"
+			"desc": "Kimberly (Readloud)"
 		},
 		"kendra1": {
 			"country": "US",
@@ -1926,7 +1926,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/english/american/32-female-voice-kendra.html",
-			"desc": "Kendra (RL)"
+			"desc": "Kendra (Readloud)"
 		},
 		"amy4": {
 			"country": "GB",
@@ -1934,7 +1934,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/english/british/5-male-voice-amy.html",
-			"desc": "Amy (RL)"
+			"desc": "Amy (Readloud)"
 		},
 		"emma2": {
 			"country": "GB",
@@ -1942,7 +1942,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/english/british/17-female-voice-emma.html",
-			"desc": "Emma (RL)"
+			"desc": "Emma (Readloud)"
 		},
 		"justin1": {
 			"country": "US",
@@ -1950,7 +1950,7 @@
 			"gender": "M",
 			"source": "readloud",
 			"arg": "/english/american/30-child-s-boy-voice-justin.html",
-			"desc": "Justin (RL)"
+			"desc": "Justin (Readloud)"
 		},
 		"filiz2": {
 			"country": "TR",
@@ -1958,7 +1958,7 @@
 			"gender": "F",
 			"source": "readloud",
 			"arg": "/turkish/20-kadın-sesi-filiz.html",
-			"desc": "Filiz (RL)"
+			"desc": "Filiz (Readloud)"
 		},
 		"ada1": {
 			"country": "NL",
