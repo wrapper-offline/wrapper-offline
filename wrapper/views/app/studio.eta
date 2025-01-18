@@ -19,6 +19,7 @@
 		<script>
 			const STORE_URL = "<%= it.env.STORE_URL %>";
 			const CLIENT_URL = "<%= it.env.CLIENT_URL %>";
+			const PLAYER_URL = "<%= it.env.SWF_URL %>/player.swf";
 			const IS_STUDIO = true;
 
 		</script>
@@ -38,22 +39,22 @@
 			</nav>
 			<%~ it.object(it.attrs, it.params) %>
 		</main>
-		<div id="previewer" style="display:none">
-			<div id="preview-inside">
-				<h2 id="preview-video">Preview Video</h2>
-			
-				<object id="preview_player" data="<%= it.env.SWF_URL %>/player.swf" type="application/x-shockwave-flash"
+		<div id="previewer">
+			<div id="preview_window">
+				<div class="preview_head">
+					<h2 id="preview_heading">Video Preview</h2>
+					<a id="preview_close" onclick="hidePreviewer()">×</a>
+				</div>
+				<object id="preview_player" type="application/x-shockwave-flash"
 					width="640" height="360">
 					<param name="flashvars" />
 					<param name="allowScriptAccess" value="always" />
 					<param name="allowFullScreen" value="true" />
 				</object>
-				<div class="buttons">
-					<button class="preview-button edit" type="button" onclick="hidePreviewer();">Back to editing</button>
-					<button class="preview-button save" type="button" onclick="publishStudio();">Save Now</button>
+				<div class="preview_foot">
+					<button class="button_small" type="button" onclick="hidePreviewer();">Exit preview</button>
+					<button class="button_big" type="button" onclick="publishStudio();">Save video</button>
 				</div>
-
-				<a class="close-button" onclick="hidePreviewer()">×</a>
 			</div>
 		</div>
 	</body>

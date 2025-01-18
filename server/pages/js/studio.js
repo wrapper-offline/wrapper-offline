@@ -1,6 +1,6 @@
-const previewer = $("#previewer");
+const previewer = document.getElementById("previewer");
+const previewObj = previewer.querySelector("#preview_player");
 const studio = $("#obj");
-const body = $("body");
 
 /**
  * studio functions
@@ -37,10 +37,12 @@ function hideImporter() {
 	importerVisible = false;
 	importer.hide();
 }
-function initPreviewPlayer(dataXmlStr, startFrame, containsChapter, themeList) {
-	movieDataXmlStr = dataXmlStr;
-	filmXmlStr = dataXmlStr.split("<filmxml>")[1].split("</filmxml>")[0];
-	hideImporter(); // hide importer before previewing
+
+let globalXml = "";
+
+function initPreviewPlayer(dataXmlStr, startFrame) {
+	globalXml = dataXmlStr;
+	hideImporter();
 	// update flashvars
 	const flashvars = new URLSearchParams({
 		apiserver: "/",
@@ -53,14 +55,16 @@ function initPreviewPlayer(dataXmlStr, startFrame, containsChapter, themeList) {
 		storePath: STORE_URL + "/<store>",
 		clientThemePath: CLIENT_URL + "/<client_theme>",
 	}).toString();
-	previewer.find("object param[name='flashvars']").attr("value", flashvars);
-	previewer.css("display", "block");
-	studio.css("height", "1px");
-	body.css("background-color", "#262d3f");
+	previewer.querySelector("object param[name='flashvars']").setAttribute("value", flashvars);
+	previewObj.setAttribute("data", PLAYER_URL);
+	document.body.classList.add("in_preview");
 }
-function retrievePreviewPlayerData() { return movieDataXmlStr }
+function retrievePreviewPlayerData() {
+	const movieXml = globalXml.slice();
+	globalXml = "";
+	return movieXml;
+}
 function hidePreviewer() {
-	previewer.css("display", "none");
-	studio.css("height", "");
-	body.css("background-color", "");
+	previewObj.setAttribute("data", "");
+	document.body.classList.remove("in_preview");
 }

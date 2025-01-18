@@ -31,6 +31,7 @@ html.dark .theme { background: #353535 }
 	border-radius: 4px;
 	margin-bottom: 6px;
 	display: block;
+	height: 164px;
 }
 .theme:hover>a,
 .theme:hover>a:visited {

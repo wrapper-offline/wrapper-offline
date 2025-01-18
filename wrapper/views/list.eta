@@ -76,7 +76,6 @@
 							<a href="javascript:;" onclick="popup('${tbl.id}')"></a>
 							<a href="/go_full?movieId=${tbl.id}"></a>
 							<a href="/file/movie/file/${tbl.id}" download="${tbl.title}.zip"></a>
-							<a href="#" onclick="destructive('${tbl.id}', 'repair')"></a>
 							<a href="#" onclick="destructive('${tbl.id}', 'delete')"></a>
 						</td>
 					</tr>`.trim()

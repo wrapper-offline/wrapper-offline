@@ -123,9 +123,6 @@ tr>:nth-child(4)>:nth-child(3)::before {
 	content: '\E182';
 }
 tr>:nth-child(4)>:nth-child(4)::before {
-	content: '\E010';
-}
-tr>:nth-child(4)>:nth-child(5)::before {
 	content: '\E017';
 }
 
