@@ -43,16 +43,6 @@
 					While useful, the editor freezes while it generates, which could be too annoying or slow for some.<br/>
 					Turning this off will simply add a repeating pre-made pattern in place of true waveforms.</p>
 					<input class="setting" type="checkbox" id="SHOW_WAVEFORMS"></input>
-					
-					<h3>Default watermark</h3>
-					<p>The Video Player has 4 choices for default watermarks.<br/>
-					Default watermarks are shown when you choose a Go!Animate watermark.</p>
-					<select class="setting" id="DEFAULT_WATERMARK">
-						<option value="default">GoAnimate</option>
-						<option value="twoLines">Go Make Your Own</option>
-						<option value="g4s">GoAnimate For Schools</option>
-						<option value="freeTrial">Free Trial</option>
-					</select>
 
 					<h3>14:9 or 16:9 aspect ratio</h3>
 					<p>By default, the Video Player uses the 16:9 aspect ratio<br/>

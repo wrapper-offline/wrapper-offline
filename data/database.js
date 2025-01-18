@@ -1,7 +1,5 @@
-// modules
 const fs = require("fs");
 const path = require("path");
-// vars
 const folder = path.join(__dirname, "../", process.env.SAVED_FOLDER);
 let baseDb;
 
@@ -13,7 +11,6 @@ module.exports = class GoDatabase {
 				DISCORD_RPC: false, // Shows your Wrapper activity in Discord.
 				TRUNCATED_THEMELIST: true, // Cuts down the amount of themes that clog up the themelist in the videomaker.
 				SHOW_WAVEFORMS: true, // Forces waveforms to be off in the videomaker.
-				DEFAULT_WATERMARK: "twoLines", // Default watermark (if the GA watermark is chosen).
 				IS_WIDE: "1" // Sets the video player to 16:9
 			};
 		} else {

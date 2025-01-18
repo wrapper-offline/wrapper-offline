@@ -1,15 +1,11 @@
 /**
  * watermark routes
  */
-// modules
 const httpz = require("@octanuary/httpz")
-// vars
 const header = process.env.XML_HEADER;
-// stuff
 const database = require("../../data/database"), DB = new database();
 const DB2 = new database(true);
 
-// create the group
 const group = new httpz.Group();
 
 group
@@ -55,13 +51,7 @@ group
 				// no watermark
 				`<watermark style="octanuary"/>` : wId == "0vTLbQy9hG7k" ?
 					// default watermark
-					(() => {
-						const { DEFAULT_WATERMARK } = DB2.select();
-						return DEFAULT_WATERMARK == "default" ?
-							// return nothing for the GoAnimate watermark
-							"" :
-							`<watermark style="${DEFAULT_WATERMARK}"/>`
-					})():
+					"" :
 					// custom watermark
 					`<watermark>/assets/${wId}</watermark>`
 		}</watermarks>`);
