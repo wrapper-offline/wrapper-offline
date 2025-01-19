@@ -2,7 +2,7 @@
 _ASSETS/*
 _CACHÉ/*
 _SAVED/*
-# Duplicates so the Mac ignores it
+# Duplicated so the Mac ignores these
 /_SAVED/*
 /_ASSETS/*
 /_CACHÉ/*

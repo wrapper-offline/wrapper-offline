@@ -131,6 +131,40 @@ module.exports = function processVoice(voiceName, text) {
 				break;
 			}
 
+			case "cereproc": {
+				const req = https.request(
+					{
+						hostname: "www.cereproc.com",
+						path: "/themes/benchpress/livedemo.php",
+						method: "POST",
+						headers: {
+							"content-type": "text/xml",
+							"accept-encoding": "gzip, deflate, br",
+							origin: "https://www.cereproc.com",
+							referer: "https://www.cereproc.com/en/products/voices",
+							"x-requested-with": "XMLHttpRequest",
+							cookie: "Drupal.visitor.liveDemoCookie=666",
+						},
+					},
+					(r) => {
+						var buffers = [];
+						r.on("data", (d) => buffers.push(d));
+						r.on("end", () => {
+							const xml = String.fromCharCode.apply(null, brotli.decompress(Buffer.concat(buffers)));
+							const beg = xml.indexOf("<url>") + 5;
+							const end = xml.lastIndexOf("</url>");
+							const loc = xml.substring(beg, end).toString();
+							https.get(loc, resolve).on("error", rej);
+						});
+						r.on("error", rej);
+					}
+				).on("error", rej);
+				req.end(
+					`<speakExtended key='666'><voice>${voice.arg}</voice><text>${text}</text><audioFormat>mp3</audioFormat></speakExtended>`
+				);
+				break;
+			}
+
 			case "polly": {
 				const q = new URLSearchParams({
 					voice: voice.arg,
