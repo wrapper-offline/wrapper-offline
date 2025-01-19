@@ -137,6 +137,8 @@ group
 			lid: 0,
 			nextUrl: "/",
 			page: "",
+			// needed for pre-saved movies to be consistent
+			movieId:"",
 			retut: 1,
 			siteId: "go",
 			tray: "custom",
