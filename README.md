@@ -37,10 +37,13 @@ No members of the original team are officially working on Offline, even if they 
 Wrapper: Offline credits:
 | Name | Contribution |
 | - | - |
-| [octanuary](https://github.com/octanuary) | Real importing, starters, API changes |
+| [octanuary](https://github.com/octanuary) | Project lead, Real importing, starters, API changes |
 | [GoTube](https://github.com/theBlukas) | Beta testing, Mega Comedy World 2 |
+| [Jyvee](https://github.com/Junior-Is-Great67) | Autosaving, Old VoiceForge method |
+| [unicom](https://github.com/Crawlerop) | VoiceForge fix |
+| [Malamations](https://github.com/Mals-Stuff) | Wrapper: Offline website |
 | [Benson](https://github.com/watchbenson) | Creator of Wrapper: Offline |
-| [GoTest334](https://github.com/GoTest334) | Current project lead |
+| [GoTest334](https://github.com/GoTest334) | Former project lead |
 | [2Epik4u](https://github.com/2Epik4u) | Stuff |
 | creepyjokes2000 | Waveform fix, improved actions |
 | [It'sJay](https://github.com/ItsJayPM) | Client Modifications |
