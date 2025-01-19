@@ -4404,19 +4404,27 @@
 	<char id="400001035" name="octanuary (Project Owner, Developer)" cc_theme_id="family" thumbnail_url="/thumbnails/400001035.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
+
 	<char id="400001006" name="GoTube (Creator of Mega CW, Project )" cc_theme_id="family" thumbnail_url="/thumbnails/400001006.png" copyable="Y">
+		<tags>family,_free,_cat:W:O credits</tags>
+	</char>
+
+	<char id="400001038" name="Jyvee (Project Staff)" cc_theme_id="family" thumbnail_url="/stock_thumbs/400001038.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
 
 	<char id="327068826" name="benson (Creator of Wrapper: Offline, Former Owner &amp; Developer)" cc_theme_id="family" thumbnail_url="/thumbnails/327068826.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
+
 	<char id="400001013" name="GoTest334 (Former Owner)" cc_theme_id="family" thumbnail_url="/thumbnails/400001013.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
+
 	<char id="400001007" name="2Epik4u (Former Developer)" cc_theme_id="family" thumbnail_url="/thumbnails/400001007.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
+
 	<char id="400001037" name="yeaimsammi (Former Developer)" cc_theme_id="family" thumbnail_url="/stock_thumbs/400001037.png" copyable="Y">
 		<tags>family,_free,_cat:W:O credits</tags>
 	</char>
