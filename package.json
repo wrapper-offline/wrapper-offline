@@ -6,38 +6,16 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"start": "npx nodemon",
-		"start2": "electron .",
-		"start:server": "node src/server/index",
+		"build": "vite build && node scripts/build.mjs",
+		"dev": "concurrently \"node scripts/build.mjs --dev\" \"vite dev\"",
 		"package": "npx electron-packager . --ignore=^/server",
 		"postinstall": "node scripts/fixModules.js",
-		"test": "mocha",
-		"build": "node scripts/build.mjs",
-		"build:dev": "node scripts/build.mjs --dev"
+		"preview": "npm run build && electron .",
+		"test": "mocha"
 	},
-	"main": "./src/main/index.js",
+	"main": "./dist/main.js",
 	"engines": {
 		"node": ">=16"
-	},
-	"nodemonConfig": {
-		"watch": [
-			"src/",
-			"scripts/",
-			"config.json",
-			"env.json",
-			"node_modules/"
-		],
-		"ignore": [
-			"_ASSETS/",
-			"_CACHÉ/",
-			"_EXPORTS/",
-			"_LOGS/",
-			"_SAVED/",
-			"src/server/public/"
-		],
-		"execMap": {
-			"js": "electron ."
-		}
 	},
 	"dependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.1.0",
@@ -50,28 +28,34 @@
 		"js-md5": "^0.7.3",
 		"lit": "^3.2.1",
 		"mime-types": "^2.1.35",
+		"modern-normalize": "^3.0.1",
 		"mp3-duration": "^1.1.0",
 		"node-zip": "github:kyriosli/node-zip",
 		"nodemon": "^3.0.3",
 		"serve-handler": "^6.1.5",
 		"sharp": "^0.33.2",
 		"tempfile": "^3.0.0",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.0",
 		"xmldoc": "^1.1.2"
 	},
 	"devDependencies": {
-		"@chialab/esbuild-plugin-html": "^0.18.2",
 		"@types/brotli": "^1.3.4",
 		"@types/fluent-ffmpeg": "^2.1.24",
 		"@types/formidable": "^3.4.5",
 		"@types/node": "^20.11.13",
 		"@types/node-static": "^0.7.11",
 		"@types/xmldoc": "^1.1.9",
+		"@vitejs/plugin-vue": "^5.2.1",
+		"concurrently": "^9.1.2",
 		"electron": "^11.5.0",
 		"electron-packager": "^15.5.1",
 		"esbuild": "0.24.0",
 		"js-base64": "^3.7.2",
 		"mocha": "^10.0.0",
-		"supertest": "^6.2.3"
+		"supertest": "^6.2.3",
+		"vite": "^6.0.7",
+		"vite-svg-loader": "^5.1.0"
 	},
 	"repository": {
 		"type": "git",

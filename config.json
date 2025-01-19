@@ -16,6 +16,7 @@
 	"SAVED_FOLDER": "./_SAVED",
 	"THEME_FOLDER": "./_THEMES",
 
+	"SERVER_HOST": "http://127.0.0.1",
 	"SERVER_PORT": 4343,
 	"WRAPPER_VER": "2.1.0"
 }

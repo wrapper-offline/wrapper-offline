@@ -1,3 +1,10 @@
+@font-face {
+	font-family: "GlyphiconsRegular";
+	src: url("../fonts/glyphicons-regular.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+}
+
 i.ico {
 	font-family: "GlyphiconsRegular";
     font-style: normal;
@@ -60,4 +67,3 @@ i.ico.trash::before {
 i.ico.undo::before {
 	content: '\E436';
 }
-

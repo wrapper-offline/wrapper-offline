@@ -13,6 +13,7 @@ class Settings {
 		SAVE_LOG_FILES: false,
 		HIDE_NAVBAR: true,
 		PASSED_SETUP: false,
+		THEME_REPO: "wrapper-offline/asset-store",
 	};
 	private static _instance:Settings;
 
@@ -83,6 +84,7 @@ class Settings {
 			saveLogFiles: this.saveLogFiles,
 			hideNavbar: this.hideNavbar,
 			passedSetup: this.passedSetup,
+			themeRepo: this.themeRepo,
 		};
 	}
 
@@ -161,6 +163,17 @@ class Settings {
 	}
 	set passedSetup(newValue:boolean) {
 		this.json["PASSED_SETUP"] = newValue;
+		this.save(this.json);
+	}
+
+	/**
+	 * GitHub repository containing assets to be downloaded.
+	 */
+	get themeRepo() {
+		return this.json["THEME_REPO"];
+	}
+	set themeRepo(newValue:string) {
+		this.json["THEME_REPO"] = newValue;
 		this.save(this.json);
 	}
 }

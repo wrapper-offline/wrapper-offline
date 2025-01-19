@@ -1,11 +1,12 @@
-import { Eta } from "eta";
+import type { IncomingMessage, ServerResponse } from "http";
 
 declare module "@octanuary/httpz" {
-	interface Request {
+	interface Request extends IncomingMessage {
 		body: {[key: string]: any};
 		files: {[key: string]: any};
 	}
-	interface Response {
-		render(filename:string, data:Object, config?:{filepath:string}): Promise<void>;
+	interface Response<Request = IncomingMessage> extends ServerResponse<Request> {
+		logged: boolean;
+		log: (toLog:string) => void;
 	}
 }

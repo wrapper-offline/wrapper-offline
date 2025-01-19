@@ -6,18 +6,15 @@ License: MIT
 const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
+import directories from "../shared/storage/directories";
 import { createWriteStream } from "fs";
 import { join } from "path";
 import settings from "../shared/storage/settings";
-import { fork } from "child_process";
+import { startAll } from "./server/index";
 
-const IS_DEV = app.commandLine.getSwitchValue("dev") != null;
+const IS_DEV = app.commandLine.getSwitchValue("dev").length > 0;
 
-if (!IS_DEV) {
-	const serverProc = fork(join(__dirname, "./server.js"), ["--dev"]);
-	// serverProc.stdout.on("data", (c) => console.log(c));
-	// serverProc.stderr.on("data", (c) => console.error(c));
-}
+startAll();
 
 /*
 log files
@@ -25,10 +22,10 @@ log files
 if (settings.saveLogFiles) {
 	const filePath = join(env.LOG_FOLDER, new Date().valueOf() + ".txt");
 	const writeStream = createWriteStream(filePath);
-	console.log = console.error = console.warn = function (c) {
-		writeStream.write(c + "\n");
-		process.stdout.write(c + "\n");
-	};
+	// console.log = console.error = console.warn = function (c) {
+	// 	writeStream.write(c + "\n");
+	// 	process.stdout.write(c + "\n");
+	// };
 	process.on("exit", () => {
 		console.log("Exiting...");
 		writeStream.close();
@@ -63,6 +60,7 @@ app.commandLine.appendSwitch("ppapi-flash-version", "32.0.0.371");
 app.commandLine.appendSwitch("disable-http-cache");
 
 let mainWindow:BrowserWindow;
+let root:string;
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
 		width: 1200,
@@ -77,16 +75,21 @@ const createWindow = () => {
 	});
 	setMenuBar(mainWindow);
 
+	ipcMain.on("exit", () => process.exit(0));
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
+	ipcMain.on("theme-folder", themeFolder);
 
 	if (IS_DEV) {
 		const host = app.commandLine.getSwitchValue("host");
 		const port = app.commandLine.getSwitchValue("port");
-		mainWindow.loadURL(`http://${host}:${port}`);
+		root = `http://${host}:${port}`;
+		mainWindow.loadURL(root);
 	} else {
-		mainWindow.loadFile(join(__dirname, "index.html"));
+		root = join(__dirname, "index.html");
+		mainWindow.loadFile(root);
 	}
+	console.log(root)
 	mainWindow.on("closed", () => process.exit(0));
 };
 
@@ -95,6 +98,9 @@ async function openDiscord() {
 }
 async function openGithub() {
 	await shell.openExternal("https://github.com/wrapper-offline/wrapper-offline");
+}
+async function themeFolder() {
+	await shell.openPath(directories.theme);
 }
 
 app.whenReady().then(() => {
@@ -117,7 +123,11 @@ function setMenuBar(mainWindow:BrowserWindow) {
 		{
 			label: "Home",
 			click: () => {
-				mainWindow.loadURL("http://localhost:4343")
+				if (root.startsWith("http")) {
+					mainWindow.loadURL(root);
+					return;
+				}
+				mainWindow.loadFile(root);
 			}
 		},
 		{

@@ -3,6 +3,7 @@
 		"esModuleInterop": true,
 		"useDefineForClassFields": false,
 		"experimentalDecorators": true,
+		"downlevelIteration": true,
 		"typeRoots": [
 			"./src/shared/@types",
 			"./node_modules/@types",

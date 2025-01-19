@@ -1,11 +1,11 @@
 import { context } from "esbuild";
-import htmlPlugin from "@chialab/esbuild-plugin-html"
 import { join } from "path";
 import { readFileSync } from "fs";
 import { spawn } from "child_process";
+import viteConfig from "../vite.config.js";
 
-const DEV_HOST = "127.0.0.1";
-const DEV_PORT = 8080;
+const DEV_HOST = "localhost";
+const DEV_PORT = viteConfig.server.port || 5173;
 
 /** @returns {Record<string, string>} */
 const readEnv = () => {
@@ -14,6 +14,7 @@ const readEnv = () => {
 	for (const [key, val] of Object.entries(env)) {
 		envObj["process.env." + key] = `'${val}'`;
 	}
+	envObj["window.IS_DEVELOPMENT"] = "true";
 	return envObj;
 };
 
@@ -24,18 +25,6 @@ const restartMainPlugin = (cb) => {
 		setup(build) {
 			build.onEnd(result => {
 				console.log(`Main build ended with ${result.errors.length} errors`);
-				cb();
-			});
-		},
-	};
-};
-/** @returns {import("esbuild").Plugin} */
-const restartServerPlugin = (cb) => {
-	return {
-		name: "restart-server",
-		setup(build) {
-			build.onEnd(result => {
-				console.log(`Server build ended with ${result.errors.length} errors`);
 				cb();
 			});
 		},
@@ -72,27 +61,6 @@ let options = {
 		platform: "node",
 		target: "node14",
 	},
-	renderer: {
-		bundle: true,
-		entryPoints: ["src/renderer/index.html"],
-		loader: {
-			".png": "file",
-			".svg": "file",
-			".woff": "file",
-		},
-		minify: true,
-		outdir: "dist/renderer",
-		plugins: [htmlPlugin()],
-		sourcemap: true,
-		supported: {
-			nesting: false
-		},
-	},
-	server: {
-		...BASE_OPTIONS,
-		entryPoints: ["src/server/index.ts"],
-		outfile: "dist/server.js",
-	},
 };
 
 class ProcController {
@@ -101,48 +69,32 @@ class ProcController {
 			"npx",
 			"electron",
 			options.main.outfile,
-			`--dev`,
+			"--dev=true",
 			`--host=${DEV_HOST}`,
 			`--port=${DEV_PORT}`,
-		],
-		server: [
-			"node",
-			options.server.outfile,
-			`--dev`,
 		]
 	}
-	/** @type {Record<"main"|"server", import("child_process").ChildProcessWithoutNullStreams>} */
-	#processes = {}
-	/** @param {"main"|"server"} name */
-	#restart(name) {
-		this.#procOptions[name];
-
-		if (this.#processes[name]) {
-			this.#processes[name].kill();
-		}
-		const prog = this.#procOptions[name].at(0);
-		const options = this.#procOptions[name].slice(1);
-		const process = spawn(prog, options, {
-			cwd: join(import.meta.dirname, "../")
-		});
-		process.stdout.on("data", (c) => console.log(c.toString()));
-		process.stderr.on("data", (c) => console.error(c.toString()));
-		this.#processes[name] = process;
-	}
+	/** @type {import("child_process").ChildProcessWithoutNullStreams | void} */
+	mainProcess;
 	restartMain() {
-		this.#restart("main");
-	}
-	restartServer() {
-		this.#restart("server");
+		if (this.mainProcess) {
+			this.mainProcess.kill();
+		}
+		const prog = this.#procOptions["main"].at(0);
+		const options = this.#procOptions["main"].slice(1);
+		this.mainProcess = spawn(prog, options, {
+			cwd: join(import.meta.dirname, "../"),
+			stdio: ['inherit', 'inherit', 'inherit', 'inherit']
+		});
+		// this.mainProcess.stdout.on("data", (c) => console.log(c.toString()));
+		// this.mainProcess.stderr.on("data", (c) => console.error(c.toString()));
 	}
 };
 
 async function initContexts() {
 	return {
 		main: await context(options.main),
-		preload: await context(options.preload),
-		renderer: await context(options.renderer),
-		server: await context(options.server),
+		preload: await context(options.preload)
 	};
 }
 
@@ -151,18 +103,10 @@ if (process.argv.includes("--dev")) {
 	options.main.plugins = [
 		restartMainPlugin(() => controller.restartMain())
 	];
-	options.server.plugins = [
-		restartServerPlugin(() => controller.restartServer())
-	];
 	let contexts = await initContexts();
 	for (const [, ctx] of Object.entries(contexts)) {
 		await ctx.watch()
 	}
-	await contexts.renderer.serve({
-		servedir: "dist/renderer",
-		host: DEV_HOST,
-		port: DEV_PORT,
-	});
 } else {
 	let contexts = await initContexts();
 	for (const [, ctx] of Object.entries(contexts)) {
