@@ -5,7 +5,7 @@
 // assign config and env.json stuff to process.env
 const env = Object.assign(process.env, require("./env"), require("./config"));
 // modules
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, globalShortcut } = require("electron");
 const fs = require("fs");
 const path = require("path");
 // vars
@@ -68,6 +68,28 @@ const createWindow = () => {
 	// load the video list
 	mainWindow.loadURL("http://localhost:4343");
 	mainWindow.on("closed", () => mainWindow = null);
+
+	// set shortcuts
+	globalShortcut.register("CommandOrControl+Shift+I", () => {
+		const window = BrowserWindow.fromId(+process.env.MAIN_WINDOW_ID);
+		if (window.webContents.isDevToolsOpened()) {
+			window.webContents.closeDevTools();
+		} else {
+			window.webContents.openDevTools();
+		}
+	});
+	globalShortcut.register("CommandOrControl+-", () => {
+		const window = BrowserWindow.fromId(+process.env.MAIN_WINDOW_ID);
+		const zoom = window.webContents.getZoomFactor();
+		if (zoom - 0.2 > 0.1) {
+			window.webContents.setZoomFactor(zoom - 0.2);
+		}
+	});
+	globalShortcut.register("CommandOrControl+=", () => {
+		const window = BrowserWindow.fromId(+process.env.MAIN_WINDOW_ID);
+		const zoom = window.webContents.getZoomFactor();
+		window.webContents.setZoomFactor(zoom + 0.2);
+	});
 
 	// debug stuff
 	if (env.NODE_ENV == "development") {
