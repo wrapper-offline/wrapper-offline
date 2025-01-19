@@ -3,6 +3,8 @@
  */
 // modules
 const httpz = require("@octanuary/httpz")
+const fs = require("fs");
+const path = require("path");
 // stuff
 const database = require("../../data/database"), DB = new database();
 const Movie = require("../models/movie");
@@ -39,7 +41,7 @@ group
 				req.matches[1] :
 				req.query.movieId;
 			res.assert(id, 400, "");
-			
+
 			try {
 				const buf = await Movie.load(id, isGet);
 				res.setHeader("Content-Type", "application/zip");
@@ -66,11 +68,11 @@ group
 	//  #movies
 	.route("POST", "/goapi/saveMovie/", async (req, res) => {
 		res.assert(req.body.body_zip, 400, "1");
-		const trigAutosave = req.body.is_triggered_by_autosave;
-		res.assert(!(trigAutosave && !req.body.movieId), 200, "0");
+		//const trigAutosave = req.body.is_triggered_by_autosave;
+		//res.assert(!(trigAutosave && !req.body.movieId), 200, "0");
 
 		const body = Buffer.from(req.body.body_zip, "base64");
-		const thumb = trigAutosave ?
+		const thumb = !req.body.thumbnail_large && req.body.is_triggered_by_autosave ? fs.readFileSync(path.join(__dirname, "../../_SAVED/", req.body.movieId + ".png")) : !req.body.thumbnail_large ?
 			null : Buffer.from(req.body.thumbnail_large, "base64");
 
 		const id = await Movie.save(body, thumb, req.body.movieId)
@@ -91,7 +93,7 @@ group
 
 		const readStream = Movie.thumb(id);
 		res.setHeader("Content-Type", "image/png");
-		readStream.pipe(res); 
+		readStream.pipe(res);
 	});
 
 module.exports = group;

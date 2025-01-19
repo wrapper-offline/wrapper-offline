@@ -57,11 +57,15 @@ module.exports = {
 		const buffer = fs.readFileSync(filepath);
 
 		// title
-		const title = buffer.subarray(
+		var title = buffer.subarray(
 			buffer.indexOf("<title>") + 16,
 			buffer.indexOf("]]></title>")
 		).toString().trim();
 
+		if (title == "")
+		{
+		title = "Untitled";
+		}
 		// get the duration string
 		const durBeg = buffer.indexOf('duration="') + 10;
 		const duration = Number.parseFloat(buffer.subarray(
