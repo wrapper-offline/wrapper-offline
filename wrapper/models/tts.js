@@ -58,10 +58,9 @@ module.exports = function processVoice(voiceName, text) {
 										const beg = html.indexOf("&snd_url=") + 9;
 										const end = html.indexOf("&", beg);
 										const sub = html.subarray(beg, end).toString();
-										if (sub.includes("err_code"))
-										{
-										rej("An error occured during generation.");
-										return;
+										if (sub.includes("err_code")) {
+											rej("An error occured during generation.");
+											return;
 										}
 										https
 											.get(sub, resolve)
@@ -271,11 +270,27 @@ module.exports = function processVoice(voiceName, text) {
 					.on("error", rej);
 				break;
 			}
+			case "svox": {
+				const q = new URLSearchParams({
+					speed: 0,
+					apikey: "ispeech-listenbutton-betauserkey",
+					text: text,
+					action: "convert",
+					voice: voice.arg,
+					format: "mp3",
+					e: "audio.mp3"
+				}).toString();
+
+				https
+					.get(`https://api.ispeech.org/api/rest?${q}`, res)
+					.on("error", rej);
+				break;
+			}
 			// again thx unicom for this fix
 			case "voiceforge": {
 				const vUtil = require("../../utils/voiceUtil");
 				// the people want this
-				text = await vUtil.convertText(text,voice.arg);
+				text = await vUtil.convertText(text, voice.arg);
 				const queryString = new URLSearchParams({
 					msg: text,
 					voice: voice.arg,
@@ -286,7 +301,7 @@ module.exports = function processVoice(voiceName, text) {
 						hostname: "api.voiceforge.com",
 						path: `/swift_engine?${queryString}`,
 						method: "GET",
-						headers: { 
+						headers: {
 							"Host": "api.voiceforge.com",
 							"User-Agent": "just_audio/2.7.0 (Linux;Android 14) ExoPlayerLib/2.15.0",
 							"Connection": "Keep-Alive",

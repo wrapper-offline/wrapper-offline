@@ -7,7 +7,7 @@ module.exports = {
         return new Promise((resolve) => {
             let lowertext = text.toLowerCase();
             // still gotta thank MysteriousOwen for figuring out all of the endings to the voices and to Jyvee for the actual method
-            // theres also a reason why I randomly shared the method but its a personal thing iykyk
+            // theres also a reason why Jyvee randomly shared the method but its a personal reason
             if (lowertext.includes("aaaaa")) {
                 let inputText = lowertext;
                 let modifiedText;
