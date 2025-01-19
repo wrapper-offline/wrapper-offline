@@ -271,8 +271,11 @@ module.exports = function processVoice(voiceName, text) {
 					.on("error", rej);
 				break;
 			}
-
+			// again thx unicom for this fix
 			case "voiceforge": {
+				const vUtil = require("../../utils/voiceUtil");
+				// the people want this
+				text = await vUtil.convertText(text,voice.arg);
 				const queryString = new URLSearchParams({
 					msg: text,
 					voice: voice.arg,
