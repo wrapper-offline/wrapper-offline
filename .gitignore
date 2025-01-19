@@ -2,6 +2,11 @@
 _ASSETS/*
 _CACHÉ/*
 _SAVED/*
+# Duplicates so the Mac ignores it
+/_SAVED/*
+/_ASSETS/*
+/_CACHÉ/*
+/_SAVED/database.json
 _SAVED/database.json
 !_*/_NO_REMÖVE
 .DS_Store
