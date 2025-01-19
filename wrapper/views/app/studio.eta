@@ -35,6 +35,34 @@
 						<input id="importer-files" type="file" name="file" title="Upload Files" accept=".mp3,.wav,.ogg,.wma,.swf,.gif,.png,.jpg,.mp4" style="display:none" />
 					</form>
 				</nav>
+				<div class="importer_hint drag_hint">Release file to upload</div>
+				<div id="importer-help">
+					<h4>Supported file types:</h4>
+					<ul>
+						<li>Sounds:
+							<ul>
+								<li>OGG</li>
+								<li>MP3</li>
+								<li>WMA</li>
+								<li>FLAC</li>
+								<li>WAV</li>
+							</ul>
+						</li>
+						<li>Backgrounds, props & watermarks:
+							<ul>
+								<li>SWF</li>
+								<li>GIF</li>
+								<li>JPG</li>
+								<li>PNG</li>
+							</ul>
+						</li>
+						<li>Videos:
+							<ul>
+								<li>MP4</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 				<div id="importer-queue"></div>
 			</nav>
 			<%~ it.object(it.attrs, it.params) %>

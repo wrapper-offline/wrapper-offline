@@ -8,6 +8,7 @@
 	"scripts": {
 		"start": "electron . --unhandled-rejections=strict",
 		"build": "npx electron-packager . --ignore=^/server",
+		"postinstall": "node scripts/fixModules.js",
 		"test": "mocha"
 	},
 	"main": "main.js",
@@ -27,7 +28,7 @@
 		"mp3-duration": "^1.1.0",
 		"node-static": "^0.7.11",
 		"node-zip": "github:kyriosli/node-zip",
-		"sharp": "^0.30.6",
+		"sharp": "^0.33.5",
 		"tempfile": "^3.0.0",
 		"undici": "^5.6.0",
 		"xmldoc": "^1.1.2"

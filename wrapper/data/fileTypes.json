@@ -21,6 +21,8 @@
 		"mp3",
 		"ogg",
 		"wav",
-		"asf"
+		"asf",
+		"flac",
+		"wma"
 	]
 }

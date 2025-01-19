@@ -15,7 +15,7 @@ class AssetImporter {
 			//uploads every file
 			var fileUpload = document.getElementById("importer-files");
 			for (var i = 0; i < fileUpload.files.length; i++) {
-				this.addFiles(fileUpload.files[i]);
+				this.addFile(fileUpload.files[i]);
 			}
 		});
 		this.importer.on("dragover", event => {
@@ -25,17 +25,39 @@ class AssetImporter {
 		this.importer.on("dragenter", event => {
 			event.preventDefault();
 			event.stopPropagation();
+			this.importer.find(".drag_hint").show();
+		})
+		this.importer.on("dragleave", event => {
+			event.preventDefault();
+			event.stopPropagation();
+			this.importer.find(".drag_hint").hide();
 		})
 		this.importer.on("drop", event => {
 			event.preventDefault();
 			event.stopPropagation();
+			this.importer.find(".drag_hint").hide();
 			const files = event.originalEvent.dataTransfer.files;
 			for (var i = 0; i < files.length; i++) {
-				this.addFiles(files[i]);
+				this.addFile(files[i]);
 			}
 		})
 	}
-	addFiles(file) { //adds a file to the queue
+
+	/**
+	 * @param {string} msg 
+	 */
+	displayError(msg) {
+		const $elem = $(`<div class="importer_hint">${msg}</div>`);
+		this.importer.find("#import_head").after($elem);
+		setTimeout(() => $elem.fadeOut(() => $elem.remove()), 6000);
+	}
+
+	/**
+	 * adds a file to the queue
+	 * @param {File} file 
+	 */
+	addFile(file) {
+		this.importer.find("#importer-help").remove();
 		const ext = file.name.substring(file.name.lastIndexOf(".") + 1);
 		const maxsize = this.config.maxsize;
 		if (maxsize && file.size > maxsize) return; // check if file is too large
@@ -112,7 +134,7 @@ class AssetImporter {
 			}
 		}
 		if (!validFileType) {
-			console.error("Invalid file type!");
+			this.displayError("Invalid file type!");
 			return;
 		}
 		const request = new ImporterFile(file, el, ext);
@@ -186,6 +208,8 @@ class ImporterFile {
 			name = "unnamed" + Math.random().toString().substring(2, 8);
 
 		// set the importer icon
+		this.el.find(".import_as").html("");
+		this.el.find(".asset_subtype").text("Pending...");
 		if (IS_STUDIO) studio[0].importerStatus("processing");
 
 		let b = new FormData();
@@ -204,39 +228,49 @@ class ImporterFile {
 		})
 			.done(d => {
 				if (d.status == "ok") {
-					if (IS_STUDIO) {
-						if (this.type == "watermark") this.el.fadeOut(() => this.el.remove());
-						this.id = d.data.file;
+					this.el.find(".asset_subtype").text("Imported");
+					if (this.type == "watermark") this.el.fadeOut(() => this.el.remove());
+					this.id = d.data.file;
 
-						// why
-						const importType = this.subtype == "video" ? "video" : this.type;
-						const thumbUrl = `${window.location.origin}/assets/${d.data.file.slice(0, -3) + "png"}`;
-						d.data.thumbnail = thumbUrl;
+					// why
+					const importType = this.subtype == "video" ? "video" : this.type;
+					const thumbUrl = `${window.location.origin}/assets/${d.data.file.slice(0, -3) + "png"}`;
+					d.data.thumbnail = thumbUrl;
 
-						// alert the studio
-						studio[0].importerStatus("done");
-						studio[0].importerUploadComplete(importType, d.data.file, d.data);
+					// alert the studio
+					studio[0].importerStatus("done");
+					studio[0].importerUploadComplete(importType, d.data.file, d.data);
 
-						// update html for images
-						if (this.subtype == 0) {
-							if (this.ext != "swf") 
-								this.el.find("img").attr("src", `/assets/${d.data.file}`);
-							// change the subtypes to an add to scene button
-							this.el.find(".import_as").html(`
-								<a href='#' action='add-to-scene'>Add to scene</a>
-								<a href="#" action="cancel">Close</a>
-							`.trim());
-							return;
-						}
-					} else {
-						this.el.find(".import_as").remove();
-						if (this.ext != "swf") 
+					// update html for images
+					if (this.type == "sound") {
+						this.el.find("img").after(`
+							<audio>
+								<source src="/assets/${this.id}" data-type="audio/${this.ext}">
+							</audio>
+						`.trim()).attr({
+							"onclick": "this.nextSibling.play()",
+							"style": "cursor:pointer"
+						});
+						d.downloadtype = "progressive";
+						this.el.find(".import_as").html(`
+							<a href='#' action='add-to-scene'>Add to scene</a>
+							<a href="#" action="cancel">Close</a>
+						`.trim());
+					} else if (this.type == "prop" || this.type == "bg") {
+						if (this.subtype == "video")
+							this.el.fadeOut(() => this.el.remove());
+						else if (this.ext != "swf") 
 							this.el.find("img").attr("src", `/assets/${d.data.file}`);
+						// change the subtypes to an add to scene button
+						this.el.find(".import_as").html(`
+							<a href='#' action='add-to-scene'>Add to scene</a>
+							<a href="#" action="cancel">Close</a>
+						`.trim());
 						return;
 					}
 				} else alert("Error importing asset.");
 				// remove element
-				this.el.fadeOut(() => this.el.remove());
+				// this.el.fadeOut(() => this.el.remove());
 			})
 			.catch(e => console.error("Import failed. Error:", e))
 	}

@@ -9,13 +9,12 @@ const { fromFile } = require("file-type");
 const fs = require("fs");
 const httpz = require("@octanuary/httpz")
 const mime = require("mime-types");
+const mp3Duration = require("mp3-duration");
 const path = require("path");
 const tempfile = require("tempfile");
-// vars
 const fileTypes = require("../data/fileTypes.json");
 const header = process.env.XML_HEADER;
 const thumbUrl = process.env.THUMB_BASE_URL;
-// stuff
 const Asset = require("../models/asset");
 const database = require("../../data/database"), DB = new database();
 const rFileUtil = require("../../utils/realFileUtil");
@@ -225,7 +224,7 @@ group
 					const writeStream = fs.createWriteStream(temppath);
 					stream.pipe(writeStream);
 					stream.on("end", async () => {
-						info.duration = await rFileUtil.mp3Duration(temppath);
+						info.duration = await mp3Duration(temppath) * 1e3;
 						info.file = await Asset.save(temppath, "mp3", info);
 						info.downloadtype = "progressive";
 						resolve();
