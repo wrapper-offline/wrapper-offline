@@ -99,7 +99,7 @@ links
 	border-bottom: 1px solid #bfb9da;
 	box-shadow: 0 0 1px #0009;
 	border-radius: 3px;
-	transition: 0.1s ease-out;
+	transition: 0.05s ease-out;
 	overflow: hidden;
 	display: flex;
 	margin: 5px 0;
@@ -111,6 +111,9 @@ links
 	border: none;
 	color: #232323;
 	cursor: pointer;
+	display: flex;
+	padding: 8px 12px;
+	width: calc(100% - 14px);
 }
 /* remove ugly button styling */
 .app_sidebar .link>button:focus {
@@ -126,7 +129,6 @@ links
 	text-decoration: none;
 	display: flex;
 	padding: 4px 12px;
-	flex-grow: 1;
 	height: 100%;
 	width: calc(100% - 14px);
 }
@@ -155,6 +157,30 @@ links
 
 
 /**
+create button
+**/
+.app_sidebar .link.create {
+	background: #fc4f7d;
+	border-bottom-color: #ac0633;
+}
+.app_sidebar .link.create>button {
+	color: #fff;
+}
+.app_sidebar .link.create::after {
+	content: "";
+	background: linear-gradient(90deg, #0000 0, #fc4f7d 10px);
+	width: 14px;
+	height: 100%;
+}
+
+
+/* spacer */
+.app_sidebar .spacer {
+	margin-bottom: 10px;
+}
+
+
+/**
 dragger
 **/
 .app_sidebar .dragger {
@@ -174,22 +200,29 @@ dragger
 pinned links
 **/
 
-/* page folders collapse button */
-.app_sidebar .user_custom .link>button {
+/* pinned links heading */
+.app_sidebar h3 {
+	color: #918fa0;
+	font-size: 13px;
+    font-weight: bold;
+	text-transform: uppercase;
+    margin: 5px 0;
+}
+/* page folders unpin button */
+.app_sidebar .user_custom .link>button.unpin {
 	border-radius: 3px 0 0 3px;
 	font-size: 12px;
 	text-align: left;
 	padding: 5px 5px 5px 8px;
 	height: 100%;
 }
-.app_sidebar .user_custom .link>button:hover {
+.app_sidebar .user_custom .link>button.unpin:hover {
 	background: #ffd3e8;
 }
 .app_sidebar .user_custom .link>a {
 	padding: 5px 6px 5px 3px;
 }
-
-/* sidebar collapse button */
+/* pin button */
 .app_sidebar .link[data-toggle]>button {
 	display: flex;
 	padding: 5px 12px;
@@ -204,14 +237,7 @@ pinned links
 .app_sidebar .link[data-toggle]>button:hover {
 	background: #0000
 }
-/* pinned links heading */
-.app_sidebar h3 {
-	color: #918fa0;
-	font-size: 13px;
-    font-weight: bold;
-	text-transform: uppercase;
-    margin: 5px 0;
-}
+
 /* version string */
 .app_sidebar #wrapper_ver {
 	color: #909090;
@@ -354,7 +380,11 @@ animations
 </style>
 
 <script setup lang="ts">
+import Dropdown from "./controls/Dropdown.vue";
+import DropdownItem from "./controls/DropdownItem.vue";
+import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import { ref } from "vue";
+import ThemeSelector from "./ThemeSelector.vue";
 
 const inResize = ref(false);
 const collapsed = ref(false);
@@ -427,23 +457,39 @@ function draggerDown(e) {
 			</div>
 		</div>
 		<ul>
+			<Dropdown>
+				<template #toggle>
+					<li class="link create">
+						<button>
+							<i class="ico arr_r"></i>
+							<div class="link_text">Create</div>
+						</button>
+					</li>
+				</template>
+				<DropdownItem>Create a video</DropdownItem>
+				<DropdownItem>Create a character</DropdownItem>
+				<DropdownSeparator></DropdownSeparator>
+				<DropdownItem>Upload a video</DropdownItem>
+				<DropdownItem>Upload a character</DropdownItem>
+			</Dropdown>
+			<div class="spacer"></div>
 			<li class="link">
-				<a href="/videos" @click="onLinkClick">
+				<RouterLink to="/videos" @click="onLinkClick">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
-				</a>
+				</RouterLink>
 			</li>
 			<li class="link">
-				<a href="/starters" @click="onLinkClick">
+				<RouterLink to="/videos/true" @click="onLinkClick">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
-				</a>
+				</RouterLink>
 			</li>
 			<li class="link">
-				<a href="/characters" @click="onLinkClick">
+				<RouterLink to="/characters" @click="onLinkClick">
 					<i class="ico person"></i>
 					<div class="link_text">Characters</div>
-				</a>
+				</RouterLink>
 			</li>
 		</ul>
 		<ul class="user_custom">
@@ -473,13 +519,14 @@ function draggerDown(e) {
 				</ul>
 			</li>
 			<li class="link">
-				<a href="/settings" @click="onLinkClick">
+				<RouterLink to="/settings" @click="onLinkClick">
 					<i class="ico cog"></i>
 					<div class="link_text">Settings</div>
-				</a>
+				</RouterLink>
 			</li>
 			<span id="wrapper_ver">2.1.0</span>
 		</ul>
 		<div class="dragger" :style="{left: width - 3 + 'px'}" @mousedown="draggerDown"></div>
+		<ThemeSelector v-show="false"/>
 	</div>
 </template>

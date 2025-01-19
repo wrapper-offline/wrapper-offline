@@ -53,7 +53,7 @@ class SettingsController {
 
 	private async loadSettings() {
 		const host = process.env.SERVER_HOST;
-		const port = process.env.SERVER_PORT;
+		const port = process.env.API_SERVER_PORT;
 		const res = await fetch(`${host}:${port}/api/settings/list`);
 		const json = await res.json();
 		return json;

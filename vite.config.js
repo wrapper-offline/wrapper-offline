@@ -4,7 +4,7 @@ import svgPlugin from "vite-svg-loader";
 import vuePlugin from "@vitejs/plugin-vue";
 
 process.env.VITE_SERVER_HOST = config.SERVER_HOST;
-process.env.VITE_SERVER_PORT = config.SERVER_PORT;
+process.env.VITE_API_SERVER_PORT = config.API_SERVER_PORT;
 
 export default defineConfig({
 	base: "",

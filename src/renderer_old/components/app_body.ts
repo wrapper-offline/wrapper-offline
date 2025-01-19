@@ -14,7 +14,7 @@ import SettingsPage from "../pages/settings";
 export default class AppBody extends ComponentBase {
 	static DEFAULT_PATH = "/characters";
 	appName = "Wrapper: Offline";
-	apiServer = `${process.env.SERVER_HOST}:${process.env.SERVER_PORT}`;
+	apiServer = `${process.env.SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 	routes = [
 		{
 			path: /^\/404$/,

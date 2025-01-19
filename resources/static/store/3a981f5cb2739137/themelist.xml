@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list version="1.0">
+	<fvm_meta theme_code="" is_biz="0" />
+	<theme id="custom" name="Comedy World" cc_theme_id="custom" />
+	<theme id="action" name="Lil' Peepz" cc_theme_id="action" />
+	<theme id="politics2" name="White Houserz" cc_theme_id="politics2" />
+	<theme id="retro" name="Cartoon Classics" cc_theme_id="retro" />
+	<theme id="anime" name="Anime" cc_theme_id="anime" />
+	<theme id="ninjaanime" name="Ninja Anime" cc_theme_id="ninjaanime" />
+	<theme id="spacecitizen" name="Space Citizens" cc_theme_id="spacecitizen" />
+	<theme id="chibi" name="Chibi Peepz" cc_theme_id="chibi" />
+	<theme id="ninja" name="Chibi Ninjas" cc_theme_id="ninja" />
+	<theme id="space" name="Space Peepz" cc_theme_id="space" />
+	<theme id="stick" name="Stick Figure" cc_theme_id="stick" />
+	<theme id="animal" name="Lil' Petz" cc_theme_id="animal" />
+	<theme id="common" name="Common" cc_theme_id="common" />
+	<word />
+	<whiteword />
+	<excludeAssetIDs />
+	<points money="0" sharing="0" />
+</list>
