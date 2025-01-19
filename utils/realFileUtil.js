@@ -18,13 +18,19 @@ module.exports = {
 			});
 		});
 	},
-
+	
+	/**
+	 * converts a sound to an mp3
+	 * @param {Buffer} data sound buffer
+	 * @param {string} ext original sound extension
+	 * @returns {ReadableStream}
+	 */
 	convertToMp3(data, ext) {
 		return new Promise((resolve, rej) => {
-			// convert the sound to an mp3
 			const command = ffmpeg(data)
 				.inputFormat(ext)
 				.toFormat("mp3")
+                .audioBitrate('44100k')
 				.on("error", (e) => rej("Error converting audio:", e));
 			resolve(command.pipe());
 		});
