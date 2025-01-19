@@ -5,7 +5,7 @@ const brotli = require("brotli");
 const fileUtil = require("../../utils/realFileUtil");
 const fs = require("fs");
 const https = require("https");
-const http = require("http"); 	
+const http = require("http");
 const voices = require("../data/voices.json").voices;
 
 /**
@@ -22,6 +22,79 @@ module.exports = function processVoice(voiceName, text) {
 		}
 
 		switch (voice.source) {
+			case "acapela": {
+				let acapelaArray = [];
+				for (let c = 0; c < 15; c++) acapelaArray.push(~~(65 + Math.random() * 26));
+				const email = `${String.fromCharCode.apply(null, acapelaArray)}@gmail.com`;
+
+				let req = https.request(
+					{
+						hostname: "acapelavoices.acapela-group.com",
+						path: "/index/getnonce",
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded",
+						},
+					},
+					(r) => {
+						let buffers = [];
+						r.on("data", (b) => buffers.push(b));
+						r.on("end", () => {
+							const nonce = JSON.parse(Buffer.concat(buffers)).nonce;
+							let req = https.request(
+								{
+									hostname: "h-ir-ssd-1.acapela-group.com",
+									path: "/Services/Synthesizer",
+									method: "POST",
+									headers: {
+										"Content-Type": "application/x-www-form-urlencoded",
+									},
+								},
+								(r) => {
+									let buffers = [];
+									r.on("data", (d) => buffers.push(d));
+									r.on("end", () => {
+										const html = Buffer.concat(buffers);
+										const beg = html.indexOf("&snd_url=") + 9;
+										const end = html.indexOf("&", beg);
+										const sub = html.subarray(beg, end).toString();
+										if (sub.includes("err_code"))
+										{
+										rej("An error occured during generation.");
+										return;
+										}
+										https
+											.get(sub, resolve)
+											.on("error", rej);
+									});
+									r.on("error", rej);
+								}
+							).on("error", rej);
+							req.end(
+								new URLSearchParams({
+									cl_vers: "1-30",
+									req_text: text,
+									cl_login: "AcapelaGroup",
+									cl_app: "AcapelaGroup_WebDemo_Android",
+									req_comment: `{"nonce":"${nonce}","user":"${email}"}`,
+									prot_vers: 2,
+									cl_env: "ACAPELA_VOICES",
+									cl_pwd: "",
+									req_voice: voice.arg,
+									req_echo: "ON",
+								}).toString()
+							);
+						});
+					}
+				).on("error", rej);
+				req.end(
+					new URLSearchParams({
+						json: `{"googleid":"${email}"`,
+					}).toString()
+				);
+				break;
+			}
+
 			case "cepstral": {
 				https.get("https://www.cepstral.com/en/demos", async (r) => {
 					r.on("error", (e) => rej(e));
@@ -59,43 +132,14 @@ module.exports = function processVoice(voiceName, text) {
 			}
 
 			case "polly": {
-				text = text.substring(0, 181);
-				const body = new URLSearchParams({
-					msg: text,
-					lang: voice.arg,
-					source: "ttsmp3"
+				const q = new URLSearchParams({
+					voice: voice.arg,
+					text: text,
 				}).toString();
-				const req = https.request(
-					{
-						hostname: "ttsmp3.com",
-						path: "/makemp3_new.php",
-						method: "POST",
-						headers: { 
-							"Content-Length": body.length,
-							"Content-type": "application/x-www-form-urlencoded"
-						}
-					},
-					(r) => {
-						let body = "";
-						r.on("error", (e) => rej(e));
-						r.on("data", (b) => body += b);
-						r.on("end", () => {
-							const json = JSON.parse(body);
-							if (json["Error"] == 1) return rej(json.Text);
 
-							https.get(json["URL"], (response) => {
-								let chunks = [];
-								response.on("error", (e) => rej(e));
-								response.on("data", (c) => chunks.push(c));
-								response.on("end", () => {
-									resolve(Buffer.concat(chunks));
-								});
-							});
-						});
-						r.on("error", rej);
-					}
-				).on("error", (e) => rej(e));
-				req.end(body);
+				https
+					.get(`https://api.streamelements.com/kappa/v2/speech?${q}`, resolve)
+					.on("error", rej);
 				break;
 			}
 
@@ -112,7 +156,7 @@ module.exports = function processVoice(voiceName, text) {
 						hostname: "readloud.net",
 						path: voice.arg,
 						method: "POST",
-						headers: { 
+						headers: {
 							"Content-Type": "application/x-www-form-urlencoded"
 						}
 					},
@@ -126,13 +170,9 @@ module.exports = function processVoice(voiceName, text) {
 							const end = html.indexOf("mp3", beg) + 3;
 							const sub = html.subarray(beg, end).toString();
 
-							https.get(`https://readloud.net${sub}`, response => {
-								let chunks = [];
-								response.on("error", (e) => rej(e));
-								response.on("data", (c) => chunks.push(c));
-								response.on("end", () => {
-									resolve(Buffer.concat(chunks));
-								});
+							https.get(`https://readloud.net${sub}`, (r2) => {
+								r2.on("error", (e) => rej(e));
+								resolve(r2);
 							});
 						});
 					}
@@ -141,8 +181,65 @@ module.exports = function processVoice(voiceName, text) {
 				break;
 			}
 
+			case "svox2": {
+				const q = new URLSearchParams({
+					speed: 0,
+					apikey: "38fcab81215eb701f711df929b793a89",
+					text: text,
+					action: "convert",
+					voice: voice.arg,
+					format: "mp3",
+					e: "audio.mp3"
+				}).toString();
+
+				https
+					.get(`https://api.ispeech.org/api/rest?${q}`, resolve)
+					.on("error", rej);
+				break;
+			}
+
+			case "vocalware": {
+				const [EID, LID, VID] = voice.arg;
+				const q = new URLSearchParams({
+					EID,
+					LID,
+					VID,
+					TXT: text,
+					EXT: "mp3",
+					FNAME: "",
+					ACC: 15679,
+					SceneID: 2703396,
+					HTTP_ERR: "",
+				}).toString();
+
+				console.log(`https://cache-a.oddcast.com/tts/genB.php?${q}`)
+				https
+					.get(
+						{
+							hostname: "cache-a.oddcast.com",
+							path: `/tts/genB.php?${q}`,
+							headers: {
+								"Host": "cache-a.oddcast.com",
+								"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0",
+								"Accept": "*/*",
+								"Accept-Language": "en-US,en;q=0.5",
+								"Accept-Encoding": "gzip, deflate, br",
+								"Origin": "https://www.oddcast.com",
+								"DNT": 1,
+								"Connection": "keep-alive",
+								"Referer": "https://www.oddcast.com/",
+								"Sec-Fetch-Dest": "empty",
+								"Sec-Fetch-Mode": "cors",
+								"Sec-Fetch-Site": "same-site"
+							}
+						}, resolve
+					)
+					.on("error", rej);
+				break;
+			}
+
 			case "voiceforge": {
-				const queryString = new URLSearchParams({						
+				const queryString = new URLSearchParams({
 					msg: text,
 					voice: voice.arg,
 					email: "chopped@chin.com"
