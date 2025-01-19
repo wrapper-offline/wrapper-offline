@@ -41,11 +41,12 @@ class AssetImporter {
 		if (maxsize && file.size > maxsize) return; // check if file is too large
 		let validFileType = false;
 		let el;
-		switch (ext) {
-			case "ogg":
-			case "mp3":
-			case "wma":
-			case "wav": {
+		switch (ext.toUpperCase()) {
+			case "OGG":
+			case "MP3":
+			case "WMA":
+			case "FLAC":
+			case "WAV": {
 				validFileType = true;
 				el = $(`
 					<div class="importer_asset">
@@ -66,10 +67,10 @@ class AssetImporter {
 				`.trim()).appendTo(this.queue);
 				break;
 			}
-			case "swf":
-			case "gif":
-			case "jpg":
-			case "png": {
+			case "SWF":
+			case "GIF":
+			case "JPG":
+			case "PNG": {
 				validFileType = true;
 				el = $(`
 					<div class="importer_asset">
@@ -90,7 +91,7 @@ class AssetImporter {
 				`.trim()).prependTo(this.queue);
 				break;
 			}
-			case "mp4": {
+			case "MP4": {
 				validFileType = true;
 				el = $(`
 					<div class="importer_asset">
