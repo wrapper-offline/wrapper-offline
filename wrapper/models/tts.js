@@ -270,6 +270,17 @@ module.exports = function processVoice(voiceName, text) {
 					.on("error", rej);
 				break;
 			}
+			case "nuance": {
+				const q = new URLSearchParams({
+					voice_name: voice.arg,
+					speak_text: text,
+				}).toString();
+
+				https
+					.get(`https://voicedemo.codefactoryglobal.com/generate_audio.asp?${q}`, resolve)
+					.on("error", rej);
+				break;
+			}
 			case "svox": {
 				const q = new URLSearchParams({
 					speed: 0,
@@ -282,7 +293,7 @@ module.exports = function processVoice(voiceName, text) {
 				}).toString();
 
 				https
-					.get(`https://api.ispeech.org/api/rest?${q}`, res)
+					.get(`https://api.ispeech.org/api/rest?${q}`, resolve)
 					.on("error", rej);
 				break;
 			}
