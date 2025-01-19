@@ -44,50 +44,7 @@ module.exports = function processVoice(voiceName, rawText) {
 						.on("error", rej);
 					break;
 				}
-				case "cepstral": {
-					let pitch;
-					if (flags.pitch) {
-						pitch = +flags.pitch;
-						pitch /= 100;
-						pitch *= 4.6;
-						pitch -= 0.4;
-						pitch = Math.round(pitch * 10) / 10;
-					} else {
-						pitch = 1;
-					}
-					https.get("https://www.cepstral.com/en/demos", async (r) => {
-						const cookie = r.headers["set-cookie"];
-						const q = new URLSearchParams({
-							voiceText: text,
-							voice: voice.arg,
-							createTime: 666,
-							rate: 170,
-							pitch: pitch,
-							sfx: "none"
-						}).toString();
 
-						https.get(
-							{
-								hostname: "www.cepstral.com",
-								path: `/demos/createAudio.php?${q}`,
-								headers: { Cookie: cookie }
-							},
-							(r) => {
-								let body = "";
-								r.on("data", (b) => body += b);
-								r.on("end", () => {
-									const json = JSON.parse(body);
-
-									https
-										.get(`https://www.cepstral.com${json.mp3_loc}`, resolve)
-										.on("error", rej);
-								});
-								r.on("error", rej);
-							}
-						).on("error", rej);
-					}).on("error", rej);
-					break;
-				}
 				case "vocalware": {
 					const [EID, LID, VID] = voice.arg;
 					const q = new URLSearchParams({
@@ -196,9 +153,6 @@ module.exports = function processVoice(voiceName, rawText) {
 						}).toString()
 					);
 					break;
-				}
-				case "voiceforge": {
-					rej("VoiceForge has recently updated their API and due to this, the voices no longer work.\nWe do not have a fix for this at the moment.");
 				}
 				case "svox": {
 					const q = new URLSearchParams({
