@@ -181,6 +181,7 @@ group
 			params: {
 				flashvars,
 				allowScriptAccess: "always",
+				allowFullScreen: "true"
 			},
 			object: toObjectString
 		});
