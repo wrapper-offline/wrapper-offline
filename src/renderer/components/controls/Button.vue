@@ -1,6 +1,5 @@
-<style lang="css" scoped>
+<style lang="css">
 .btn {
-	/* style */
 	background: #43bca5;
 	border: none;
 	font-size: 14px;
@@ -8,10 +7,13 @@
 	text-decoration: none;
 	color: #fff;
 	border-radius: 4px;
-	/* layout */
 	display: inline-block;
 	padding: 5.5px 10px;
 	margin: 9px 5px;
+}
+.btn a {
+	color: #fff;
+	text-decoration: none;
 }
 .btn:hover {
 	background: #029a85;

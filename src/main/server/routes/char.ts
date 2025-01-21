@@ -33,6 +33,9 @@ group.route("GET", "/api/char/list", (req, res) => {
 	}
 	return res.json(Database.select("assets", filter));
 });
+group.route("POST", "/goapi/getCCPreMadeCharacters", (req, res) => {
+	res.end();
+});
 
 /*
 load

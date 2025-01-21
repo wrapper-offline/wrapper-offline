@@ -6,6 +6,7 @@
 	<theme id="anime" name="Anime" cc_theme_id="anime" col="1"/>
 	<theme id="ninjaanime" name="Ninja Anime" cc_theme_id="ninjaanime" col="1"/>
 
+	<theme id="politic" name="Politics &amp; Celebrity" col="2"/>
 	<theme id="cctoonadventure" name="Toon Adventure CC" cc_theme_id="cctoonadventure" col="2"/>
 	<theme id="retro" name="Cartoon Classics" col="2"/>
 	<theme id="stick" name="Stick Figure" col="2"/>
