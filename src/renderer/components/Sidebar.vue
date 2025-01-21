@@ -76,7 +76,7 @@ sidebar sections *OR* grouped link containers
 /* icons */
 .app_sidebar i {
 	margin-top: 0;
-	margin-right: 6px;
+	margin-right: 7px;
 }
 
 /* grouped links (faq & discord) */
@@ -103,7 +103,6 @@ links
 	overflow: hidden;
 	display: flex;
 	margin: 5px 0;
-	width: 100%;
 	height: 35px;
 }
 .app_sidebar .link>button {
@@ -244,7 +243,6 @@ pinned links
 	display: block;
 	font-size: 13px;
 	text-align: center;
-	width: 100%;
 }
 
 /***
@@ -384,19 +382,31 @@ import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import { ref } from "vue";
-import ThemeSelector from "./ThemeSelector.vue";
+import { onBeforeRouteLeave } from "vue-router";
 
 const inResize = ref(false);
 const collapsed = ref(false);
 const logoCollapsed = ref(false);
 const width = ref(250);
 
+let oldWidth = 0;
+onBeforeRouteLeave((to, from) => {
+	console.log(to.path)
+	if (to.path.startsWith("/character") && !from.path.startsWith("/character")) {
+		oldWidth = width.value;
+		setWidth(150);
+	} else if (from.path.startsWith("/character") && !to.path.startsWith("/character")) {
+		setWidth(oldWidth);
+		oldWidth = 0;
+	}
+});
+
 function openInfo() {
 
 }
 
-function onLinkClick() {
-
+function onLinkClick(e:MouseEvent) {
+	// console.log(e.currentTarget)
 }
 
 function pin() {
@@ -409,28 +419,7 @@ function draggerDown(e) {
 	const startWidth = width.value;
 	const moveCb = (moveE2:MouseEvent) => {
 		const newWidth = startWidth - startX + moveE2.clientX;
-		if (newWidth < 200) {
-			logoCollapsed.value = true;
-		} else if (logoCollapsed.value) {
-			logoCollapsed.value = false;
-		}
-		if (newWidth < 93) {
-			if (newWidth < 56) {
-				collapsed.value = true;
-				width.value = 56;
-			} else {
-				if (collapsed.value) {
-					collapsed.value = false;
-				}
-				width.value = 93;
-			}
-			return;
-		}
-		if (newWidth > 590) {
-			width.value = 590;
-			return;
-		}
-		width.value = newWidth;
+		setWidth(newWidth);
 	};
 	window.addEventListener("mousemove", moveCb);
 	window.addEventListener("mouseup", () => {
@@ -442,6 +431,35 @@ function draggerDown(e) {
 		document.body.classList.remove("col_resize");
 	});
 }
+function setWidth(newWidth:number) {
+	if (newWidth <= 200) {
+		logoCollapsed.value = true;
+	} else if (logoCollapsed.value == true) {
+		logoCollapsed.value = false;
+	}
+	if (newWidth <= 93) {
+		if (newWidth <= 56) {
+			collapsed.value = true;
+			width.value = 56;
+		} else {
+			if (collapsed.value == true) {
+				collapsed.value = false;
+			}
+			width.value = 93;
+		}
+		return;
+	} else if (collapsed.value == true) {
+		collapsed.value = false;
+	}
+	if (newWidth >= 590) {
+		width.value = 590;
+		return;
+	}
+	width.value = newWidth;
+}
+function isSelected(e) {
+	// console.log(e)
+}
 </script>
 
 <template>
@@ -452,8 +470,8 @@ function draggerDown(e) {
 	}" :style="{width:width + 'px'}">
 		<div id="logo_container" :style="{width:width + 'px'}">
 			<div class="toggle_btn" @click="openInfo" title="About Wrapper: Offline">
-				<img id="logo_icon" src="../media/img/logo_icon.svg" alt="Candy"/>
-				<img id="logo_wordmark" src="../media/img/logo_wordmark.svg" alt="Wrapper: Offline"/>
+				<img id="logo_icon" src="/img/logo_icon.svg" alt="Candy"/>
+				<img id="logo_wordmark" src="/img/logo_wordmark.svg" alt="Wrapper: Offline"/>
 			</div>
 		</div>
 		<ul>
@@ -466,8 +484,9 @@ function draggerDown(e) {
 						</button>
 					</li>
 				</template>
-				<DropdownItem>Create a video</DropdownItem>
-				<DropdownItem>Create a character</DropdownItem>
+				<DropdownItem>
+					<RouterLink to="/videos/create">Create a video</RouterLink>
+				</DropdownItem>
 				<DropdownSeparator></DropdownSeparator>
 				<DropdownItem>Upload a video</DropdownItem>
 				<DropdownItem>Upload a character</DropdownItem>
@@ -519,7 +538,7 @@ function draggerDown(e) {
 				</ul>
 			</li>
 			<li class="link">
-				<RouterLink to="/settings" @click="onLinkClick">
+				<RouterLink to="/settings" :class="{sel:isSelected($el)}">
 					<i class="ico cog"></i>
 					<div class="link_text">Settings</div>
 				</RouterLink>
@@ -527,6 +546,5 @@ function draggerDown(e) {
 			<span id="wrapper_ver">2.1.0</span>
 		</ul>
 		<div class="dragger" :style="{left: width - 3 + 'px'}" @mousedown="draggerDown"></div>
-		<ThemeSelector v-show="false"/>
 	</div>
 </template>

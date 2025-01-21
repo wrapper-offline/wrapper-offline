@@ -1,6 +1,6 @@
 @font-face {
 	font-family: "GlyphiconsRegular";
-	src: url("../fonts/glyphicons-regular.woff") format("woff");
+	src: url("/fonts/glyphicons-regular.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 }

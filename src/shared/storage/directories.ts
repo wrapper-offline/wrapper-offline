@@ -10,8 +10,7 @@ class DirUtil {
 			this.asset,
 			this.log,
 			this.saved,
-			this.export,
-			this.theme,
+			this.export
 		];
 		for (const p of requiredPaths) {
 			if (!existsSync(p)) {
@@ -35,6 +34,10 @@ class DirUtil {
 		return join(__dirname, "../../", process.env.USERDATA_DIR);
 	}
 
+	get static() {
+		return join(__dirname, "../resources/static");
+	}
+
 	get asset() {
 		return join(this.userData, process.env.ASSET_FOLDER);
 	}
@@ -51,8 +54,8 @@ class DirUtil {
 		return join(this.userData, process.env.SAVED_FOLDER);
 	}
 
-	get theme() {
-		return join(this.userData, process.env.THEME_FOLDER);
+	get store() {
+		return join(this.static, process.env.STORE_URL);
 	}
 }
 

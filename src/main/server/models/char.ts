@@ -14,7 +14,7 @@ export type Char = {
 
 export default class CharModel {
 	static folder = Directories.asset;
-	static baseThumbUrl = path.join(__dirname, "../../../", process.env.CHAR_BASE_URL);
+	static baseThumbUrl = path.join(Directories.static, process.env.CHAR_BASE_URL);
 
 	/**
 	 * Tries to find a character in the _SAVED folder. If there's no match, it tries to find it in the character dump.
@@ -49,7 +49,7 @@ export default class CharModel {
 	 * @param info character metadata
 	 * @returns char id
 	 */
-	static save(xml:Buffer, info:Char): string {
+	static save(xml:Buffer, info:Partial<Char>): string {
 		// save asset info
 		info.id ||= generateId();
 		Database.insert("assets", info);

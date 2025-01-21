@@ -98,11 +98,11 @@ export default class AssetModel {
 	 * @param filters object containing all properties an asset object should have
 	 * @param returnXml if true, returns a ugc theme xml instead of an array of `Asset`s
 	 */
-	static list(filters:{}, returnXml:true): string
-	static list(filters:{}, returnXml:false): Asset[]
+	static list(filters:Partial<Asset>, returnXml:true): string
+	static list(filters:Partial<Asset>, returnXml:false): Asset[]
 	static list(returnXml:true): string
 	static list(returnXml:false): Asset[]
-	static list(param1?:boolean|Record<string, string>, param2?:boolean) {
+	static list(param1?:boolean|Partial<Asset>, param2?:boolean) {
 		let filters, returnXml;
 		if (typeof param1 == "boolean") {
 			filters = null;
@@ -126,24 +126,25 @@ export default class AssetModel {
 	};
 
 	/**
-	 * returns the info of an asset
+	 * returns the info of an asset, throws 404 if it doesn't
 	 * @param id Asset ID
 	 */
 	static getInfo(id:string): Asset {
-		if (!this.exists(id, true)) {
+		const info = Database.get("assets", id);
+		if (info == false) {
 			throw "404";
 		}
-		return Database.get("assets", id);
+		return info.data;
 	}
 
 	/**
-	 * updates asset info
+	 * updates asset info, throws 404 if asset doesn't exist
 	 */
-	static updateInfo(id:string, info:Asset) {
-		if (!this.exists(id, true)) {
+	static updateInfo(id:string, info:Partial<Asset>): void {
+		const success = Database.update("assets", id, info);
+		if (!success) {
 			throw "404";
 		}
-		Database.update("assets", id, info)
 	}
 
 	/**

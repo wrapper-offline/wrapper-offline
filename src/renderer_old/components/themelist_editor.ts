@@ -173,7 +173,7 @@ export default class ThemelistEditor extends ComponentBase {
 	}
 
 	private async fetchLocalThemes() {
-		const host = process.env.SERVER_HOST;
+		const host = process.env.API_SERVER_HOST;
 		const port = process.env.API_SERVER_PORT;
 		const res = await fetch(`${host}:${port}/api/theme/locally_available`);
 		const json = await res.json();

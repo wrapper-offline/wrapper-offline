@@ -1,23 +1,22 @@
 {
 	"XML_HEADER": "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
 
+	"API_SERVER_HOST": "http://127.0.0.1",
+	"API_SERVER_PORT": 4343,
+
+	"STATIC_SERVER_HOST": "http://127.0.0.1",
+	"STATIC_SERVER_PORT": 4664,
 	"SWF_URL": "/animation/414827163ad4eb60",
 	"STORE_URL": "/store/3a981f5cb2739137",
 	"CLIENT_URL": "/static/ad44370a650793d9",
-
-	"CHAR_BASE_URL": "./server/characters",
-	"THUMB_BASE_URL": "./server/thumbnails",
+	"CHAR_BASE_URL": "/characters",
+	"THUMB_BASE_URL": "/thumbnails",
 
 	"USERDATA_DIR": "./_USERDATA",
-	
 	"ASSET_FOLDER": "./_ASSETS",
 	"EXPORT_FOLDER": "./_EXPORTS",
 	"LOG_FOLDER": "./_LOGS",
 	"SAVED_FOLDER": "./_SAVED",
-	"THEME_FOLDER": "./_THEMES",
-
-	"SERVER_HOST": "http://127.0.0.1",
-	"API_SERVER_PORT": 4343,
-	"STATIC_SERVER_PORT": 4664,
+	
 	"WRAPPER_VER": "2.1.0"
 }

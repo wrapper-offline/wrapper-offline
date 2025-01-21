@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
+import { Group, Request, Response, Server } from "@octanuary/httpz";
 
 declare module "@octanuary/httpz" {
 	interface Request extends IncomingMessage {

@@ -1,9 +1,9 @@
-import type { Asset } from "../../server/models/asset";
+import type { Asset } from "../../main/server/models/asset";
 import crypto from "crypto";
 import Directories from "./directories";
 import fs from "fs";
 import { join } from "path";
-import type { Movie } from "../../server/models/movie";
+import type { Movie } from "../../main/server/models/movie";
 
 type DatabaseJson = {
 	version: string,
@@ -92,37 +92,31 @@ export class Database {
 	}
 
 	/**
-	 * @overload
-	 * @param {"assets"} from
-	 * @param {string} id
-	 * @returns {{
-	*  data: Asset,
-	*  index: number
-	* } | false} returns object if it worked, false if it didn't
-	*/
-	/**
-	 * @overload
-	 * @param {"movies"} from
-	 * @param {string} id
-	 * @returns {{
-	 *  data: Movie,
-	 *  index: number
-	 * } | false} returns object if it worked, false if it didn't
-	 */
-	/**
 	 * returns an object from the database
-	 * @param {"movies | "assets"} from category to select from
-	 * @param {string} id id to look for
-	 * @returns {{
-	 *  data: Movie | Asset,
-	 *  index: number
-	 * } | false} returns object if it worked, false if it didn't
+	 * @param from category to select from
+	 * @param id id to look for
+	 * @returns returns object if it worked, false if it didn't
 	 */
-	get(from, id) {
+	get(from:"assets", id:string): {
+		data: Asset,
+		index: number
+	} | false;
+	get(from:"movies", id:string): {
+		data: Movie,
+		index: number
+	} | false;
+	get(from:"assets"|"movies", id:string): {
+		data: Movie | Asset,
+		index: number
+	} | false
+	get(from:"assets"|"movies", id:string): {
+		data: Movie | Asset,
+		index: number
+	} | false {
 		this.refresh();
 
 		const category = this.json[from];
-		let index;
+		let index:number;
 		const object = category.find((i, ind) => {
 			if (i.id == id) {
 				index = ind;
@@ -192,7 +186,7 @@ export class Database {
 	 * @param data New data to save.
 	 * @returns did it work or not
 	 */
-	update(from:"assets"|"movies", id:string, data:Asset|Movie): boolean {
+	update(from:"assets"|"movies", id:string, data:Partial<Asset>|Partial<Movie>): boolean {
 		const object = this.get(from, id);
 		if (object == false) {
 			return false;

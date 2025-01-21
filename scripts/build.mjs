@@ -39,6 +39,7 @@ const BASE_OPTIONS = {
 		"@ffprobe-installer/ffprobe",
 		"electron",
 		"es6-promise",
+		"formidable",
 	],
 	platform: "node",
 	target: "node14",

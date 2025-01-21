@@ -1,3 +1,4 @@
+import { Char } from "../models/char.js";
 import CharModel from "../models/char.js";
 import Database from "../../../shared/storage/database";
 import fs from "fs";
@@ -106,9 +107,9 @@ group.route("POST", "/goapi/saveCCCharacter/", (req, res) => {
 	const body = Buffer.from(req.body.body);
 	const thumb = Buffer.from(req.body.thumbdata, "base64");
 
-	const meta = {
+	const meta:Partial<Char> = {
 		type: "char",
-		subtype: 0,
+		subtype: "0",
 		title: req.body.title,
 		themeId: req.body.themeId
 	};
@@ -145,9 +146,9 @@ group.route("*", "/api/char/upload", (req, res) => {
 	const origName = file.originalFilename;
 	const path = file.filepath, buffer = fs.readFileSync(path);
 
-	const meta = {
+	const meta:Partial<Char> = {
 		type: "char",
-		subtype: 0,
+		subtype: "0",
 		title: origName || "Untitled",
 		themeId: CharModel.getThemeId(buffer)
 	};

@@ -5,7 +5,7 @@ import httpz from "@octanuary/httpz";
 import { join } from "path";
 import settings from "../../../shared/storage/settings";
 
-const THEME_FOLDER = Directories.theme;
+const THEME_FOLDER = Directories.store;
 const group = new httpz.Group();
 
 /**
@@ -49,20 +49,6 @@ group.route("POST", "/goapi/getThemeList/", async (req, res) => {
 	res.setHeader("Content-Type", "application/zip");
 	res.end(zip);
 });
-
-/*
-themelist management
-*/
-group.route("GET", "/api/theme/locally_available", (req, res) => {
-	const entries = fs.readdirSync(Directories.theme);
-	console.log(entries);
-	console.log(Directories.theme);
-	res.end("{}")
-});
-group.route("GET", "/api/theme/download", (req, res) => {
-	const themes = fs.readdirSync(Directories.theme);
-});
-
 
 /*
 load

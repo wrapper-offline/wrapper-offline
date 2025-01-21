@@ -38,15 +38,15 @@ load flash player
 let pluginName:string;
 switch (process.platform) {
 	case "win32": {
-		pluginName = "./extensions/pepflashplayer.dll";
+		pluginName = "../resources/extensions/pepflashplayer.dll";
 		break;
 	}
 	case "darwin": {
-		pluginName = "./extensions/PepperFlashPlayer.plugin";
+		pluginName = "../resources/extensions/PepperFlashPlayer.plugin";
 		break;
 	}
 	case "linux": {
-		pluginName = "./extensions/libpepflashplayer.so";
+		pluginName = "../resources/extensions/libpepflashplayer.so";
 		app.commandLine.appendSwitch("no-sandbox");
 		break;
 	}
@@ -78,7 +78,6 @@ const createWindow = () => {
 	ipcMain.on("exit", () => process.exit(0));
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
-	ipcMain.on("theme-folder", themeFolder);
 
 	if (IS_DEV) {
 		const host = app.commandLine.getSwitchValue("host");
@@ -98,9 +97,6 @@ async function openDiscord() {
 }
 async function openGithub() {
 	await shell.openExternal("https://github.com/wrapper-offline/wrapper-offline");
-}
-async function themeFolder() {
-	await shell.openPath(directories.theme);
 }
 
 app.whenReady().then(() => {

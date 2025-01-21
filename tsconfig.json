@@ -4,6 +4,7 @@
 		"useDefineForClassFields": false,
 		"experimentalDecorators": true,
 		"downlevelIteration": true,
+		"resolveJsonModule": true,
 		"typeRoots": [
 			"./src/shared/@types",
 			"./node_modules/@types",

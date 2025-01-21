@@ -1,4 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-	h
+	<div id="page_container">	
+		Video List
+	</div>
 </template>

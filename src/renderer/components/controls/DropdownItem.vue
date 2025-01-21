@@ -1,7 +1,7 @@
 <style lang="css">
 .dropdown_item {
 	color: #232323;
-	border-radius: 2px;
+	border-radius: 1px;
     line-height: 16px;
     font-size: 15px;
     margin: 0 4px;
