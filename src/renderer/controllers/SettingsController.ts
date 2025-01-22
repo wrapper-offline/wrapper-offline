@@ -18,8 +18,7 @@ class SettingsController {
 	public async loadSettings(host) {
 		if (!this.settingsLoaded) {
 			const res = await fetch(`${host}/api/settings/list`);
-			const json = await res.json();
-			return json;
+			this.settings = await res.json();
 		}
 		return this.settings;
 	}

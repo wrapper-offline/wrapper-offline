@@ -1,13 +1,11 @@
 <style lang="css">
-.popup_container {
+.theme_selector .popup_container {
 	background: radial-gradient(#333, #111);
 }
-.popup {
+.theme_selector .popup {
 	width: 70%;
 	min-width: 660px;
 	max-width: 950px;
-	height: auto;
-	max-height: calc(100% - 50px);
 }
 
 /**
@@ -152,19 +150,21 @@ onMounted(async () => {
 </script>
 
 <template>
-	<Popup>
-		<template #small-heading>{{ props.headingFor }}</template>
-		<template #large-heading>Select a theme</template>
-
-		<div v-for="theme in themeList" class="theme" :style="{
-			backgroundImage: `url('/img/themes/banners/${theme.id}.webp')`
-		}" :data-id="theme.id" @click="$emit('themeClicked', theme)">
-			<img :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
-			{{ theme.name }}
-		</div>
-		
-		<template #foot>
-			<Button><RouterLink to="/">Cancel</RouterLink></Button>
-		</template>
-	</Popup>
+	<div class="theme_selector">
+		<Popup>
+			<template #small-heading>{{ props.headingFor }}</template>
+			<template #large-heading>Select a theme</template>
+	
+			<div v-for="theme in themeList" class="theme" :style="{
+				backgroundImage: `url('/img/themes/banners/${theme.id}.webp')`
+			}" :data-id="theme.id" @click="$emit('themeClicked', theme)">
+				<img :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
+				{{ theme.name }}
+			</div>
+			
+			<template #foot>
+				<Button><RouterLink to="/">Cancel</RouterLink></Button>
+			</template>
+		</Popup>
+	</div>
 </template>

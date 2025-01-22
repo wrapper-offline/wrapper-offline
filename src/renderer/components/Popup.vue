@@ -20,8 +20,8 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 60%;
-	height: 80%;
+	height: auto;
+	max-height: calc(100% - 50px);
 }
 .popup .popup_head {
 	background: #dbd9e4;
@@ -31,7 +31,7 @@
 	font-weight: 700;
 	display: flex;
 	margin: 0;
-	padding: 6px 18px;
+	padding: 6px 25px;
 	height: 50px;
 }
 .popup .popup_head .head_left {
@@ -74,7 +74,7 @@
 
 .popup .contents {
 	overflow: auto;
-	padding: 15px 30px;
+	padding: 15px 25px;
 }
 
 .popup .popup_foot {
@@ -82,7 +82,7 @@
     border-top: 1px solid #c7c5d3;
 	display: flex;
 	justify-content: flex-end;
-	padding: 2px 10px;
+	padding: 2px 20px;
 	height: 55px;
 }
 
@@ -111,24 +111,20 @@ popup animations
 <script setup lang="ts"></script>
 
 <template>
-	<div>
-		<Teleport to="body">
-			<div class="popup_container">
-				<div class="popup">
-					<div class="popup_head">
-						<div class="head_left"></div>
-						<div class="head_center">
-							<span class="small"><slot name=small-heading></slot></span>
-							<span class="main"><slot name="large-heading"></slot></span>
-						</div>
-						<div class="head_right"></div>
-					</div>
-					<div class="contents"><slot></slot></div>
-					<div class="popup_foot">
-						<slot name="foot"></slot>
-					</div>
+	<div class="popup_container">
+		<div class="popup">
+			<div class="popup_head">
+				<div class="head_left"></div>
+				<div class="head_center">
+					<span class="small"><slot name=small-heading></slot></span>
+					<span class="main"><slot name="large-heading"></slot></span>
 				</div>
+				<div class="head_right"></div>
 			</div>
-		</Teleport>
+			<div class="contents"><slot></slot></div>
+			<div class="popup_foot">
+				<slot name="foot"></slot>
+			</div>
+		</div>
 	</div>
 </template>

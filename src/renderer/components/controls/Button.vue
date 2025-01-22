@@ -8,7 +8,7 @@
 	color: #fff;
 	border-radius: 4px;
 	display: inline-block;
-	padding: 5.5px 10px;
+	padding: 4px 10px;
 	margin: 9px 5px;
 }
 .btn a {
