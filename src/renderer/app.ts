@@ -1,3 +1,4 @@
+import { apiServer } from "./controllers/AppInit";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
@@ -37,26 +38,6 @@ const routes:RouteRecordRaw[] = [
 			title: "Characters"
 		},
 	},
-	// {
-	// 	path: "/characters/create/:themeId?/:bs?",
-	// 	component: DefaultLayout,
-	// 	children: [
-	// 		{ path:"", component:CharacterAppView },
-	// 	],
-	// 	meta: {
-	// 		title: "Character Creator"
-	// 	},
-	// },
-	// {
-	// 	path: "/characters/copy/:assetId",
-	// 	component: DefaultLayout,
-	// 	children: [
-	// 		{ path:"", component:CharacterAppView },
-	// 	],
-	// 	meta: {
-	// 		title: "Character Creator"
-	// 	},
-	// },
 	{
 		path: "/videos/:displayStarters?",
 		component: DefaultLayout,
@@ -68,7 +49,14 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/videos/create/:movieId?",
+		path: "/videos/create/:themeId?",
+		component: StudioView,
+		meta: {
+			title: "Video Maker"
+		},
+	},
+	{
+		path: "/videos/edit/:movieId?",
 		component: StudioView,
 		meta: {
 			title: "Video Maker"
@@ -99,23 +87,8 @@ router.beforeEach((to) => {
 	}
 });
 
-//@ts-ignore
-const apiServer = `${import.meta.env.VITE_API_SERVER_HOST}:${import.meta.env.VITE_API_SERVER_PORT}`;
-//@ts-ignore
-const staticServer = `${import.meta.env.VITE_STATIC_SERVER_HOST}:${import.meta.env.VITE_STATIC_SERVER_PORT}`;
-const staticPaths = {
-	//@ts-ignore
-	swfUrl: import.meta.env.VITE_SWF_URL,
-	//@ts-ignore
-	storeUrl: import.meta.env.VITE_STORE_URL,
-	//@ts-ignore
-	clientUrl: import.meta.env.VITE_CLIENT_URL,
-};
 SettingsController.loadSettings(apiServer).then(() => {
 	const app = createApp(App);
-	app.provide("apiServer", apiServer);
-	app.provide("staticServer", staticServer);
-	app.provide("staticPaths", staticPaths);
 	app.use(router);
 	app.mount("#app");
 });

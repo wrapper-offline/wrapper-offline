@@ -35,16 +35,7 @@ html.dark, html.dark>body {
 	width: 100%;
 	height: calc(100% - 50px);
 }
-
-
 </style>
-
-<script setup lang="ts">
-import SettingsController from "./controllers/SettingsController";
-import Sidebar from "./components/Sidebar.vue";
-import { inject } from "vue";
-
-</script>
 
 <template>
 	<RouterView/>

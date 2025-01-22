@@ -1,118 +1,13 @@
 <style lang="css">
 .popup_container {
-	background: #0e0e109d;
-	animation: 0.15s popup_container_fade forwards ease-out;
-	z-index: 9;
-	position: absolute;
-	top: 0;
-	width: 100%;
-	height: 100%;
+	background: radial-gradient(#333, #111);
 }
-
-.popup {
-	background: #eeedf2;
-	border-radius: 3px;
-	box-shadow: 0 2px 5px #0004;
-	animation: 0.15s popup_flyDown forwards var(--sidebar-open-anim);
-	overflow: hidden;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 60%;
-	height: 80%;
-}
-.popup .popup_heading {
-	background: #dbd9e4;
-    border-bottom: 1px solid #c1bfce;
-	user-select: none;
-	font-size: 20px;
-	font-weight: 700;
-	display: flex;
-	margin: 0;
-	padding: 6px 18px;
-	height: 50px;
-}
-.popup .popup_heading .head_left {
-	flex: 1;
-	background: #0000;
-}
-.popup .popup_heading .head_center .small {
-	color: #84899a;
-	font-size: 10px;
-	position: absolute;
-	left: 0;
-	transform: translateX(-50%);
-	margin-left: 50%;
-}
-.popup .popup_heading .head_center .small + .main {
-	font-size: 17px;
-	position: relative;
-	top: 6px;
-}
-.popup .popup_heading .head_right {
-	flex: 1;
-}
-.popup .popup_heading small {
-	color: #bbb;
-}
-
-.popup .close_btn {
-	background: #0000;
-	border: none;
-	color: #fff;
-	cursor: pointer;
-	font-size: 30px;
-	position: absolute;
-	top: 20px;
-	right: 30px;
-}
-.popup .close_btn:focus {
-	outline: none;
-}
-
-.popup .contents {
-	overflow: auto;
-	padding: 15px 30px;
-	height: calc(100% - 105px);
-}
-
-.popup .bottom {
-	background: #e2e1ea;
-    border-top: 1px solid #c7c5d3;
-	display: flex;
-	justify-content: flex-end;
-	padding: 2px 10px;
-	height: 55px;
-}
-
-
-
-@keyframes popup_container_fade {
-	0% {
-		opacity: 0.3;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-
-@keyframes popup_flyDown {
-	0% {
-		transform: scale(0.8) translate(calc(-50% * calc(1 / 0.8)), calc(-50% - 200px));
-	}
-	100% {
-		transform: translate(-50%, -50%);
-	}
-}
-
-</style>
-
-<style lang="css" scoped>
 .popup {
 	width: 70%;
 	min-width: 660px;
 	max-width: 950px;
 	height: auto;
+	max-height: calc(100% - 50px);
 }
 
 /**
@@ -168,6 +63,21 @@ html.dark .theme:hover {
 	background-blend-mode: overlay;
 }
 
+@media (max-width: 700px) {
+	.popup {
+		min-width: 310px;
+		width: 80%;
+	}
+	.theme {
+		font-size: 16px;
+		width: calc(100% - 8px);
+	}
+	.theme img {
+		width: 50px;
+		height: 50px;
+	}
+}
+
 @media (min-width: 1270px) {
 	.theme {
 		width: calc(33% - 8px);
@@ -185,24 +95,28 @@ html.dark .theme:hover {
 	}
 }
 
+@keyframes popup_container_fade {
+	0% {
+		opacity: 0.2;
+	}
+	70% {
+		opacity: 1;
+	}
+}
+
 </style>
 
-<script async setup lang="ts">
+<script setup lang="ts">
+import { apiServer } from "../controllers/AppInit";
 import Button from "./controls/Button.vue";
-import { inject, onMounted, ref } from "vue";
-
-const props = defineProps<{
-	ccFilter?: boolean
-}>();
+import { onMounted, ref } from "vue";
+import Popup from "./Popup.vue";
 
 type Theme = {
 	id: string,
 	name: string,
 	cc_theme_id?: string
 };
-
-const apiServer = inject("apiServer") as string;
-const themeList = ref<Theme[]>([]);
 
 function loadThemeList(ccFilter = false) : Promise<Theme[]> {
 	return new Promise((res, rej) => {
@@ -225,37 +139,32 @@ function loadThemeList(ccFilter = false) : Promise<Theme[]> {
 		xhttp.send();
 	});
 }
+
+const props = defineProps<{
+	ccFilter?: boolean,
+	headingFor: string,
+}>();
+const themeList = ref<Theme[]>([]);
+
 onMounted(async () => {
 	themeList.value = await loadThemeList(props.ccFilter);
 });
 </script>
 
 <template>
-	<div class="theme_selector">
-		<Teleport to="body">
-			<div class="popup_container">
-				<div class="popup">
-					<h2 class="popup_heading">
-						<div class="head_left"></div>
-						<div class="head_center">
-							<span class="small">Create a character</span>
-							<span class="main">Select a theme</span>
-						</div>
-						<div class="head_right"></div>
-					</h2>
-					<div class="contents">
-						<div v-for="theme in themeList" class="theme" :style="{
-							backgroundImage: `url('/img/themes/banners/${theme.id}.webp')`
-						}" :data-id="theme.id" @click="$emit('themeClicked', theme)">
-							<img :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
-							{{ theme.name }}
-						</div>
-					</div>
-					<div class="bottom">
-						<Button><RouterLink to="/">Cancel</RouterLink></Button>
-					</div>
-				</div>
-			</div>
-		</Teleport>
-	</div>
+	<Popup>
+		<template #small-heading>{{ props.headingFor }}</template>
+		<template #large-heading>Select a theme</template>
+
+		<div v-for="theme in themeList" class="theme" :style="{
+			backgroundImage: `url('/img/themes/banners/${theme.id}.webp')`
+		}" :data-id="theme.id" @click="$emit('themeClicked', theme)">
+			<img :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
+			{{ theme.name }}
+		</div>
+		
+		<template #foot>
+			<Button><RouterLink to="/">Cancel</RouterLink></Button>
+		</template>
+	</Popup>
 </template>

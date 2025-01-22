@@ -24,6 +24,23 @@ group.add(settings);
 group.add(tts);
 group.add(watermark);
 group.add(waveform);
+
+group.route("POST", "/goapi/getCCPreMadeCharacters", (_, r) => {
+	r.end();
+});
+group.route("POST", "/api_v2/team/members", (_, r) => {
+	r.json({status:"ok", data:[]});
+});
+group.route("GET", "/goapi/getAssetTags", (_, r) => {
+	r.json([]);
+});
+group.route("POST", "/goapi/getUserFontList/", (_, r) => {
+	r.json({status:"ok"})
+});
+group.route("POST", "/api_v2/studio_preference/get", (_, r) => {
+	r.json({status:"ok", data:[]})
+});
+
 group.route("*", "*", (req, res) => {
 	if (res.writableEnded) {
 		return;

@@ -40,7 +40,6 @@ logo container
 .app_sidebar #logo_container .toggle_btn:hover {
 	background: #2f2a3c;
 }
-
 .app_sidebar #logo_container #logo_icon {
 	transition: 0.205s var(--sidebar-open-anim);
 	pointer-events: none;
@@ -64,7 +63,7 @@ sidebar sections *OR* grouped link containers
 	margin: 0;
 	padding: 0 2px;
 }
-/* only sections */
+/* sections */
 .app_sidebar>ul:first-of-type {
 	border-bottom: 1px dashed #ceccde;
 }
@@ -72,13 +71,6 @@ sidebar sections *OR* grouped link containers
 	border-top: 1px dashed #ceccde;
 	margin-top: auto;
 }
-
-/* icons */
-.app_sidebar i {
-	margin-top: 0;
-	margin-right: 7px;
-}
-
 /* grouped links (faq & discord) */
 .app_sidebar .group>ul {
 	display: flex;
@@ -90,6 +82,11 @@ sidebar sections *OR* grouped link containers
 	width: calc(50% - 2.5px);
 }
 
+/* icons */
+.app_sidebar i {
+	margin-top: 0;
+	margin-right: 7px;
+}
 
 /**
 links
@@ -484,9 +481,7 @@ function isSelected(e) {
 						</button>
 					</li>
 				</template>
-				<DropdownItem>
-					<RouterLink to="/videos/create">Create a video</RouterLink>
-				</DropdownItem>
+					<RouterLink to="/videos/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator></DropdownSeparator>
 				<DropdownItem>Upload a video</DropdownItem>
 				<DropdownItem>Upload a character</DropdownItem>

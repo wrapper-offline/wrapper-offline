@@ -2,6 +2,8 @@
 .dropdown_item {
 	color: #232323;
 	border-radius: 1px;
+	text-decoration: none;
+	display: block;
     line-height: 16px;
     font-size: 15px;
     margin: 0 4px;
