@@ -190,7 +190,7 @@ module.exports = function processVoice(voiceName, text) {
 					}).toString();
 					const req = https.request(
 						{
-							hostname: "tts.town",
+							hostname: "readloud.net",
 							path: voice.arg,
 							method: "POST",
 							headers: {
@@ -207,7 +207,7 @@ module.exports = function processVoice(voiceName, text) {
 								const end = html.indexOf("mp3", beg) + 3;
 								const sub = html.subarray(beg, end).toString();
 	
-								https.get(`https://tts.town${sub}`, (r2) => {
+								https.get(`https://readloud.net${sub}`, (r2) => {
 									r2.on("error", (e) => rej(e));
 									resolve(r2);
 								});
