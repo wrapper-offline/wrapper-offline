@@ -23,6 +23,28 @@ module.exports = function processVoice(voiceName, text) {
 
 		try {
 			switch (voice.source) {
+				case "acapelaOld": {
+					var q = new URLSearchParams({
+						voiceSpeed: 100,
+						inputText: Buffer.from(text, 'utf8').toString('base64'),
+					}).toString();
+					https.get(
+						{
+							host: "voice.reverso.net",
+							path: `/RestPronunciation.svc/v1/output=json/GetVoiceStream/voiceName=${voice.arg}?${q}`,
+							headers: {
+								'Host': 'voice.reverso.net',
+								'Referer': 'voice.reverso.net',
+								'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.2 (KHTML, like Gecko) Chrome/6.0',
+								'Connection': 'Keep-Alive'
+							}
+						},
+						(r) => {
+							res(r)
+						}
+					);
+					break;
+				}
 				case "acapela": {
 					let acapelaArray = [];
 					for (let c = 0; c < 15; c++) acapelaArray.push(~~(65 + Math.random() * 26));
@@ -134,34 +156,15 @@ module.exports = function processVoice(voiceName, text) {
 				case "cereproc": {
 					const req = https.request(
 						{
-							hostname: "www.cereproc.com",
-							path: "/themes/benchpress/livedemo.php",
+							hostname: "api.cerevoice.com",
+							path: `/v2/demo?voice=${voice.arg}&audio_format=mp3`,
 							method: "POST",
-							headers: {
-								"content-type": "text/xml",
-								"accept-encoding": "gzip, deflate, br",
-								origin: "https://www.cereproc.com",
-								referer: "https://www.cereproc.com/en/products/voices",
-								"x-requested-with": "XMLHttpRequest",
-								cookie: "Drupal.visitor.liveDemoCookie=666",
-							},
 						},
 						(r) => {
-							var buffers = [];
-							r.on("data", (d) => buffers.push(d));
-							r.on("end", () => {
-								const xml = String.fromCharCode.apply(null, brotli.decompress(Buffer.concat(buffers)));
-								const beg = xml.indexOf("<url>") + 5;
-								const end = xml.lastIndexOf("</url>");
-								const loc = xml.substring(beg, end).toString();
-								https.get(loc, resolve).on("error", rej);
-							});
-							r.on("error", rej);
+							resolve(r)
 						}
-					).on("error", rej);
-					req.end(
-						`<speakExtended key='666'><voice>${voice.arg}</voice><text>${text}</text><audioFormat>mp3</audioFormat></speakExtended>`
 					);
+					req.end(`<text>${text}</text>`);
 					break;
 				}
 	
@@ -187,7 +190,7 @@ module.exports = function processVoice(voiceName, text) {
 					}).toString();
 					const req = https.request(
 						{
-							hostname: "readloud.net",
+							hostname: "tts.town",
 							path: voice.arg,
 							method: "POST",
 							headers: {
@@ -204,7 +207,7 @@ module.exports = function processVoice(voiceName, text) {
 								const end = html.indexOf("mp3", beg) + 3;
 								const sub = html.subarray(beg, end).toString();
 	
-								https.get(`https://readloud.net${sub}`, (r2) => {
+								https.get(`https://tts.town${sub}`, (r2) => {
 									r2.on("error", (e) => rej(e));
 									resolve(r2);
 								});
@@ -235,8 +238,8 @@ module.exports = function processVoice(voiceName, text) {
 				case "tiktok": {
 					const req = https.request(
 						{
-							hostname: "tiktok-tts.weilnet.workers.dev",
-							path: "/api/generation",
+							hostname: "tiktok-tts-extension.mobisharksdev.com",
+							path: "/api/v1/generate",
 							method: "POST",
 							headers: {
 								"Content-type": "application/json"
@@ -277,12 +280,12 @@ module.exports = function processVoice(voiceName, text) {
 						HTTP_ERR: "",
 					}).toString();
 	
-					console.log(`https://cache-a.oddcast.com/tts/genB.php?${q}`)
+					console.log(`https://cache-a.oddcast.com/tts/genC.php?${q}`)
 					https
 						.get(
 							{
 								hostname: "cache-a.oddcast.com",
-								path: `/tts/genB.php?${q}`,
+								path: `/tts/genC.php?${q}`,
 								headers: {
 									"Host": "cache-a.oddcast.com",
 									"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0",
