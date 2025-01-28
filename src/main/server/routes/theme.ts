@@ -25,7 +25,7 @@ function parseThemeList() {
 		node = node.trim().slice(0, -2);
 		let theme = {};
 		for (const regEx of node.matchAll(/(\S+)="(.+?)"/g)) {
-			theme[regEx[1]] = regEx[2];
+			theme[regEx[1]] = regEx[2].replace("&amp;", "&");
 		}
 		themes.push(theme);
 	}

@@ -1,6 +1,7 @@
 export interface Params {
 	flashvars: Flashvars,
 	allowScriptAccess: "always",
+	allowFullScreen?: "always",
 	movie?: string,
 	wmode?: string,
 }

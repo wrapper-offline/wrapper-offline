@@ -1,5 +1,5 @@
 import type { Char } from "./char";
-import Directories from "../../../shared/storage/directories";
+import directories from "../../../shared/storage/directories";
 import fs from "fs";
 import Database, { generateId } from "../../../shared/storage/database";
 import type { Movie } from "./movie";
@@ -45,7 +45,7 @@ export type Asset = Sound | Background | Watermark | Prop | Video | Char;
 const header = process.env.XML_HEADER;
 
 export default class AssetModel {
-	static folder = Directories.asset;
+	static folder = directories.asset;
 
 	/**
 	 * Deletes an asset.

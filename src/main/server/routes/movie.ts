@@ -61,7 +61,7 @@ list
 // movies
 group.route("GET", "/api/movie/list", (req, res) => {
 	if (!req.query.type) {
-		return res.status(400).json({msg:"No type specified."});
+		return res.status(400).json({msg:"Expected type parameter"});
 	}
 	switch (req.query.type) {
 		case "starter":
@@ -156,42 +156,44 @@ save
 */
 group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], (req, res) => {
 	if (!req.body.body_zip) {
-		return res.status(400).end("No movie zip.");
+		return res.status(400).end("Expected body_zip field");
 	}
 	const trigAutosave = req.body.is_triggered_by_autosave;
-	const saveAsStarter = req.parsedUrl.pathname == "/goapi/saveTemplate/";
 	// make sure we're autosaving an existing movie
 	if (trigAutosave && !req.body.movieId) {
-		return res.end("0");
-	} else if ( // check if there's a thumbnail in case this is a manual save
-		!trigAutosave && !req.body.thumbnail_large
-	) {
-		return res.status(400).end("A thumbnail is required on manual saves.");
+		return res.end("0"); // lie
 	}
-
+	// check if there's a thumbnail in case this is a manual save
+	if (!trigAutosave && !req.body.thumbnail_large) {
+		return res.status(400).end("No is_triggered_by_autosave, expected thumbnail_large field");
+	}
+	
 	const body = Buffer.from(req.body.body_zip, "base64");
-	let thumb;
+	let thumb:Buffer | void;
 	if (!trigAutosave) {
 		thumb = Buffer.from(req.body.thumbnail_large, "base64");
 	}
+	// zip check
 	if (!body.subarray(0, 4).equals(
 		Buffer.from([0x50, 0x4b, 0x03, 0x04])
 	)) {
 		return res.status(400).end("Movie is not a zip.");
 	}
-
+	
 	console.log(`Controllers.movie#save: Saving movie #${req.body.movieId || "<new movie>"}...`);
 	// extract the xml from the BLANK ZIP YOU FUCKERS
 	// YOU GOANIMATE HACKS
+	// wow 2023 octanuary crash out
 	const xmlStream = nodezip.unzip(body)["movie.xml"].toReadStream();
 	let buffers = [];
-	xmlStream.on("data", (c) => buffers.push(c));
+	xmlStream.on("data", (c:Buffer) => buffers.push(c));
 	xmlStream.on("end", () => {
-		const xml = Buffer.concat(buffers);
-		MovieModel.save(xml, thumb, req.body.movieId, saveAsStarter).then((id) => {
+		const movieXml = Buffer.concat(buffers);
+		const saveAsStarter = req.parsedUrl.pathname == "/goapi/saveTemplate/";
+		MovieModel.save(movieXml, thumb, req.body.movieId, saveAsStarter).then((id:string) => {
 			console.log(`Controllers.movie#save: Successfully saved movie #${id}.`);
 			res.end("0" + id);
-		}).catch((err) => {
+		}).catch((err:Error|"404") => {
 			if (err == "404") {
 				return res.status(404).end("Specified movie doesn't exist.");
 			}

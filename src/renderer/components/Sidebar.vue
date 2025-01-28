@@ -1,13 +1,9 @@
-<style lang="css">
-:root {
-	--sidebar-open-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
-}
-
+<style lang="css" scoped>
 .app_sidebar {
 	background: #eeedf2;
 	border-right: 1px solid #c8c6dd;
-	box-shadow: 0 0 3px #0001;
-	transition: width 0.2s var(--sidebar-open-anim);
+	box-shadow: 0 0 2px #0001;
+	transition: 0.2s var(--slide-anim);
 	z-index: 8;
 	user-select: none;
 	display: flex;
@@ -21,9 +17,9 @@ logo container
 **/
 .app_sidebar #logo_container {
 	background: #1e1b2b;
-	border-right: 1px solid #15131f;
+	border-right: 1px solid #2c293e;
 	border-bottom: 1px solid #433d5d;
-	transition: width 0.2s var(--sidebar-open-anim);
+	transition: width 0.2s var(--slide-anim);
 	padding: 4px 8px;
 	transform: translateX(-6px);
 	cursor: pointer;
@@ -32,7 +28,7 @@ logo container
 }
 .app_sidebar #logo_container .toggle_btn {
 	border-radius: 3px;
-	transition: background 0.2s var(--sidebar-open-anim);
+	transition: background 0.2s var(--slide-anim);
 	user-select: none;
 	width: 100%;
 	height: 100%;
@@ -41,14 +37,14 @@ logo container
 	background: #2f2a3c;
 }
 .app_sidebar #logo_container #logo_icon {
-	transition: 0.205s var(--sidebar-open-anim);
+	transition: 0.205s var(--slide-anim);
 	pointer-events: none;
 	position: absolute;
 	left: calc(50% - calc(175px / 2));
 	height: 41px;
 }
 .app_sidebar #logo_container #logo_wordmark {
-	transition: 0.2s var(--sidebar-open-anim);
+	transition: 0.2s var(--slide-anim);
 	pointer-events: none;
 	position: absolute;
 	left: calc(50% - calc(175px / 2));
@@ -344,6 +340,7 @@ collapsed
 }
 
 .app_sidebar.resize {
+	filter: brightness(0.95);
 	transition: none;
 }
 .app_sidebar.resize #logo_container {
@@ -351,10 +348,6 @@ collapsed
 }
 .app_sidebar.resize .dragger {
 	background: #5298d6;
-}
-
-body.col_resize {
-	cursor: col-resize;
 }
 
 /**
@@ -378,8 +371,8 @@ animations
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
-import { ref } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
+import { ref } from "vue";
 
 const inResize = ref(false);
 const collapsed = ref(false);
@@ -409,7 +402,7 @@ function onLinkClick(e:MouseEvent) {
 function pin() {
 
 }
-function draggerDown(e) {
+function draggerDown(e:MouseEvent) {
 	inResize.value = true;
 	document.body.classList.add("col_resize");
 	const startX = e.clientX;
@@ -477,7 +470,7 @@ function isSelected(e) {
 					<li class="link create">
 						<button>
 							<i class="ico arr_r"></i>
-							<div class="link_text">Create</div>
+							<div class="link_text">New</div>
 						</button>
 					</li>
 				</template>
@@ -488,13 +481,13 @@ function isSelected(e) {
 			</Dropdown>
 			<div class="spacer"></div>
 			<li class="link">
-				<RouterLink to="/videos" @click="onLinkClick">
+				<RouterLink to="/videos/movie" @click="onLinkClick">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/videos/true" @click="onLinkClick">
+				<RouterLink to="/videos/starter" @click="onLinkClick">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
 				</RouterLink>

@@ -3,17 +3,20 @@ movie parsing
  if you don't know what's going on here, look at the lvm's code
  ffdec does a great job with that
 */
-const AssetModel = require("../models/asset.js");
-const CharModel = require("../models/char.js");
-const database = require("../../../shared/storage/database.js");
-const fileUtil = require("./fileUtil.js");
-const fs = require("fs");
-const nodezip = require("node-zip");
-const path = require("path");
-const { XmlDocument } = require("xmldoc");
 
-const source = path.join(__dirname, "../../server", process.env.CLIENT_URL);
-const store = path.join(__dirname, "../../server", process.env.STORE_URL);
+import AssetModel, { Asset } from "../models/asset";
+import type { Char } from "../models/char";
+import CharModel from "../models/char";
+import database from "../../../shared/storage/database";
+import fileUtil from "./fileUtil";
+import fs from "fs";
+import nodezip from "node-zip";
+import path from "path";
+import { Readable } from "stream";
+import { XmlDocument } from "xmldoc";
+
+const source = path.join(__dirname, "../resources/static", process.env.CLIENT_URL);
+const store = path.join(__dirname, "../resources/static", process.env.STORE_URL);
 const header = process.env.XML_HEADER;
 
 /**
@@ -64,10 +67,9 @@ function name2Font(font) {
 }
 
 /**
- * @param {import("stream").Readable} readStream 
- * @returns {Promise<Buffer>}
+ * converts a readable stream to a buffer
  */
-function stream2Buffer(readStream) {
+function stream2Buffer(readStream:Readable): Promise<Buffer> {
 	return new Promise((res, rej) => {
 		let buffers = [];
 		readStream.on("data", (c) => buffers.push(c));
@@ -75,29 +77,26 @@ function stream2Buffer(readStream) {
 	});
 }
 
-module.exports = {
+export default {
 	/**
 	 * Parses a movie XML by adding files to a ZIP.
-	 * @param {Buffer} xmlBuffer 
-	 * @param {?Buffer} thumbBuffer 
+	 * @param xmlBuffer movie xml
+	 * @param thumbBuffer thumbnail
 	 * @returns {Promise<Buffer>}
 	 */
-	async pack(xmlBuffer, thumbBuffer) {
+	async pack(xmlBuffer:Buffer, thumbBuffer?:Buffer): Promise<Buffer> {
 		if (xmlBuffer.length == 0) throw null;
 
 		const zip = nodezip.create();
-		/** @type {Record<string, boolean>} */
-		const themes = { common: true };
+		const themes:Record<string, boolean> = { common: true };
 		var ugc = `${header}<theme id="ugc" name="ugc">`;
 		fileUtil.addToZip(zip, "movie.xml", xmlBuffer);
 
 		/**
 		 * why not just merge em together they're all similar anyway
-		 * @param {string} file 
-		 * @param {string} type 
-		 * @param {?string} subtype 
+		 * @param file TODO: describe this
 		 */
-		async function basicParse(file, type, subtype) {
+		async function basicParse(file:string, type:string, subtype?:string) {
 			const pieces = file.split(".");
 			const themeId = pieces[0];
 			
@@ -114,7 +113,7 @@ module.exports = {
 					const buffer = AssetModel.load(id, true);
 	
 					// add asset meta
-					const assetMeta = database.instance.get("assets", id);
+					const assetMeta = database.get("assets", id);
 					if (!assetMeta) {
 						throw new Error(`Asset #${id} is in the XML, but it does not exist.`);
 					}
@@ -206,7 +205,7 @@ module.exports = {
 											id: id,
 											type: "char",
 											themeId: CharModel.getThemeId(charXml)
-										});
+										} as Char);
 										fileUtil.addToZip(zip, filename + ".xml", charXml);
 									} catch (e) {
 										console.error(`WARNING: ${id}:`, e);
@@ -347,10 +346,10 @@ module.exports = {
 
 	/**
 	 * unpacks a movie zip returns movie xml
-	 * @param {Buffer} body 
-	 * @returns {Promise<[Buffer, Buffer]>} [moviexml buffer, movie thumb buffer]
+	 * @param body body zip
+	 * @returns [moviexml buffer, movie thumb buffer]
 	 */
-	async unpack(body) {
+	async unpack(body:Buffer): Promise<[Buffer, Buffer]> {
 		const zip = nodezip.unzip(body);
 		const ugcStream = zip["ugc.xml"].toReadStream();
 		const ugcBuffer = await stream2Buffer(ugcStream);
@@ -386,7 +385,7 @@ module.exports = {
 								width: +elem.attr.width,
 								height: +elem.attr.height,
 								id: elem.attr.id
-							});
+							} as Asset);
 
 							const readStream2 = zip[`ugc.prop.${elem.attr.id.slice(0, -4)}.png`].toReadStream();
 							const buffer2 = await stream2Buffer(readStream2);
@@ -419,7 +418,7 @@ module.exports = {
 						const buffer = await stream2Buffer(readStream);
 						CharModel.save(buffer, {
 							type: "char",
-							subtype: 0,
+							subtype: "0",
 							title: elem.attr.name,
 							themeId: CharModel.getThemeId(buffer),
 							id: elem.attr.id

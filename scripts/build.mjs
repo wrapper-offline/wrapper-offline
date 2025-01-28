@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { spawn } from "child_process";
 import viteConfig from "../vite.config.js";
 
-const DEV_HOST = "localhost";
+const DEV_HOST = "http://localhost";
 const DEV_PORT = viteConfig.server.port || 5173;
 
 /** @returns {Record<string, string>} */

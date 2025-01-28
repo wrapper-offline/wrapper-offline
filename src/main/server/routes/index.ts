@@ -41,12 +41,12 @@ group.route("POST", "/api_v2/studio_preference/get", (_, r) => {
 	r.json({status:"ok", data:[]})
 });
 
-group.route("*", "*", (req, res) => {
+group.route("*", "*", async (req, res) => {
 	if (res.writableEnded) {
 		return;
 	}
-	handler(req, res, {
-		public: "src/server/public", 
+	await handler(req, res, {
+		public: "dist/renderer", 
 		headers: {
 			"Cache-Control": "no-store"
 		}

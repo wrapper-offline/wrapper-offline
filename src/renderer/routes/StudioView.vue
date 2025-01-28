@@ -126,7 +126,7 @@ function themeSelected(themeId:string) {
 
 /* get flashvars */
 const route = useRoute();
-let movieId = route.query.themeId as string | void;
+let movieId = route.params.movieId as string | void;
 if (movieId) {
 	params.flashvars.movieId = movieId;
 	themeSelected("MovieLibrary");

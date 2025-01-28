@@ -3,6 +3,10 @@
 @import "/node_modules/modern-normalize/modern-normalize.css";
 @import "/css/icons.css";
 
+:root {
+	--slide-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
+}
+
 /**
 general
 **/
@@ -12,6 +16,9 @@ html, body {
 	font: 15px/1.7 "Lato", Arial, sans-serif;
 	width: 100%;
 	height: 100%;
+}
+body.col_resize {
+	cursor: col-resize;
 }
 html.dark, html.dark>body {
 	background: #1e1d25;
@@ -36,6 +43,18 @@ html.dark, html.dark>body {
 	height: calc(100% - 50px);
 }
 </style>
+
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+
+const params = new URLSearchParams(window.location.search);
+if (params.get("redirect")) {
+	const router = useRouter();
+	const to = params.get("redirect") as string;
+	router.push(to);
+}
+
+</script>
 
 <template>
 	<RouterView/>

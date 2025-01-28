@@ -1,28 +1,34 @@
-const fs = require("fs");
-const path = require("path");
-const database = require("../../../shared/storage/database.js");
-const Parse = require("../utils/movieParser.js");
+import directories from "../../../shared/storage/directories";
+import database, { generateId } from "../../../shared/storage/database";
+import fs from "fs";
+import { join } from "path";
+import Parse from "../utils/movieParser.js";
 
-/**
- * @typedef {Object} Movie
- * @property {string} duration
- * @property {string} date
- * @property {string} title
- * @property {number} sceneCount
- * @property {?string} watermark
- * @property {string} id
- * @property {?"movie"} type
- */
+export type Movie = {
+	duration: string,
+	date: string,
+	title: string,
+	sceneCount: number,
+	watermark?: string,
+	id: string,
+};
+export type Starter = {
+	type: "movie",
+	duration: string,
+	date: string,
+	title: string,
+	sceneCount: number,
+	id: string,
+};
 
-module.exports = class MovieModel {
-	static folder = path.join(__dirname, "../../../", process.env.SAVED_FOLDER);
+export default class MovieModel {
+	static folder = directories.saved;
 
 	/**
 	 * deletes a movie do i really have to explain this to you
-	 * @param {string} id 
-	 * @returns {Promise<void>}
+	 * @param id movie id
 	 */
-	static delete(id) {
+	static delete(id:string): Promise<void> {
 		return new Promise((res, rej) => {
 			// if movie delete from movies, if starter delete from assets
 			if (database.get("movies", id)) {
@@ -36,22 +42,22 @@ module.exports = class MovieModel {
 				return rej("404");
 			}
 
-			fs.unlinkSync(path.join(this.folder, id + ".xml"));
-			fs.unlinkSync(path.join(this.folder, id + ".png"));
+			fs.unlinkSync(join(this.folder, id + ".xml"));
+			fs.unlinkSync(join(this.folder, id + ".png"));
 			res();
 		});
 	}
 
 	/**
 	 * packs a movie into a zip to be loaded by the videomaker
-	 * @param {string} id
-	 * @returns {Promise<Buffer>}
+	 * @param id movie id
+	 * @returns zip file containing the movie
 	 */
-	static async packMovie(id) {
+	static async packMovie(id:string): Promise<Buffer> {
 		if (!this.exists(id)) {
 			throw "404";
 		} 
-		const filepath = path.join(this.folder, id);
+		const filepath = join(this.folder, id);
 		const xml = fs.readFileSync(filepath + ".xml");
 		const thumbnail = fs.readFileSync(filepath + ".png");
 		const zipped = await Parse.pack(xml, thumbnail);
@@ -63,28 +69,30 @@ module.exports = class MovieModel {
 	*/
 
 	/**
-	 * @param {string} id 
-	 * @returns {Promise<{
-	 *  filepath: string,
-	 *  start: number,
-	 *  stop: number,
-	 *  trimStart: number,
-	 *  trimEnd: number,
-	 *  fadeIn: {
-	 *   duration: number;
-	 *   vol: number;
-	 *  },
-	 *  fadeOut: {
-	 *   duration: number;
-	 *   vol: number;
-	 *  }
-	 * }[]>}
+	 * extracts audio information from a movie xml
+	 * @param id movie id
+	 * @returns list of objects representing audio clips and how they
+	 * should be played
 	 */
-	static async extractAudioTimes(id) {
+	static async extractAudioTimes(id:string): Promise<{
+		filepath: string,
+		start: number,
+		stop: number,
+		trimStart: number,
+		trimEnd: number,
+		fadeIn: {
+			duration: number;
+			vol: number;
+		},
+		fadeOut: {
+			duration: number;
+			vol: number;
+		}
+	}[]> {
 		if (!this.exists(id)) {
 			throw "404";
 		}
-		const filepath = path.join(this.folder, `${id}.xml`);
+		const filepath = join(this.folder, `${id}.xml`);
 		const xml = fs.readFileSync(filepath);
 		const audio = await Parse.extractAudioTimes(xml);
 		return audio;
@@ -92,18 +100,18 @@ module.exports = class MovieModel {
 
 	/**
 	 * Gets movie metadata from an XML.
-	 * @param {string} id the movie id
-	 * @returns {{
-	 * 	date: Date,
-	 *  durationString: string,
-	 * 	duration: number,
-	 *  sceneCount?: count,
-	 * 	title: string,
-	 * 	id: string
-	 * }} 
+	 * @param id movie id
+	 * @returns movie information 
 	 */
-	static async extractMeta(id) {
-		const filepath = path.join(this.folder, `${id}.xml`);
+	static async extractMeta(id:string): Promise<{
+		date: Date,
+		durationString: string,
+		duration: number,
+		sceneCount?: number,
+		title: string,
+		id: string
+	}> {
+		const filepath = join(this.folder, `${id}.xml`);
 		if (!fs.existsSync(filepath)) {
 			throw "404";
 		}
@@ -144,35 +152,40 @@ module.exports = class MovieModel {
 
 	/**
 	 * what do you think
-	 * @param {Buffer} xml the movie xml
-	 * @param {Buffer} thumb movie thumbnail in .png format
-	 * @param {string} id movie id, if overwriting an old one
-	 * @param {boolean} saveAsStarter
-	 * @returns {Promise<string>}
+	 * @param xml the movie xml
+	 * @param thumb movie thumbnail in .png format
+	 * @param id movie id, if overwriting an old one
+	 * @param saveAsStarter
+	 * @returns movie id
 	 */
-	static async save(xml, thumbnail, id, saveAsStarter) {
+	static async save(
+		xml:Buffer,
+		thumbnail:Buffer,
+		id:string,
+		saveAsStarter:boolean
+	): Promise<string> {
 		return new Promise((res, rej) => {
 			const newMovie = !id;
 			if (!newMovie && !this.exists(id)) {
 				return rej("404");
 			}
-			id ||= database.generateId();
+			id ||= generateId();
 
 			if (thumbnail) {
-				fs.writeFileSync(path.join(this.folder, id + ".png"), thumbnail);
+				fs.writeFileSync(join(this.folder, id + ".png"), thumbnail);
 			}
-			fs.writeFileSync(path.join(this.folder, id + ".xml"), xml);
+			fs.writeFileSync(join(this.folder, id + ".xml"), xml);
 
 			this.extractMeta(id).then((meta) => {
-				// meoww x3
-				let dbCat;
-				const info = {
+				// cat meoww x3
+				let dbCat:"assets"|"movies";
+				const info:Movie|Starter = {
 					id: id,
 					duration: meta.durationString,
 					date: meta.date.toISOString(),
 					title: meta.title,
 					sceneCount: meta.sceneCount,
-				}
+				};
 				if (
 					// new starter
 					(newMovie && saveAsStarter) ||
@@ -181,7 +194,7 @@ module.exports = class MovieModel {
 						type: "movie"
 					}).length > 0
 				) {
-					info.type = "movie";
+					(info as Starter).type = "movie";
 					dbCat = "assets";
 				} else {
 					dbCat = "movies";
@@ -197,9 +210,10 @@ module.exports = class MovieModel {
 
 	/**
 	 * checks if a movie exists
-	 * @param {string} id
+	 * @param id movie id
+	 * @returns whether it exists or not
 	 */
-	static exists(id) {
+	static exists(id:string): boolean {
 		if (
 			!database.get("movies", id) &&
 			database.select("assets", {
@@ -213,12 +227,12 @@ module.exports = class MovieModel {
 	}
 
 	/**
-	 * Returns a stream of a movie thumbnail.
-	 * @param {string} id 
+	 * returns a movie thumbnail stream. throws "404" if movie doesn't exist
+	 * @param id movie id
 	 */
-	static thumb(id) {
+	static thumb(id:string) {
 		// look for match in folder
-		const filepath = path.join(this.folder, `${id}.png`);
+		const filepath = join(this.folder, `${id}.png`);
 		if (fs.existsSync(filepath)) {
 			const readStream = fs.createReadStream(filepath);
 			return readStream;
@@ -229,34 +243,34 @@ module.exports = class MovieModel {
 
 	/**
 	 * unpacks a movie zip
-	 * @param {Buffer} body zip containing the movie and its assets
-	 * @param {?boolean} isStarter is the movie being uploaded as a starter
-	 * @returns {Promise<string>}
+	 * @param body zip containing the movie and its assets
+	 * @param isStarter is the movie being uploaded as a starter
+	 * @returns movie id
 	 */
-	static upload(body, isStarter = false) {
+	static upload(body:Buffer, isStarter = false): Promise<string> {
 		return new Promise(async (res, rej) => {
-			const id = database.generateId();
+			const id = generateId();
 			const [xml, thumb] = await Parse.unpack(body);
 
-			fs.writeFileSync(path.join(this.folder, `${id}.xml`), xml);
-			fs.writeFileSync(path.join(this.folder, `${id}.png`), thumb);
+			fs.writeFileSync(join(this.folder, `${id}.xml`), xml);
+			fs.writeFileSync(join(this.folder, `${id}.png`), thumb);
 			this.extractMeta(id).then((meta) => {
-				let type;
-				const info = {
+				let dbCategory:string;
+				const info:Starter|Movie = {
 					id,
 					duration: meta.durationString,
 					date: meta.date.toISOString(),
 					title: meta.title,
 					sceneCount: meta.sceneCount,
-				}
+				};
 				if (isStarter) {
-					info.type = "movie";
-					type = "assets";
+					(info as Starter).type = "movie";
+					dbCategory = "assets";
 				} else {
-					type = "movies";
+					dbCategory = "movies";
 				}
 
-				database.insert(type, info);
+				database.insert(dbCategory, info);
 				res(id);
 			});
 		});

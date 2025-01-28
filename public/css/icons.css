@@ -43,6 +43,9 @@ i.ico.film::before {
 i.ico.flop::before {
 	content: '\E444';
 }
+i.ico.grid::before {
+	content: '\E156';
+}
 i.ico.interr::before {
 	content: '\E195';
 }

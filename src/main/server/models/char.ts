@@ -7,7 +7,7 @@ export type Char = {
 	type: "char",
 	subtype: "0",
 	title: string,
-	tags: string,
+	tags?: string,
 	themeId: string,
 	id: string,
 };

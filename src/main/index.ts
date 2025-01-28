@@ -79,16 +79,16 @@ const createWindow = () => {
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
 
+	let host:string, port:string;
 	if (IS_DEV) {
-		const host = app.commandLine.getSwitchValue("host");
-		const port = app.commandLine.getSwitchValue("port");
-		root = `http://${host}:${port}`;
-		mainWindow.loadURL(root);
+		host = app.commandLine.getSwitchValue("host");
+		port = app.commandLine.getSwitchValue("port");
 	} else {
-		root = join(__dirname, "index.html");
-		mainWindow.loadFile(root);
+		host = process.env.API_SERVER_HOST;
+		port = process.env.API_SERVER_PORT;
 	}
-	console.log(root)
+	root = `${host}:${port}`;
+	mainWindow.loadURL(root);
 	mainWindow.on("closed", () => process.exit(0));
 };
 

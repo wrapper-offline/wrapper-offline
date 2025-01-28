@@ -8,15 +8,16 @@ import SettingsController from "./controllers/SettingsController";
 import AssetListView from "./routes/AssetListView.vue";
 import CharacterAppView from "./routes/CharacterAppView.vue";
 import Error404View from "./routes/Error404View.vue";
+import MovieListView from "./routes/MovieListView.vue";
+import PlayerView from "./routes/PlayerView.vue";
 import StudioView from "./routes/StudioView.vue";
-import VideoListView from "./routes/VideoListView.vue";
 
 import DefaultLayout from "./DefaultLayout.vue"
 
 const routes:RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/videos",
+		redirect: "/videos/movie",
 	},
 	{
 		path: "/assets",
@@ -39,10 +40,10 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/videos/:displayStarters?",
+		path: "/videos/:filter",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:VideoListView },
+			{ path:"", component:MovieListView },
 		],
 		meta: {
 			title: "Videos"
@@ -60,6 +61,13 @@ const routes:RouteRecordRaw[] = [
 		component: StudioView,
 		meta: {
 			title: "Video Maker"
+		},
+	},
+	{
+		path: "/videos/play/:movieId",
+		component: PlayerView,
+		meta: {
+			title: "Playing a video"
 		},
 	},
 	{

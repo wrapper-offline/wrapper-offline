@@ -5,6 +5,7 @@
 	z-index: 9;
 	position: absolute;
 	top: 0;
+	left: 0;
 	width: 100%;
 	height: 100%;
 }
@@ -13,7 +14,7 @@
 	background: #eeedf2;
 	border-radius: 3px;
 	box-shadow: 0 2px 5px #0004;
-	animation: 0.15s popup_flyDown forwards var(--sidebar-open-anim);
+	animation: 0.15s popup_flyDown forwards var(--slide-anim);
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
