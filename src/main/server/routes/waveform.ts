@@ -1,7 +1,7 @@
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import path from "path";
-import Settings from "../../../shared/storage/settings";
+import Settings from "../../storage/settings";
 import WfModel from "../models/waveform.js";
 
 const group = new httpz.Group();

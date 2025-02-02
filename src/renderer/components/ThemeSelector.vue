@@ -1,8 +1,8 @@
 <style lang="css">
-.theme_selector .popup_container {
-	background: radial-gradient(#333, #111);
+.popup_container.theme_sel_popup {
+	background: var(--popup-gradient-bg);
 }
-.theme_selector .popup {
+.popup_container.theme_sel_popup .popup {
 	width: 70%;
 	min-width: 660px;
 	max-width: 950px;
@@ -62,7 +62,7 @@ html.dark .theme:hover {
 }
 
 @media (max-width: 700px) {
-	.popup {
+	.popup_container.theme_sel_popup .popup {
 		min-width: 310px;
 		width: 80%;
 	}
@@ -83,7 +83,7 @@ html.dark .theme:hover {
 }
 
 @media (min-width: 1450px) {
-	.popup {
+	.popup_container.theme_sel_popup .popup {
 		max-width: 1200px;
 	}
 	.theme {
@@ -151,7 +151,7 @@ onMounted(async () => {
 
 <template>
 	<div class="theme_selector">
-		<Popup>
+		<Popup class="theme_sel_popup hidden">
 			<template #small-heading>{{ props.headingFor }}</template>
 			<template #large-heading>Select a theme</template>
 	

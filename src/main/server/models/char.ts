@@ -1,5 +1,5 @@
-import Database, { generateId } from "../../../shared/storage/database";
-import Directories from "../../../shared/storage/directories";
+import Database, { generateId } from "../../storage/database";
+import Directories from "../../storage/directories";
 import fs from "fs";
 import path from "path";
 

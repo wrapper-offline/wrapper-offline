@@ -1,12 +1,14 @@
 <style lang="css">
 .btn {
-	background: #43bca5;
+	background: #838190;
+	color: #fff;
+	border-radius: 4px;
 	border: none;
+	user-select: none;
 	font-size: 14px;
 	font-weight: bold;
 	text-decoration: none;
-	color: #fff;
-	border-radius: 4px;
+	transition: opacity 0.2s var(--button-anim);
 	display: inline-block;
 	padding: 4px 10px;
 	margin: 9px 5px;
@@ -16,27 +18,29 @@
 	text-decoration: none;
 }
 .btn:hover {
-	background: #029a85;
+	opacity: 0.8;
+	transition: none;
 	cursor: pointer;
 }
+.btn.primary {
+	background: #fc4f7d;
+}
 .dark .btn {
-	background: #333;
+	background: #42404f;
 }
-.dark .btn:hover {
-	background: #444;
-}
-/* primary color buttons */
-.btn.btn_primary {
-	background: #e97d3b;
-	width: 160px;
-}
-.btn.btn_primary:hover {
-	background: #dd6522;
+.dark .btn.primary {
+	background: #a82447;
 }
 </style>
 
+<script setup lang="ts">
+const props = defineProps<{
+	primary?: boolean
+}>();
+</script>
+
 <template>
-	<div class="btn">
+	<div class="btn" :class="{ primary: props.primary }">
 		<slot></slot>
 	</div>
 </template>

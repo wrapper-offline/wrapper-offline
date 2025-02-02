@@ -1,6 +1,6 @@
 import httpz from "@octanuary/httpz";
 import https from "https";
-import Settings from "../../../shared/storage/settings";
+import Settings from "../../storage/settings";
 
 const group = new httpz.Group();
 

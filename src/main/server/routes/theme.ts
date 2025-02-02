@@ -1,9 +1,9 @@
-import Directories from "../../../shared/storage/directories";
+import Directories from "../../storage/directories";
 import fileUtil from "../utils/fileUtil.js";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import { join } from "path";
-import settings from "../../../shared/storage/settings";
+import settings from "../../storage/settings";
 
 const THEME_FOLDER = Directories.store;
 const group = new httpz.Group();

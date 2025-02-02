@@ -7,7 +7,7 @@ movie parsing
 import AssetModel, { Asset } from "../models/asset";
 import type { Char } from "../models/char";
 import CharModel from "../models/char";
-import database from "../../../shared/storage/database";
+import database from "../../storage/database";
 import fileUtil from "./fileUtil";
 import fs from "fs";
 import nodezip from "node-zip";

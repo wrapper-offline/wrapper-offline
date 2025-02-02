@@ -2,18 +2,14 @@ import DirUtil from "./directories";
 import fs from "fs";
 import { join } from "path";
 
-// using the new version of this file feels like going from walter white's rv to the underground meth lab
 class Settings {
 	private path = join(DirUtil.saved, "settings.json");
 	private json = {
-		TRUNCATED_THEMELIST: true,
+		TRUNCATED_THEMELIST: false,
 		SHOW_WAVEFORMS: true,
-		DEFAULT_WATERMARK: "twoLines",
 		IS_WIDE: "1",
 		SAVE_LOG_FILES: false,
 		HIDE_NAVBAR: true,
-		PASSED_SETUP: false,
-		THEME_REPO: "wrapper-offline/asset-store",
 	};
 	private static _instance:Settings;
 
@@ -79,12 +75,9 @@ class Settings {
 		return {
 			truncatedThemeList: this.truncatedThemeList,
 			showWaveforms: this.showWaveforms,
-			goWatermark: this.goWatermark,
 			isWide: this.isWide,
 			saveLogFiles: this.saveLogFiles,
 			hideNavbar: this.hideNavbar,
-			passedSetup: this.passedSetup,
-			themeRepo: this.themeRepo,
 		};
 	}
 
@@ -107,17 +100,6 @@ class Settings {
 	}
 	set showWaveforms(newValue:boolean) {
 		this.json["SHOW_WAVEFORMS"] = newValue;
-		this.save(this.json);
-	}
-
-	/**
-	 * The GoAnimate watermark the player should use.
-	 */
-	get goWatermark() {
-		return this.json["DEFAULT_WATERMARK"];
-	}
-	set goWatermark(newValue:string) {
-		this.json["DEFAULT_WATERMARK"] = newValue;
 		this.save(this.json);
 	}
 
@@ -152,28 +134,6 @@ class Settings {
 	}
 	set hideNavbar(newValue:boolean) {
 		this.json["HIDE_NAVBAR"] = newValue;
-		this.save(this.json);
-	}
-
-	/**
-	 * Determines whether or not the initial setup will be shown.
-	 */
-	get passedSetup() {
-		return this.json["PASSED_SETUP"];
-	}
-	set passedSetup(newValue:boolean) {
-		this.json["PASSED_SETUP"] = newValue;
-		this.save(this.json);
-	}
-
-	/**
-	 * GitHub repository containing assets to be downloaded.
-	 */
-	get themeRepo() {
-		return this.json["THEME_REPO"];
-	}
-	set themeRepo(newValue:string) {
-		this.json["THEME_REPO"] = newValue;
 		this.save(this.json);
 	}
 }

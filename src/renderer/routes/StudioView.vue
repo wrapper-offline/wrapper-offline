@@ -14,7 +14,7 @@
 previewer is open
 **/
 #page_container.preview_mode {
-	background: radial-gradient(#333, #111);
+	background: var(--popup-gradient-bg);
 }
 #page_container.preview_mode #studio_object {
 	height: 1px;
@@ -141,11 +141,11 @@ if (movieId) {
 </script>
 
 <template>
-	<div id="page_container" :class="{ preview_mode:showPreviewer }">
+	<div id="page_container" :class="{ preview_mode: showPreviewer }">
 		<ThemeSelector heading-for="Create a video" v-if="showSelector" @theme-clicked="(theme) => themeSelected(theme.id)"/>
-			<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
-				<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
-			</object>
-			<PreviewPlayer v-show="showPreviewer" ref="previewPlayer" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
-		</div>
+		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
+			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
+		</object>
+		<PreviewPlayer :show="showPreviewer == true" ref="previewPlayer" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
+	</div>
 </template>

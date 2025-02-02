@@ -1,6 +1,6 @@
 import { Char } from "../models/char.js";
 import CharModel from "../models/char.js";
-import Database from "../../../shared/storage/database";
+import Database from "../../storage/database";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import path from "path";

@@ -4,7 +4,9 @@
 @import "/css/icons.css";
 
 :root {
+	--popup-gradient-bg: radial-gradient(#333, #111);
 	--slide-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
+	--button-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
 }
 
 /**
@@ -14,20 +16,17 @@ html, body {
 	background: #e4e2e9;
 	color: #505969;
 	font: 15px/1.7 "Lato", Arial, sans-serif;
+	overflow: hidden;
 	width: 100%;
 	height: 100%;
 }
 body.col_resize {
 	cursor: col-resize;
 }
-html.dark, html.dark>body {
-	background: #1e1d25;
-	color: #eee;
-}
+
 #app {
 	display: flex; 
 	flex-direction: row;
-	overflow: hidden;
 	height: 100%;
 }
 

@@ -1,6 +1,6 @@
 import fs from "fs";
 import httpz from "@octanuary/httpz";
-import Database from "../../../shared/storage/database.js";
+import Database from "../../storage/database.js";
 import MovieModel from "../models/movie.js";
 import nodezip from "node-zip";
 

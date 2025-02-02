@@ -6,6 +6,35 @@
 	flex-direction: column;
 }
 
+/**
+view options row
+**/
+.view_options {
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+	border-color: #bfbeca;
+	display: flex;
+	padding: 6px 0 4px 25px;
+	justify-content: space-between;
+}
+.view_options .zoom_slider {
+	display: flex;
+}
+.view_options .zoom_slider input {
+	margin-left: 4px;
+}
+.view_options .view_change .btn {
+	font-weight: normal;
+	margin: 0 4px 0 0;
+	padding: 2px 8px 1px;
+}
+.view_options .view_change .btn:hover {
+	opacity: 0.8;
+}
+html.dark .view_options {
+	border-color: #32313f;
+}
+
 /***
 list view
 ***/
@@ -20,42 +49,25 @@ table.movie_list {
 	flex-grow: 1;
 }
 
-/***
+/**
 list head
-***/
+*s*/
 thead.list_head {
 	border-bottom: 2px solid;
 	border-color: #bfbeca;
 	height: 34px;
 }
-
 thead.list_head th {
 	border-left: 1px solid;
 	border-color: #bfbeca;
 	top: 0;
 }
-
-/**
-dragger
-**/
-thead.list_head th .dragger {
-	cursor: col-resize;
-	position: absolute;
-	float: right;
-	margin-top: -23px;
-	width: 6px;
-	height: 32px;
-}
-thead.list_head th .dragger:hover {
-	background: #489cf7a3;
-	transition: 0.1s ease-in;
-}
-
 thead.list_head .space.side_padding {
 	border: none;
 	width: 25px;
 }
 thead.list_head .sort_option {
+	transition: background 0.2s var(--button-anim);
 	text-align: left;
 	padding: 8px 6px;
 	line-height: 15px;
@@ -71,22 +83,49 @@ thead.list_head .sort_option.active.desc::after {
 }
 thead.list_head .sort_option:hover {
 	background: #ffeaf4;
+	transition: none;
+}
+/* resize dragger */
+thead.list_head th .dragger {
+	cursor: col-resize;
+	position: absolute;
+	float: right;
+	margin-top: -23px;
+	width: 6px;
+	height: 32px;
+}
+thead.list_head th .dragger:hover {
+	background: #489cf7a3;
+	transition: 0.1s ease-in;
+}
+html.dark thead.list_head {
+	border-color: #32313f;
+}
+html.dark thead.list_head th {
+	border-color: #32313f;
+}
+html.dark thead.list_head .sort_option:hover {
+	background: #422b3d;
 }
 
 /**
-actions
+movie actions
 **/
 .actions .action {
 	background: #838190;
 	color: #fff;
 	border-radius: 100%;
+	transition: 0.2s var(--button-anim);
 	padding: 4px 4px 1px;
 	margin: 0 4px;
 }
 .actions .action:hover {
 	opacity: 0.8;
+	transition: none;
 }
-
+html.dark .actions .action {
+	background: #42404f;
+}
 
 /***
 list view
@@ -96,11 +135,14 @@ tbody {
 	height: 100%;
 }
 
+/**
+movie row
+**/
 tr.movie {
 	border-bottom: 1px solid;
 	border-color: #cbcad3;
 	align-items: center;
-	transition: background 0.05s ease-out;
+	transition: background 0.2s var(--button-anim);
 	height: v-bind("zoomLevel");
 }
 tr.movie td {
@@ -120,46 +162,25 @@ tr.movie td.title img {
 	width: auto;
 	height: calc(v-bind("zoomLevel") - 20px);
 }
+/* movie title */
 tr.movie td.title span {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: block;
 }
-
 tr.movie:hover {
 	background: #ffeaf4;
+	transition: none;
+}
+html.dark tr.movie {
+	border-color: #32313f;
+}
+html.dark tr.movie:hover {
+	background: #422b3d;
 }
 
 .folder td.title img {
 	min-width: calc(calc(calc(v-bind("zoomLevel") - 20px) / 9) * 16);
-}
-
-
-.list_info {
-	border-top: 1px solid;
-	border-bottom: 1px solid;
-	border-color: #bfbeca;
-	display: flex;
-	padding: 6px 0 4px 25px;
-	justify-content: space-between;
-}
-.list_info .zoom_slider {
-	display: flex;
-}
-.list_info .zoom_slider input {
-	margin-left: 4px;
-}
-.list_info .view_change .btn {
-	background: #838190;
-	font-weight: normal;
-	margin: 0 4px 0 0;
-	padding: 2px 8px 1px;
-}
-.list_info .view_change .btn:hover {
-	opacity: 0.8;
-}
-.list_info .view_change .btn.active {
-	background: #43bca5;
 }
 
 
@@ -172,22 +193,19 @@ grid view
 	padding-left: 25px;
 }
 
+/**
+movie tile
+**/
 div.movie {
 	border: 1px solid #c8c5dc;
 	border-radius: 3px;
-	transition: 0.1s ease-out;
+	transition: 0.2s var(--button-anim);
 	display: inline-flex;
 	flex-direction: column;
 	margin: 0 5px 10px;
 	padding: 6px 7px;
 	width: calc(4 * v-bind("zoomLevel"));
 }
-div.movie:hover {
-	background: #ffebf9;
-	border-color: #e2a5bd;
-	box-shadow: 0 2px 4px #00000010;
-}
-
 div.movie .thumbnail_container img {
 	width: 100%;
 }
@@ -200,20 +218,30 @@ div.movie .thumbnail_container .duration {
     margin-left: 5px;
 	padding: 0 4px;
 }
-
 div.movie .title {
 	font-weight: bold;
 	line-height: 17px;
 	margin-bottom: 2px;
 }
-
 div.movie .modified {
 	font-size: 13px;
 }
-
 div.movie .actions {
 	margin-top: 3px;
 	text-align: center;
+}
+div.movie:hover {
+	background: #ffebf9;
+	border-color: #e2a5bd;
+	box-shadow: 0 2px 4px #00000010;
+	transition: none;
+}
+html.dark div.movie {
+	border-color: #2b2a37;
+}
+html.dark div.movie:hover {
+	background: #422b3d;
+	border-color: #5f3b57;
 }
 
 </style>
@@ -222,18 +250,16 @@ div.movie .actions {
 import { apiServer } from "../controllers/AppInit";
 import Button from "../components/controls/Button.vue";
 import type { Movie } from "../../main/server/models/movie";
-import { onMounted, ref, Ref, toValue } from "vue";
+import { onMounted, ref, Ref, toValue, watch } from "vue";
 import { useRoute } from "vue-router";
 
 type MovieField = "title" | "duration" | "modified";
-
-const route = useRoute();
-const filter = route.params.filter as "movie" | "starter";
+type MovieTypeFilter = "movie" | "starter";
 
 /**
  * loads the movie list from the server
  */
-function loadMovieList() : Promise<Movie[]> {
+function loadMovieList(filter:MovieTypeFilter) : Promise<Movie[]> {
 	return new Promise((res, rej) => {
 		const xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function () {
@@ -409,9 +435,19 @@ function draggerDown(id:MovieField, e:MouseEvent) {
 	});
 }
 
+const route = useRoute();
+
 onMounted(async () => {
-	movieList.value = await loadMovieList();
+	const typeFilter = route.params.filter as MovieTypeFilter;
+	movieList.value = await loadMovieList(typeFilter);
 });
+
+watch(
+	() => route.params.filter,
+	async (newTypeFilter:MovieTypeFilter) => {
+		movieList.value = await loadMovieList(newTypeFilter);
+	}
+);
 
 </script>
 
@@ -419,7 +455,7 @@ onMounted(async () => {
 	<div id="page_container" :class="{
 		view: view + '_view'
 	}">
-		<div class="list_info">
+		<div class="view_options">
 			<div class="results_stats">{{ movieList.length }} videos</div>
 			<div class="zoom_slider">
 				Zoom:
@@ -427,12 +463,12 @@ onMounted(async () => {
 			</div>
 			<div class="view_change">
 				<Button
-					:class="{active:view == 'grid'}"
+					:primary="view == 'grid'"
 					@click="() => changeView('grid')">
 					<i class="ico grid"></i>
 				</Button>
 				<Button
-					:class="{active:view == 'list'}"
+					:primary="view == 'list'"
 					@click="() => changeView('list')">
 					<i class="ico blist"></i>
 				</Button>

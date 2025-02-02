@@ -1,5 +1,5 @@
-import directories from "../../../shared/storage/directories";
-import database, { generateId } from "../../../shared/storage/database";
+import directories from "../../storage/directories";
+import database, { generateId } from "../../storage/database";
 import fs from "fs";
 import { join } from "path";
 import Parse from "../utils/movieParser.js";

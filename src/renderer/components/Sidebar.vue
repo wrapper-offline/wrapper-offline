@@ -3,7 +3,6 @@
 	background: #eeedf2;
 	border-right: 1px solid #c8c6dd;
 	box-shadow: 0 0 2px #0001;
-	transition: 0.2s var(--slide-anim);
 	z-index: 8;
 	user-select: none;
 	display: flex;
@@ -18,22 +17,20 @@ logo container
 .app_sidebar #logo_container {
 	background: #1e1b2b;
 	border-right: 1px solid #2c293e;
-	border-bottom: 1px solid #433d5d;
-	transition: width 0.2s var(--slide-anim);
 	padding: 4px 8px;
 	transform: translateX(-6px);
-	cursor: pointer;
 	width: 250px;
 	height: 50px;
 }
 .app_sidebar #logo_container .toggle_btn {
 	border-radius: 3px;
-	transition: background 0.2s var(--slide-anim);
-	user-select: none;
+	transition: 0.2s var(--button-anim);
+	cursor: pointer;
 	width: 100%;
 	height: 100%;
 }
 .app_sidebar #logo_container .toggle_btn:hover {
+	transition: none;
 	background: #2f2a3c;
 }
 .app_sidebar #logo_container #logo_icon {
@@ -44,7 +41,7 @@ logo container
 	height: 41px;
 }
 .app_sidebar #logo_container #logo_wordmark {
-	transition: 0.2s var(--slide-anim);
+	transition: 0.205s var(--slide-anim);
 	pointer-events: none;
 	position: absolute;
 	left: calc(50% - calc(175px / 2));
@@ -92,7 +89,7 @@ links
 	border-bottom: 1px solid #bfb9da;
 	box-shadow: 0 0 1px #0009;
 	border-radius: 3px;
-	transition: 0.05s ease-out;
+	transition: 0.2s var(--button-anim);
 	overflow: hidden;
 	display: flex;
 	margin: 5px 0;
@@ -134,6 +131,7 @@ links
 .app_sidebar .link:hover {
 	background: #ffeaf4;
 	border-color: #e4b0c5;
+	transition: none;
 }
 .app_sidebar .link:hover::after {
 	background: linear-gradient(90deg, #0000 0, #ffeaf4 10px);
@@ -184,7 +182,8 @@ dragger
 }
 .app_sidebar .dragger:hover {
 	background: #489cf7a3;
-	transition: 0.1s ease-in;
+	transition: 0.08s ease-in;
+	transition-delay: 0.18s;
 }
 
 
@@ -242,66 +241,72 @@ pinned links
 dark mode recoloring
 ***/
 html.dark .app_sidebar {
-	background: #24232e;
-	border-color: #292833;
-	box-shadow: 0 0 3px #0002;
-
-	& #logo_container {
-		background: #14121c;
-		border-right-color: #2e2d39;
-		border-bottom-color: #2e2d39;
-
-		& .toggle_btn:hover {
-			background: #1b1924;
-		}
-	}
-	
-	&>ul:first-of-type {
-		border-color: #343242;
-	}
-	&>ul:last-of-type {
-		border-color: #343242;
-	}
-	
-	& .link {
-		background: #2c2b38;
-		border-bottom-color: #1a1925;
-
-		&>a {
-			color: #ddd;
-		}
-		&>button {
-			color: #ddd;
-		}
-		& i {
-			color: #9f9eab;
-		}
-
-		&::after {
-			background: linear-gradient(90deg, #0000 0, #2c2b38 10px);
-		}
-
-		&.pin_btn {
-			background: #23222d;
-			box-shadow: inset 0 0 0 1px #1b1a21;
-		}
-		&:hover {
-			background: #422b3d;
-			border-color: #6b3f56;
-		}
-		&.sel {
-			background: #3c2234;
-			border-color: #732a46;
-			color: #fff;
-		}
-	}
-	& .user_custom .link>button:hover {
-		background: #573344;
-	}
-	
-	& #wrapper_ver {
-		color: #bbb;
-	}
+	background: #22212b;
+	border-color: #2c2b38;
+	box-shadow: 0 0 2px #0002;
+}
+html.dark .app_sidebar #logo_container {
+	background: #15141a;
+	border-right-color: #1c1b22;
+}
+html.dark .app_sidebar #logo_container .toggle_btn:hover {
+	background: #1b1924;
+}
+/* groups */
+html.dark .app_sidebar>ul:first-of-type {
+	border-color: #343242;
+}
+html.dark .app_sidebar>ul:last-of-type {
+	border-color: #343242;
+}
+/* links */
+html.dark .app_sidebar .link {
+	background: #2c2b36;
+	border-bottom-color: #1a1925;
+}
+html.dark .app_sidebar .link>a {
+	color: #ddd;
+}
+html.dark .app_sidebar .link>button {
+	color: #ddd;
+}
+html.dark .app_sidebar .link i {
+	color: #9f9eab;
+}
+html.dark .app_sidebar .link::after {
+	background: linear-gradient(90deg, #0000 0, #2c2b36 10px);
+}
+html.dark .app_sidebar .link.pin_btn {
+	background: #23222d;
+	box-shadow: inset 0 0 0 1px #1b1a21;
+}
+html.dark .app_sidebar .link:hover {
+	background: #422b3d;
+}
+html.dark .app_sidebar .link:hover::after {
+	background: linear-gradient(90deg, #0000 0, #422b3d 10px);
+}
+html.dark .app_sidebar .link.sel {
+	background: #3c2234;
+	border-color: #732a46;
+	color: #fff;
+}
+/* create button */
+html.dark .app_sidebar .link.create {
+	background: #a82447;
+	border-bottom-color: #732137;
+}
+html.dark .app_sidebar .link.create i {
+	color: #ccc;
+}
+html.dark .app_sidebar .link.create::after {
+	background: linear-gradient(90deg, #0000 0, #a82447 10px);
+}
+html.dark .app_sidebar .user_custom .link>button:hover {
+	background: #573344;
+}
+html.dark .app_sidebar #wrapper_ver {
+	color: #bbb;
 }
 
 /**
@@ -318,9 +323,9 @@ width below 200px
 	opacity: 0;
 }
 
-/***
+/**
 collapsed
-***/
+**/
 /* display groups vertically */
 .app_sidebar.collapsed .group>ul {
 	display: block;	
@@ -339,6 +344,9 @@ collapsed
 	display: none;
 }
 
+/**
+resize state
+**/
 .app_sidebar.resize {
 	filter: brightness(0.95);
 	transition: none;
@@ -348,6 +356,20 @@ collapsed
 }
 .app_sidebar.resize .dragger {
 	background: #5298d6;
+}
+
+/**
+cc + small window
+**/
+.app_sidebar.slide_mode {
+	transition: transform 0.2s var(--slide-anim), filter 0.2s var(--slide-anim);
+	filter: brightness(0.92);
+}
+.app_sidebar.slide_mode:hover {
+	box-shadow: 2px 0 10px #0003;
+	filter: none;
+	position: relative;
+	transform: translateX(v-bind("-slideMode.margin + 'px'"))
 }
 
 /**
@@ -368,26 +390,60 @@ animations
 </style>
 
 <script setup lang="ts">
+import AppInfoModal from "./AppInfoModal.vue";
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import { onBeforeRouteLeave } from "vue-router";
-import { ref } from "vue";
+import { ref, toValue } from "vue";
+import SettingsModal from "./SettingsModal.vue";
 
 const inResize = ref(false);
 const collapsed = ref(false);
 const logoCollapsed = ref(false);
 const width = ref(250);
 
-let oldWidth = 0;
+const displaySettings = ref(false);
+const displayAppInfo = ref(false);
+
+/**
+ * sets the sidebar width
+ * @param newWidth new width in px
+ */
+function setWidth(newWidth:number) {
+	if (newWidth <= 93) { // min
+		if (newWidth <= 46) {
+			width.value = 56;
+		} else {
+			width.value = 93;
+		}
+	} else {
+		width.value = Math.min(newWidth, 590);
+	}
+	collapsed.value = toValue(width) <= 56;
+	logoCollapsed.value = toValue(width) <= 200;
+}
+
+/*
+set a minimum page width for cc paths
+*/
+const slideMode = ref({
+	margin: 0,
+	enabled: false,
+});
+function watchWidth() {
+	slideMode.value.margin = Math.min(0, -toValue(width) + Math.max(56, document.body.clientWidth - 1000));
+	// slideMode.value.enabled = toValue(slideMode).margin != 0;
+}
 onBeforeRouteLeave((to, from) => {
-	console.log(to.path)
 	if (to.path.startsWith("/character") && !from.path.startsWith("/character")) {
-		oldWidth = width.value;
-		setWidth(150);
+		window.addEventListener("resize", watchWidth);
+		watchWidth();
+		slideMode.value.enabled = true;
 	} else if (from.path.startsWith("/character") && !to.path.startsWith("/character")) {
-		setWidth(oldWidth);
-		oldWidth = 0;
+		window.removeEventListener("resize", watchWidth);
+		slideMode.value.margin = 0;
+		slideMode.value.enabled = false;
 	}
 });
 
@@ -402,6 +458,11 @@ function onLinkClick(e:MouseEvent) {
 function pin() {
 
 }
+
+/**
+ * called when the user clicks on the size dragger,
+ * listens for mousemove and mouseup events
+ */
 function draggerDown(e:MouseEvent) {
 	inResize.value = true;
 	document.body.classList.add("col_resize");
@@ -414,50 +475,34 @@ function draggerDown(e:MouseEvent) {
 	window.addEventListener("mousemove", moveCb);
 	window.addEventListener("mouseup", () => {
 		window.removeEventListener("mousemove", moveCb);
-		if (width.value > 56) {
-			collapsed.value = false;
-		}
 		inResize.value = false;
 		document.body.classList.remove("col_resize");
 	});
 }
-function setWidth(newWidth:number) {
-	if (newWidth <= 200) {
-		logoCollapsed.value = true;
-	} else if (logoCollapsed.value == true) {
-		logoCollapsed.value = false;
-	}
-	if (newWidth <= 93) {
-		if (newWidth <= 56) {
-			collapsed.value = true;
-			width.value = 56;
-		} else {
-			if (collapsed.value == true) {
-				collapsed.value = false;
-			}
-			width.value = 93;
-		}
-		return;
-	} else if (collapsed.value == true) {
-		collapsed.value = false;
-	}
-	if (newWidth >= 590) {
-		width.value = 590;
-		return;
-	}
-	width.value = newWidth;
+
+/**
+ * called when the settings button is clicked, opens settings menu
+ */
+function openSettings() {
+	displaySettings.value = true;
 }
-function isSelected(e) {
-	// console.log(e)
+function closeSettings() {
+	displaySettings.value = false;
 }
+
+defineExpose({ slideMode, width });
 </script>
 
 <template>
 	<div class="app_sidebar" :class="{
 		collapsed,
-		'logo_collapsed': logoCollapsed,
+		logo_collapsed: logoCollapsed,
+		slide_mode: slideMode.enabled,
 		resize: inResize
-	}" :style="{width:width + 'px'}">
+	}" :style="{
+		marginLeft: slideMode.margin + 'px',
+		width: width + 'px'
+	}">
 		<div id="logo_container" :style="{width:width + 'px'}">
 			<div class="toggle_btn" @click="openInfo" title="About Wrapper: Offline">
 				<img id="logo_icon" src="/img/logo_icon.svg" alt="Candy"/>
@@ -526,13 +571,18 @@ function isSelected(e) {
 				</ul>
 			</li>
 			<li class="link">
-				<RouterLink to="/settings" :class="{sel:isSelected($el)}">
+				<button @click="openSettings">
 					<i class="ico cog"></i>
 					<div class="link_text">Settings</div>
-				</RouterLink>
+				</button>
 			</li>
 			<span id="wrapper_ver">2.1.0</span>
 		</ul>
-		<div class="dragger" :style="{left: width - 3 + 'px'}" @mousedown="draggerDown"></div>
+		<div
+			v-if="!slideMode.enabled"
+			class="dragger"
+			:style="{left: width - 3 + 'px'}"
+			@mousedown="draggerDown"></div>
+		<SettingsModal v-if="displaySettings" @close-click="closeSettings"/>
 	</div>
 </template>

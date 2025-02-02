@@ -6,10 +6,10 @@ License: MIT
 const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
-import directories from "../shared/storage/directories";
+import directories from "./storage/directories";
 import { createWriteStream } from "fs";
 import { join } from "path";
-import settings from "../shared/storage/settings";
+import settings from "./storage/settings";
 import { startAll } from "./server/index";
 
 const IS_DEV = app.commandLine.getSwitchValue("dev").length > 0;

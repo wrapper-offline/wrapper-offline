@@ -1,8 +1,8 @@
 import type { Char } from "./char";
-import directories from "../../../shared/storage/directories";
+import directories from "../../storage/directories";
 import fs from "fs";
-import Database, { generateId } from "../../../shared/storage/database";
-import type { Movie } from "./movie";
+import Database, { generateId } from "../../storage/database";
+import type { Starter } from "./movie";
 import path from "path";
 
 type Sound = {
@@ -167,7 +167,7 @@ export default class AssetModel {
 	 * @param v asset or starter object
 	 * @returns theme xml node with the asset information
 	 */
-	static meta2Xml(v:Asset | Movie) {
+	static meta2Xml(v:Asset | Starter) {
 		// sanitize stuff
 		v.title = (v.title || "").replace(/"/g, "&quot;");
 

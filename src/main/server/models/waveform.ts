@@ -1,4 +1,4 @@
-import Directories from "../../../shared/storage/directories.js";
+import Directories from "../../storage/directories.js";
 import fs from "fs";
 import path from "path";
 

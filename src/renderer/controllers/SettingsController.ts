@@ -1,8 +1,9 @@
+import { apiServer } from "./AppInit";
+
 class SettingsController {
+	private static _instance:SettingsController;
 	private settings:{};
 	private settingsLoaded:boolean = false;
-
-	private static _instance:SettingsController;
 
 	constructor() {
 
@@ -15,9 +16,9 @@ class SettingsController {
 		return this._instance;
 	}
 
-	public async loadSettings(host) {
+	public async loadSettings() {
 		if (!this.settingsLoaded) {
-			const res = await fetch(`${host}/api/settings/list`);
+			const res = await fetch(`${apiServer}/api/settings/list`);
 			this.settings = await res.json();
 		}
 		return this.settings;
@@ -27,7 +28,7 @@ class SettingsController {
 		const form = new FormData();
 		form.append("setting", id);
 		form.append("value", value);
-		fetch("/api/settings/update", {
+		fetch(`${apiServer}/api/settings/update`, {
 			method: "POST",
 			body: form
 		});

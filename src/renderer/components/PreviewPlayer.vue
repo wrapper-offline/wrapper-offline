@@ -1,5 +1,5 @@
 <style lang="css">
-.preview_modal .popup_container {
+.preview_popup_container {
 	background: #0000;
 }
 #player_object {
@@ -70,11 +70,14 @@ let params:Params = {
 };
 
 defineExpose({ displayPlayer });
+const { show = true } = defineProps<{
+	show?: boolean
+}>();
 </script>
 
 <template>
 	<div class="preview_modal">
-		<Popup>
+		<Popup class="preview_popup_container" :show="show">
 			<template #small-heading>Editing a video</template>
 			<template #large-heading>Video preview</template>
 	
@@ -83,7 +86,7 @@ defineExpose({ displayPlayer });
 			</object>
 	
 			<template #foot>
-				<Button @click="$emit('exitClicked')">Exit preview</Button>
+				<Button primary @click="$emit('exitClicked')">Exit preview</Button>
 				<!-- TODO: figure out why the studio hates this  -->
 				<!-- <Button @click="$emit('saveVideo')">Save video</Button> -->
 			</template>

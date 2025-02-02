@@ -95,7 +95,7 @@ router.beforeEach((to) => {
 	}
 });
 
-SettingsController.loadSettings(apiServer).then(() => {
+SettingsController.loadSettings().then(() => {
 	const app = createApp(App);
 	app.use(router);
 	app.mount("#app");

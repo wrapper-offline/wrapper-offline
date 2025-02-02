@@ -14,7 +14,7 @@
 	background: #eeedf2;
 	border-radius: 3px;
 	box-shadow: 0 2px 5px #0004;
-	animation: 0.15s popup_flyDown forwards var(--slide-anim);
+	animation: 0.125s popup_flyDown forwards var(--slide-anim);
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -37,7 +37,6 @@
 }
 .popup .popup_head .head_left {
 	flex: 1;
-	background: #0000;
 }
 .popup .popup_head .head_center .small {
 	color: #84899a;
@@ -47,7 +46,7 @@
 	transform: translateX(-50%);
 	margin-left: 50%;
 }
-.popup .popup_head .head_center .small + .main {
+.popup .popup_head .head_center .main {
 	font-size: 17px;
 	position: relative;
 	top: 6px;
@@ -84,7 +83,22 @@
 	display: flex;
 	justify-content: flex-end;
 	padding: 2px 20px;
-	height: 55px;
+	height: 56px;
+}
+
+html.dark .popup {
+	background: #23222d;
+}
+html.dark .popup .popup_head {
+	background: #1e1d25;
+	border-color: #2c2b38;
+}
+html.dark .popup .contents {
+	background: #23222d;
+}
+html.dark .popup .popup_foot {
+	background: #1e1d25;
+	border-color: #2c2b38;
 }
 
 
@@ -109,23 +123,35 @@ popup animations
 }
 </style>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { class: classList, show = true } = defineProps<{
+	class?: string,
+	show?: boolean
+}>();
+</script>
 
 <template>
-	<div class="popup_container">
-		<div class="popup">
-			<div class="popup_head">
-				<div class="head_left"></div>
-				<div class="head_center">
-					<span class="small"><slot name=small-heading></slot></span>
-					<span class="main"><slot name="large-heading"></slot></span>
+	<div>
+		<Teleport to="body">
+			<div
+				class="popup_container"
+				:class="classList"
+				v-show="typeof show != undefined ? show !== false : true">
+				<div class="popup">
+					<div class="popup_head">
+						<div class="head_left"></div>
+						<div class="head_center">
+							<span class="small"><slot name=small-heading></slot></span>
+							<span class="main"><slot name="large-heading"></slot></span>
+						</div>
+						<div class="head_right"></div>
+					</div>
+					<div class="contents"><slot></slot></div>
+					<div class="popup_foot">
+						<slot name="foot"></slot>
+					</div>
 				</div>
-				<div class="head_right"></div>
 			</div>
-			<div class="contents"><slot></slot></div>
-			<div class="popup_foot">
-				<slot name="foot"></slot>
-			</div>
-		</div>
+		</Teleport>
 	</div>
 </template>
