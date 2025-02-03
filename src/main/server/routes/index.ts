@@ -40,6 +40,12 @@ group.route("POST", "/goapi/getUserFontList/", (_, r) => {
 group.route("POST", "/api_v2/studio_preference/get", (_, r) => {
 	r.json({status:"ok", data:[]})
 });
+group.route("POST", "/api_v2/text_component/get_list", (_, r) => {
+	r.json({status:"ok", data:[]})
+});
+group.route("POST", "/api_v2/text_component/add", (_, r) => {
+	r.json({status:"ok", data:[]})
+});
 
 group.route("*", "*", async (req, res) => {
 	if (res.writableEnded) {

@@ -519,7 +519,7 @@ defineExpose({ slideMode, width });
 						</button>
 					</li>
 				</template>
-					<RouterLink to="/videos/create" class="dropdown_item">Create a video</RouterLink>
+				<RouterLink to="/videos/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator></DropdownSeparator>
 				<DropdownItem>Upload a video</DropdownItem>
 				<DropdownItem>Upload a character</DropdownItem>

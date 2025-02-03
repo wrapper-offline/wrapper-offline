@@ -6,7 +6,7 @@ import type { RouteRecordRaw } from "vue-router";
 import SettingsController from "./controllers/SettingsController";
 
 import AssetListView from "./routes/AssetListView.vue";
-import CharacterAppView from "./routes/CharacterAppView.vue";
+import CCView from "./routes/CCView.vue";
 import Error404View from "./routes/Error404View.vue";
 import MovieListView from "./routes/MovieListView.vue";
 import PlayerView from "./routes/PlayerView.vue";
@@ -33,7 +33,7 @@ const routes:RouteRecordRaw[] = [
 		path: "/characters/:themeId?",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:CharacterAppView },
+			{ path:"", component:CCView },
 		],
 		meta: {
 			title: "Characters"

@@ -13,10 +13,10 @@
 /**
 previewer is open
 **/
-#page_container.preview_mode {
+#page_container.popup_mode {
 	background: var(--popup-gradient-bg);
 }
-#page_container.preview_mode #studio_object {
+#page_container.popup_mode #studio_object {
 	height: 1px;
 }
 </style>
@@ -30,6 +30,7 @@ import {
 	swfUrlBase,
 	toAttrString
 } from "../controllers/AppInit";
+import CCModal from "../components/CCModal.vue";
 import { onMounted, ref, useTemplateRef } from "vue";
 import PreviewPlayer from "../components/PreviewPlayer.vue";
 import SettingsController from "../controllers/SettingsController";
@@ -41,13 +42,24 @@ import { useRoute, useRouter } from "vue-router";
 ==== BEGIN STUDIO CALLBACKS ====
 */
 
+type CCModalType = InstanceType<typeof CCModal>;
 type PreviewPlayerType = InstanceType<typeof PreviewPlayer>;
 
+const ccModal = useTemplateRef<CCModalType>("ccModal");
 const previewPlayer = useTemplateRef<PreviewPlayerType>("previewPlayer");
 const router = useRouter();
 const studio = useTemplateRef<HTMLObjectElement>("studio-object");
+const showCCModal = ref(false);
 const showPreviewer = ref(false);
 
+/* cc callbacks */
+function exitCCModal() {
+	showCCModal.value = false;
+}
+function charSaved(id:string) {
+	//@ts-ignore
+	studio.value.loadCharacterById(id);
+}
 /* preview callbacks */
 function exitPreviewer() {
 	showPreviewer.value = false;
@@ -59,6 +71,10 @@ function showSavePopup() {
 
 onMounted(() => {
 	const tutorialReload = (new URLSearchParams(window.location.search)).get("tutorial");
+	// @ts-ignore
+	window.studioLoaded = function (arg) {
+		console.log(arg)
+	}
 	//@ts-ignore
 	window.interactiveTutorial = {
 		neverDisplay: function() {
@@ -79,6 +95,11 @@ onMounted(() => {
 		showPreviewer.value = true;
 		previewPlayer.value.displayPlayer(movieXml, startFrame);
 	};
+	//@ts-ignore
+	window.showCCWindow = function (themeId:string) {
+		showCCModal.value = true;
+		ccModal.value.display(themeId);
+	}
 });
 
 /*
@@ -141,11 +162,12 @@ if (movieId) {
 </script>
 
 <template>
-	<div id="page_container" :class="{ preview_mode: showPreviewer }">
+	<div id="page_container" :class="{ popup_mode: showPreviewer || showCCModal }">
 		<ThemeSelector heading-for="Create a video" v-if="showSelector" @theme-clicked="(theme) => themeSelected(theme.id)"/>
 		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
 			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 		</object>
+		<CCModal :show="showCCModal == true" ref="ccModal" @exit="exitCCModal" @char-saved="charSaved"/>
 		<PreviewPlayer :show="showPreviewer == true" ref="previewPlayer" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
 	</div>
 </template>

@@ -45,6 +45,8 @@ function displayPlayer(movieXml:string, startFrame:number) {
 	showObject.value = true;
 }
 
+defineExpose({ displayPlayer });
+
 /*
 ==== END STUDIO CALLBACKS ====
 */
@@ -69,10 +71,22 @@ let params:Params = {
 	movie: ""
 };
 
-defineExpose({ displayPlayer });
 const { show = true } = defineProps<{
 	show?: boolean
 }>();
+const emit = defineEmits<{
+	exitClicked: [],
+	saveVideo: [],
+}>();
+
+function exitClicked() {
+	showObject.value = false;
+	emit("exitClicked");
+}
+function saveVideo() {
+	exitClicked();
+	emit("saveVideo");
+}
 </script>
 
 <template>
@@ -86,9 +100,8 @@ const { show = true } = defineProps<{
 			</object>
 	
 			<template #foot>
-				<Button primary @click="$emit('exitClicked')">Exit preview</Button>
-				<!-- TODO: figure out why the studio hates this  -->
-				<!-- <Button @click="$emit('saveVideo')">Save video</Button> -->
+				<Button @click="exitClicked">Exit preview</Button>
+				<Button primary @click="saveVideo">Save video</Button>
 			</template>
 		</Popup>
 	</div>

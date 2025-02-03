@@ -35,6 +35,10 @@
 	padding: 6px 25px;
 	height: 50px;
 }
+.popup .popup_head .btn {
+	margin-top: 0;
+	margin-bottom: 0;
+}
 .popup .popup_head .head_left {
 	flex: 1;
 }
@@ -52,6 +56,7 @@
 	top: 6px;
 }
 .popup .popup_head .head_right {
+	text-align: right;
 	flex: 1;
 }
 .popup .popup_head small {
@@ -83,7 +88,7 @@
 	display: flex;
 	justify-content: flex-end;
 	padding: 2px 20px;
-	height: 56px;
+	max-height: 56px;
 }
 
 html.dark .popup {
@@ -144,7 +149,7 @@ const { class: classList, show = true } = defineProps<{
 							<span class="small"><slot name=small-heading></slot></span>
 							<span class="main"><slot name="large-heading"></slot></span>
 						</div>
-						<div class="head_right"></div>
+						<div class="head_right"><slot name="head-right"></slot></div>
 					</div>
 					<div class="contents"><slot></slot></div>
 					<div class="popup_foot">

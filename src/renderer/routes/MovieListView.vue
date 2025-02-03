@@ -456,7 +456,7 @@ watch(
 		view: view + '_view'
 	}">
 		<div class="view_options">
-			<div class="results_stats">{{ movieList.length }} videos</div>
+			<div class="results_stats">Videos: {{ movieList.length }}</div>
 			<div class="zoom_slider">
 				Zoom:
 				<input type="range" min="42" max="70" :value="zoomLevel.slice(0, -2)" @input="zoomSliderMoved"/>

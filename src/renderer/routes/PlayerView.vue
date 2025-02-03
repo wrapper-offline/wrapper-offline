@@ -13,10 +13,10 @@
 /**
 previewer is open
 **/
-#page_container.preview_mode {
+#page_container.popup_mode {
 	background: radial-gradient(#333, #111);
 }
-#page_container.preview_mode #studio_object {
+#page_container.popup_mode #studio_object {
 	height: 1px;
 }
 </style>

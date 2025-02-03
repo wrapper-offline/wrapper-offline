@@ -66,13 +66,7 @@ group.route("POST", "/goapi/getMovieInfo/", (req, res) => {
 			// no watermark
 			`<watermark style="octanuary"/>` : wId == "0vTLbQy9hG7k" ?
 				// default watermark
-				(() => {
-					const defaultW = Settings.goWatermark;
-					return defaultW == "default" || defaultW == "wix" ?
-						// return nothing for the GoAnimate watermark
-						"" :
-						`<watermark style="${defaultW}"/>`
-				})() :
+				"" :
 				// custom watermark
 				`<watermark>/assets/${wId}</watermark>`
 	}</watermarks>`);
