@@ -1,3 +1,4 @@
+import directories from "../../storage/directories";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import path from "path";
@@ -19,8 +20,9 @@ group.route("POST", "/goapi/getWaveform/", async (req, res) => {
 
 		try {
 			const waveform = WfModel.load(id);
-			waveform ? (res.statusCode = 200, res.end(waveform)) :
-				(res.statusCode = 404, res.end());
+			waveform ?
+				res.status(200).end(waveform) :
+				res.status(404).end();
 		} catch (err) {
 			if (err == "404") {
 				return res.status(404).end();
@@ -29,7 +31,7 @@ group.route("POST", "/goapi/getWaveform/", async (req, res) => {
 			res.status(500).end();
 		}
 	} else {
-		const filepath = path.join(__dirname, "../data/waveform.txt");
+		const filepath = path.join(directories.static, "waveform.txt");
 		if (fs.existsSync(filepath)) {
 			fs.createReadStream(filepath).pipe(res);
 		} else {

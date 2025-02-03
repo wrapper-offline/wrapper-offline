@@ -1,6 +1,5 @@
 import Database from "../../storage/database.js";
 import { Group } from "@octanuary/httpz";
-import Settings from "../../storage/settings";
 
 const XML_HEADER = process.env.XML_HEADER;
 const group = new Group();

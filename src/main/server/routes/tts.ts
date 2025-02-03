@@ -1,10 +1,11 @@
-const fs = require("fs");
-const httpz = require("@octanuary/httpz");
-const tempfile = require("tempfile");
-const AssetModel = require("../models/asset.js");
-const mp3Duration = require("mp3-duration");
-const processVoice = require("../models/tts.js");
-const info = require("../../../../resources/staticInfo/voices.json");
+import AssetModel, { Asset } from "../models/asset";
+import fs from "fs";
+import httpz from "@octanuary/httpz";
+import tempfile from "tempfile";
+import mp3Duration from "mp3-duration";
+import processVoice from "../models/tts";
+import info from "../data/voices.json";
+import { Readable } from "stream";
 
 const group = new httpz.Group();
 
@@ -35,23 +36,24 @@ group.route("POST", "/goapi/getTextToSpeechVoices/", (req, res) => {
 load
 */
 group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
-	const { voice, text } = req.body;
-	if (!voice || !text) {
+	const { voice, text:rawText } = req.body;
+	if (!voice || !rawText) {
 		return res.status(400).end();
 	}
 
 	const filepath = tempfile(".mp3");
 	const writeStream = fs.createWriteStream(filepath);
-	processVoice(voice, text).then((data) => {
+	const text = rawText.substring(0, 320);
+	processVoice(voice, text).then((data:any) => {
 		if (typeof data.on == "function") {
-			data.pipe(writeStream);
+			(data as Readable).pipe(writeStream);
 		} else {
-			writeStream.end(data);
+			writeStream.end(data as Buffer);
 		}
 
 		writeStream.on("close", async () => {
 			const duration = await mp3Duration(filepath) * 1e3;
-			const meta = {
+			const meta:Partial<Asset> = {
 				duration,
 				type: "sound",
 				subtype: "tts",
@@ -60,10 +62,10 @@ group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 			const id = await AssetModel.save(filepath, "mp3", meta);
 			res.end(`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>tts</subtype><title>${meta.title}</title><published>0</published><tags></tags><duration>${meta.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`);
 		});
-	}).catch((err) => {
-		console.error("Error generating TTS:", err);
-		res.end(`1<error><code>ERR_ASSET_404</code><message>${err}</message><text></text></error>`);
+	}).catch((e:Error) => {
+		console.error("Error generating TTS:", e);
+		res.end(`1<error><code>ERR_ASSET_404</code><message>${e}</message><text></text></error>`);
 	});
 });
 
-module.exports = group;
+export default group;

@@ -213,7 +213,7 @@ export default class AssetModel {
 	static save(
 		data:fs.ReadStream | Buffer | string,
 		idOrExt:string,
-		info:Asset
+		info:Partial<Asset>
 	): Promise<string> {
 		return new Promise((res, rej) => {
 			if (idOrExt.includes(".")) {

@@ -521,7 +521,7 @@ watch(
 			<div v-for="movie in movieList" class="movie">
 				<div class="thumbnail_container">
 					<img :src="`${apiServer}/file/movie/thumb/${movie.id}`" alt="thumbnail"/>
-					<td class="duration">{{ movie.duration }}</td>
+					<div class="duration">{{ movie.duration }}</div>
 				</div>
 				<span class="title">{{ movieInfo(movie, "title") }}</span>
 				<div class="modified">{{ movieInfo(movie, "modified") }}</div>

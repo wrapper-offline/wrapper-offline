@@ -105,11 +105,11 @@ group.route("POST", "/goapi/getUserAssetsXml/", (req, res) => {
 /*
 load
 */
-group.route("*", /$\/(assets|goapi\/getAsset)\/([\S]*)/, (req, res, next) => {
+group.route("*", /^\/(assets|goapi\/getAsset)\/([\S]*)$/, (req, res, next) => {
 	let id:string | void;
 	switch (req.method) {
 		case "GET":
-			id = req.body.assetId = req.matches[2];
+			id = req.matches[2];
 			break;
 		case "POST":
 			id = req.body.assetId;
