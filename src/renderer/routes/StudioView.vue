@@ -3,6 +3,11 @@
 	padding: 0;
 	height: 100%;
 }
+main {
+	display: flex;
+	width: 100%;
+	height: 100%;
+}
 #studio_object {
 	display: block;
 	margin: auto;
@@ -30,8 +35,10 @@ import {
 	swfUrlBase,
 	toAttrString
 } from "../controllers/AppInit";
+import AssetImporter from "../components/importer/AssetImporter.vue";
+import type { AssetStatus } from "../components/importer/ImporterFile.vue";
 import CCModal from "../components/CCModal.vue";
-import { onMounted, ref, useTemplateRef } from "vue";
+import { onMounted, ref, toValue, useTemplateRef } from "vue";
 import PreviewPlayer from "../components/PreviewPlayer.vue";
 import SettingsController from "../controllers/SettingsController";
 import ThemeSelector from "../components/ThemeSelector.vue";
@@ -50,9 +57,11 @@ const previewPlayer = useTemplateRef<PreviewPlayerType>("previewPlayer");
 const router = useRouter();
 const studio = useTemplateRef<HTMLObjectElement>("studio-object");
 const showCCModal = ref(false);
+const showImporter = ref(false);
 const showPreviewer = ref(false);
 
 /* cc callbacks */
+
 function exitCCModal() {
 	showCCModal.value = false;
 }
@@ -60,7 +69,54 @@ function charSaved(id:string) {
 	//@ts-ignore
 	studio.value.loadCharacterById(id);
 }
+
+/* importer callbacks */
+
+function exitImporter() {
+	showImporter.value = false;
+}
+
+/**
+ * called when a file in the queue has progressed a step
+ * this would update the cloud icon in the LVM
+ */
+function onImportStatusUpdate(status:AssetStatus) {
+	switch (status) {
+		case "uploading": {
+			// @ts-ignore
+			studio.value.importerStatus("processing");
+			break;
+		}
+		case "error":
+		case "finished": {
+			// @ts-ignore
+			studio.value.importerStatus("done");
+		}
+	}
+}
+
+/**
+ * called when a in the importer queue has finished uploading
+ */
+function onImporterUploadSuccess(
+	assetType: string,
+	assetId: string,
+	lvmObject: Record<string, string>
+) {
+	// @ts-ignore
+	studio.value.importerUploadComplete(assetType, assetId, lvmObject);
+}
+
+/**
+ * called when a user clicks the 'add to scene' button on an uploaded asset
+ */
+function onImportAddToScene(assetType:string, assetId:string) {
+	// @ts-ignore
+	studio.value.importerAddAsset(assetType, assetId);
+}
+
 /* preview callbacks */
+
 function exitPreviewer() {
 	showPreviewer.value = false;
 }
@@ -87,19 +143,27 @@ onMounted(() => {
 		if (shouldQuit) {
 			router.push("/");
 		}
-		//TODO: add some sort of delay to the exit
-		//it feels weird when it instantly snaps to the default page
 	};
 	//@ts-ignore
 	window.initPreviewPlayer = function (movieXml:string, startFrame:number) {
 		showPreviewer.value = true;
+		showImporter.value = false;
 		previewPlayer.value.displayPlayer(movieXml, startFrame);
 	};
 	//@ts-ignore
 	window.showCCWindow = function (themeId:string) {
 		showCCModal.value = true;
+		showImporter.value = false;
 		ccModal.value.display(themeId);
 	}
+	//@ts-ignore
+	window.showImporter = function () {
+		if (toValue(showImporter) == false) {
+			showImporter.value = true;
+		} else {
+			showImporter.value = false;
+		}
+	};
 });
 
 /*
@@ -164,9 +228,17 @@ if (movieId) {
 <template>
 	<div id="page_container" :class="{ popup_mode: showPreviewer || showCCModal }">
 		<ThemeSelector heading-for="Create a video" v-if="showSelector" @theme-clicked="(theme) => themeSelected(theme.id)"/>
-		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
-			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
-		</object>
+		<main>
+			<AssetImporter
+				v-show="showImporter"
+				@add-to-scene="onImportAddToScene"
+				@exit-clicked="exitImporter"
+				@status-updated="onImportStatusUpdate"
+				@upload-success="onImporterUploadSuccess"/>
+			<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
+				<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
+			</object>
+		</main>
 		<CCModal :show="showCCModal == true" ref="ccModal" @exit="exitCCModal" @char-saved="charSaved"/>
 		<PreviewPlayer :show="showPreviewer == true" ref="previewPlayer" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
 	</div>

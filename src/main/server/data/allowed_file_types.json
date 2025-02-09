@@ -3,19 +3,22 @@
 		"swf",
 		"gif",
 		"png",
-		"jpg"
+		"jpg",
+		"webp"
 	],
 	"watermark": [
 		"swf",
 		"png",
-		"jpg"
+		"jpg",
+		"webp"
 	],
 	"prop": [
 		"swf",
 		"gif",
 		"png",
 		"jpg",
-		"mp4"
+		"mp4",
+		"webp"
 	],
 	"sound": [
 		"mp3",

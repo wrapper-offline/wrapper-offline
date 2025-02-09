@@ -14,7 +14,7 @@ view options row
 	border-bottom: 1px solid;
 	border-color: #bfbeca;
 	display: flex;
-	padding: 6px 0 4px 25px;
+	padding: 6px 0 4px 30px;
 	justify-content: space-between;
 }
 .view_options .zoom_slider {
@@ -435,19 +435,24 @@ function draggerDown(id:MovieField, e:MouseEvent) {
 	});
 }
 
+
 const route = useRoute();
 
-onMounted(async () => {
-	const typeFilter = route.params.filter as MovieTypeFilter;
+async function parsePath() {
+	const typeFilter = route.path.startsWith("/videos") ? "movie" : "starter";
 	movieList.value = await loadMovieList(typeFilter);
-});
+}
 
 watch(
-	() => route.params.filter,
-	async (newTypeFilter:MovieTypeFilter) => {
-		movieList.value = await loadMovieList(newTypeFilter);
+	() => route.path,
+	async (newPath:string) => {
+		await parsePath();
 	}
 );
+
+onMounted(async () => {
+	await parsePath();
+});
 
 </script>
 

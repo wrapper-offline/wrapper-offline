@@ -526,13 +526,13 @@ defineExpose({ slideMode, width });
 			</Dropdown>
 			<div class="spacer"></div>
 			<li class="link">
-				<RouterLink to="/videos/movie" @click="onLinkClick">
+				<RouterLink to="/videos" @click="onLinkClick">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/videos/starter" @click="onLinkClick">
+				<RouterLink to="/starters" @click="onLinkClick">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
 				</RouterLink>

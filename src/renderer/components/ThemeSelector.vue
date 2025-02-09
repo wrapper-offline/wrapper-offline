@@ -105,38 +105,10 @@ html.dark .theme:hover {
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
 import Button from "./controls/Button.vue";
 import { onMounted, ref } from "vue";
 import Popup from "./Popup.vue";
-
-type Theme = {
-	id: string,
-	name: string,
-	cc_theme_id?: string
-};
-
-function loadThemeList(ccFilter = false) : Promise<Theme[]> {
-	return new Promise((res, rej) => {
-		const xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function () {
-			if (this.readyState != 4 || this.status != 200) {
-				return;
-			}
-			const themes = JSON.parse(this.responseText);
-			let returnArray = [];
-			for (const theme of themes) {
-				if (ccFilter && !theme.cc_theme_id) {
-					continue;
-				}
-				returnArray.push(theme);
-			}
-			res(returnArray);
-		};
-		xhttp.open("GET", `${apiServer}/api/theme/list`, true);
-		xhttp.send();
-	});
-}
+import { Theme, useThemeList } from "../controllers/themelist";
 
 const props = defineProps<{
 	ccFilter?: boolean,
@@ -145,7 +117,7 @@ const props = defineProps<{
 const themeList = ref<Theme[]>([]);
 
 onMounted(async () => {
-	themeList.value = await loadThemeList(props.ccFilter);
+	themeList.value = await useThemeList(props.ccFilter);
 });
 </script>
 

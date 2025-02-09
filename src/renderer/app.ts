@@ -40,7 +40,7 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/videos/:filter",
+		path: "/videos/:folderId?",
 		component: DefaultLayout,
 		children: [
 			{ path:"", component:MovieListView },
@@ -68,6 +68,16 @@ const routes:RouteRecordRaw[] = [
 		component: PlayerView,
 		meta: {
 			title: "Playing a video"
+		},
+	},
+	{
+		path: "/starters",
+		component: DefaultLayout,
+		children: [
+			{ path:"", component:MovieListView },
+		],
+		meta: {
+			title: "Starters"
 		},
 	},
 	{

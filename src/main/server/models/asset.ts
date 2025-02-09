@@ -168,28 +168,29 @@ export default class AssetModel {
 	 * @returns theme xml node with the asset information
 	 */
 	static meta2Xml(v:Asset | Starter) {
+		const apiServer = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 		// sanitize stuff
 		v.title = (v.title || "").replace(/"/g, "&quot;");
 
 		let xml;
 		switch (v.type) {
 			case "char": {
-				xml = `<char id="${v.id}" enc_asset_id="${v.id}" name="${v.title || "Untitled"}" cc_theme_id="${v.themeId}" thumbnail_url="/assets/${v.id}.png" copyable="Y"><tags>${v.tags || ""}</tags></char>`;
+				xml = `<char id="${v.id}" enc_asset_id="${v.id}" name="${v.title || "Untitled"}" cc_theme_id="${v.themeId}" thumbnail_url="${apiServer}/assets/${v.id}.png" copyable="Y"><tags>${v.tags || ""}</tags></char>`;
 				break;
 			}
 			case "bg": {
-				xml = `<background subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" asset_url="/assets/${v.id}"/>`
+				xml = `<background subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" asset_url="${apiServer}/assets/${v.id}"/>`
 				break;
 			}
 			case "movie": {
-				xml = `<movie id="${v.id}" enc_asset_id="${v.id}" path="/_SAVED/${v.id}" numScene="${v.sceneCount}" title="${v.title}" thumbnail_url="/file/movie/thumb/${v.id}"><tags></tags></movie>`;
+				xml = `<movie id="${v.id}" enc_asset_id="${v.id}" numScene="${v.sceneCount}" title="${v.title}" thumbnail_url="${apiServer}/file/movie/thumb/${v.id}"><tags></tags></movie>`;
 				break;
 			}
 			case "prop": {
 				if (v.subtype == "video") {
-					xml = `<prop subtype="video" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" placeable="1" facing="left" width="${v.width}" height="${v.height}" asset_url="/assets/${v.id}" thumbnail_url="/assets/${v.id.slice(0, -3) + "png"}"/>`;
+					xml = `<prop subtype="video" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" placeable="1" facing="left" width="${v.width}" height="${v.height}" asset_url="${apiServer}/assets/${v.id}" thumbnail_url="${apiServer}/assets/${v.id.slice(0, -3) + "png"}"/>`;
 				} else {
-					xml = `<prop subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" ${v.ptype}="1" facing="left" width="0" height="0" asset_url="/assets/${v.id}"/>`;
+					xml = `<prop subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" ${v.ptype}="1" facing="left" width="0" height="0" asset_url="${apiServer}/assets/${v.id}"/>`;
 				}
 				break;
 			}

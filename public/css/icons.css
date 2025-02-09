@@ -52,6 +52,9 @@ i.ico.interr::before {
 i.ico.blist::before {
 	content: '\E158';
 }
+i.ico.left::before {
+	content: "\E225";
+}
 i.ico.person::before {
 	content: '\E004';
 }
@@ -60,6 +63,9 @@ i.ico.play::before {
 }
 i.ico.redo::before {
 	content: '\E435';
+}
+i.ico.right::before {
+	content: "\E224";
 }
 i.ico.speech::before {
 	content: '\E310';
