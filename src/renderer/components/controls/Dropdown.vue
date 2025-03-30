@@ -1,15 +1,22 @@
 <style lang="css">
-.dropdown_toggle:hover {
+.dropdown {
+	position: relative;
+}
+.dropdown .dropdown_toggle:hover {
 	cursor: pointer;
 }
-.dropdown_content {
+.dropdown .dropdown_content {
 	background: #fcfcfd;
 	border: 1px solid #a09f9f;
 	box-shadow: 0 2px 6px #0006;
 	border-radius: 4px;
+	z-index: 10;
 	position: absolute;
 	padding: 5px 0;
 	margin: -1px 0 0 5px;
+}
+.dropdown.right .dropdown_content {
+	right: 0;
 }
 .v-enter-from {
 	opacity: 0;
@@ -23,10 +30,9 @@
 import { onMounted, ref, useTemplateRef } from "vue";
 
 const props = defineProps<{
-	openWithHover?: boolean
+	openWithHover?: boolean,
+	align?: "left" | "right",
 }>();
-
-
 
 const toggle = useTemplateRef("toggle");
 const content = useTemplateRef("content");
@@ -72,7 +78,7 @@ if (props.openWithHover) {
 </script>
 
 <template>
-	<div class="dropdown">
+	<div :class="{dropdown:true, right:align == 'right'}">
 		<div class="dropdown_toggle" ref="toggle">
 			<slot name="toggle">what</slot>
 		</div>

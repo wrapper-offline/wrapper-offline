@@ -17,7 +17,7 @@ theme
 	background-blend-mode: overlay;
 	background-size: 100%;
 	border-bottom: 1px solid #c9c5de;
-    box-shadow: 0 0 2px 1px #00000015;
+	box-shadow: 0 0 2px 1px #00000015;
 	border-radius: 3px;
 	transition: 0.12s cubic-bezier(0.7, 0.5, 0.3, 1);
 	display: inline-flex;

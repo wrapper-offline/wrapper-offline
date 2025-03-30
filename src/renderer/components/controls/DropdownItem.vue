@@ -4,10 +4,10 @@
 	border-radius: 1px;
 	text-decoration: none;
 	display: block;
-    line-height: 16px;
-    font-size: 15px;
-    margin: 0 4px;
-    padding: 6px 15px;
+	line-height: 16px;
+	font-size: 15px;
+	margin: 0 4px;
+	padding: 6px 15px;
 }
 .dropdown_item:hover {
 	background: #5db8a7;

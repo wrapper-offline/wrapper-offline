@@ -1,5 +1,5 @@
 <template>
-	<div id="page_container">	
+	<div>	
 		<h2 id="404-file-not-found">404: File Not Found</h2>
 		<p>You got a four o’ four<br />
 			You got a four o’ four<br />

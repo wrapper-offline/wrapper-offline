@@ -1,5 +1,5 @@
 import directories from "../../storage/directories";
-import database, { generateId } from "../../storage/database";
+import database, { DBJsonArrayKey, generateId } from "../../storage/database";
 import fs from "fs";
 import { join } from "path";
 import Parse from "../utils/movieParser.js";
@@ -10,6 +10,7 @@ export type Movie = {
 	title: string,
 	sceneCount: number,
 	watermark?: string,
+	parent_id?: string,
 	id: string,
 };
 export type Starter = {
@@ -160,7 +161,7 @@ export default class MovieModel {
 	 */
 	static async save(
 		xml:Buffer,
-		thumbnail:Buffer,
+		thumbnail:Buffer | void,
 		id:string,
 		saveAsStarter:boolean
 	): Promise<string> {
@@ -206,6 +207,92 @@ export default class MovieModel {
 				res(id);
 			});
 		});
+	}
+
+	/**
+	 * moves a selection of movies or folders to a target folder
+	 * throws '404' if target folder doesn't exist
+	 * @param movies list of movie ids
+	 * @param movieFolders list of movie folders
+	 * @param targetFolderId target folder to move selection to
+	 */
+	static moveToFolder(
+		{
+			movieIds,
+			movieFolderIds
+		}: { movieIds:string[], movieFolderIds:string[] },
+		targetFolderId: string
+	) {
+		if (targetFolderId == "/") {
+			targetFolderId = undefined;
+		} else {
+			if (!database.get("movie_folders", targetFolderId)) {
+				throw "t-404";
+			}
+		}
+		for (const movieId of movieIds) {
+			const success = database.update("movies", movieId, {
+				parent_id: targetFolderId
+			});
+			if (!success) {
+				throw "m-404";
+			}
+		}
+		for (const folderId of movieFolderIds) {
+			const success = database.update("movie_folders", folderId, {
+				parent_id: targetFolderId
+			});
+			if (!success) {
+				throw "f-404";
+			}
+		}
+	}
+
+	/**
+	 * renames a folder
+	 * @param path folder path
+	 * @param newName new folder name
+	 */
+	static renameFolder(path:string, newName:string) {
+		let movies = database.select("movies");
+		movies = movies.filter((m) => m.parent_id && m.parent_id.startsWith(path));
+		console.log(path)
+		for (const movie of movies) {
+			const index = path.length;
+			const folders = movie.parent_id.substring(index + 1).split("/");
+			const pathBase = path.split("/").slice(0, -1);
+			let newPath = "";
+			if (pathBase.length > 0) {
+				newPath = pathBase.join("/") + "/";
+			}
+			newPath += newName;
+			if (folders.length > 0) {
+				newPath += folders.map(v => v != "" ? "/" + v : "");
+			}
+			database.update("movies", movie.id, { parent_id:newPath });
+		}
+	}
+
+	/**
+	 * deletes a folder by moving all moves to parent
+	 * @param path folder path
+	 */
+	static deleteFolder(path:string) {
+		let newParent = path.split("/").slice(0, -1).join("/") ?? "";
+		const movies = database.select("movies").filter(m => {
+			return m.parent_id && m.parent_id.startsWith(path)
+		});
+		const ids = movies.map(m => [m.id, m.parent_id]);
+		for (const [id, path] of ids) {
+			let index:number;
+			if (newParent.length == 0) {
+				index = 0;
+			} else {
+				index = path.indexOf(newParent) + newParent.length;
+			}
+			const newPath = path.substring(0, index);
+			database.update("movies", id, { parent_id:newPath });
+		}
 	}
 
 	/**
@@ -255,7 +342,7 @@ export default class MovieModel {
 			fs.writeFileSync(join(this.folder, `${id}.xml`), xml);
 			fs.writeFileSync(join(this.folder, `${id}.png`), thumb);
 			this.extractMeta(id).then((meta) => {
-				let dbCategory:string;
+				let dbCategory:DBJsonArrayKey;
 				const info:Starter|Movie = {
 					id,
 					duration: meta.durationString,

@@ -17,7 +17,9 @@ import DefaultLayout from "./DefaultLayout.vue"
 const routes:RouteRecordRaw[] = [
 	{
 		path: "/",
-		redirect: "/videos/movie",
+		redirect: {
+			name: "movie_list"
+		}
 	},
 	{
 		path: "/assets",
@@ -40,31 +42,35 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/videos/:folderId?",
+		path: "/movies/:folderId?",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:MovieListView },
+			{ 
+				name: "movie_list",
+				path: "",
+				component: MovieListView,
+			},
 		],
 		meta: {
 			title: "Videos"
 		},
 	},
 	{
-		path: "/videos/create/:themeId?",
+		path: "/movies/create/:themeId?",
 		component: StudioView,
 		meta: {
 			title: "Video Maker"
 		},
 	},
 	{
-		path: "/videos/edit/:movieId?",
+		path: "/movies/edit/:movieId?",
 		component: StudioView,
 		meta: {
 			title: "Video Maker"
 		},
 	},
 	{
-		path: "/videos/play/:movieId",
+		path: "/movies/play/:movieId",
 		component: PlayerView,
 		meta: {
 			title: "Playing a video"
@@ -74,7 +80,11 @@ const routes:RouteRecordRaw[] = [
 		path: "/starters",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:MovieListView },
+			{
+				name: "starter_list",
+				path: "",
+				component: MovieListView,
+			},
 		],
 		meta: {
 			title: "Starters"

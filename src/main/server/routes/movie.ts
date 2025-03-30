@@ -1,7 +1,7 @@
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import Database from "../../storage/database.js";
-import MovieModel from "../models/movie.js";
+import MovieModel, { Movie } from "../models/movie.js";
 import nodezip from "node-zip";
 
 const group = new httpz.Group();
@@ -60,15 +60,138 @@ list
 */
 // movies
 group.route("GET", "/api/movie/list", (req, res) => {
-	if (!req.query.type) {
-		return res.status(400).json({msg:"Expected type parameter"});
+	const type = req.query.type;
+	const basePath = req.query.path;
+	if (!type) {
+		return res.status(400).json({ msg:"Expected type parameter" });
 	}
-	switch (req.query.type) {
+	let movies:Movie[];
+	switch (type) {
 		case "starter":
-			return res.json(Database.select("assets", { type: "movie" }));
+			movies = Database.select("assets", { type: "movie" }) as any as Movie[];
+			return res.json({ movies });
 		case "movie":
 		default:
-			return res.json(Database.select("movies"));
+			movies = Database.select("movies");
+	}
+	movies = movies.filter(m => {
+		return basePath ? m.parent_id == basePath : !m.parent_id;
+	});
+	const folders = Database.select("movie_folders", {
+		parent_id: basePath ? basePath : "/",
+	});
+	let folderPath = [];
+	if (basePath) {
+		let rootFound = false;
+		let currentId = basePath;
+		while (!rootFound) {
+			const dbRes = Database.get("movie_folders", currentId);
+			if (!dbRes) {
+				if (currentId == basePath) {
+					return res.status(404).json({ msg:"Path does not exist" });
+				}
+				res.log(`Parent folder with id "${currentId}" not found, returning with empty folder_path...`);
+				folderPath = [];
+				break;
+			}
+			const folder = dbRes.data;
+			currentId = folder.parent_id;
+			if (currentId == "/") {
+				rootFound = true;
+				currentId = null;
+			}
+			folderPath.unshift({
+				id: folder.id,
+				title: folder.title
+			});
+		}
+	}
+	res.json({ folder_path:folderPath, folders, movies });
+});
+
+/*
+rename folder
+*/
+group.route("GET", "/api/movie/rename_folder", (req, res) => {
+	const { new:newName, path } = req.query;
+	if (!newName) {
+		return res.status(400).json({msg:"Expected newName parameter"});
+	}
+	if (!path) {
+		return res.status(400).json({msg:"Expected path parameter"});
+	}
+
+	try {
+		MovieModel.renameFolder(path, newName);
+		res.json({status:"ok"});
+	} catch (e) {
+		if (e == "404") {
+			return res.status(404).json({status:"error"});
+		}
+		console.error(req.parsedUrl.pathname, "failed. Error:", e);
+		res.status(500).json({status:"error"});
+	}
+});
+
+/*
+move folder
+*/
+group.route("POST", "/api/movie/move_selection", (req, res) => {
+	/** list of movie ids to move */
+	const movies:string[]|void = req.body.movies;
+	/** list of folder ids to move */
+	const movieFolders:string[]|void = req.body.movie_folders;
+	/** id of the parent folder to move to */
+	const newParentId:string|void = req.body.new_parent_id;
+
+	if ((!movies && !movieFolders) || !newParentId) {
+		return res.status(400).json({msg:"Required parameter is missing"});
+	}
+
+	try {
+		MovieModel.moveToFolder({
+			movieIds: movies || [],
+			movieFolderIds: movieFolders || []
+		}, newParentId);
+		res.json({ status:"ok" });
+	} catch (e) {
+		switch (e) {
+			case "t-404":
+				return res.status(404).json({ status:"Specified target folder does not exist" });
+			case "m-404":
+				return res.status(404).json({ status:"A specified movie does not exist" });
+			case "f-404":
+				return res.status(404).json({ status:"A specified folder does not exist" });
+			default: {
+				console.error(req.parsedUrl.pathname, "failed. Error:", e);
+				res.status(500).json({ status:"error" });
+			}
+		}
+		
+	}
+});
+
+/*
+delete folder
+*/
+/*
+move folder
+*/
+group.route("GET", "/api/movie/delete_folder", (req, res) => {
+	const { path } = req.query;
+	if (!path) {
+		return res.status(400).json({msg:"Expected path parameter"});
+	}
+
+	try {
+		MovieModel.deleteFolder(path);
+		res.json({status:"ok"});
+	} catch (e) {
+		if (e == "404") {
+			return res.status(404).json({status:"error"});
+		}
+		console.error(req.parsedUrl.pathname, "failed. Error:", e);
+		res.status(500).json({status:"error"});
 	}
 });
 

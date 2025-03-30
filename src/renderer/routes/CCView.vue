@@ -13,17 +13,12 @@
 }
 </style>
 
-<style lang="css" scoped>
-#page_container {
-	padding: 0;
-}
-</style>
-
 <script setup lang="ts">
 import CCObject from "../components/CCObject.vue";
-import { ref, useTemplateRef } from "vue";
-import ThemeSelector from "../components/ThemeSelector.vue";
+import Navbar from "../components/Navbar.vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
+import { onMounted, ref, useTemplateRef } from "vue";
+import ThemeSelector from "../components/ThemeSelector.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -45,7 +40,6 @@ function initObject(id:string) {
 }
 
 function charSaved() {
-	ccObject.value.reset();
 	ccObject.value.displayBrowser(themeId);
 }
 
@@ -70,21 +64,30 @@ function themeClicked(id:string) {
 }
 
 onBeforeRouteUpdate((newRoute) => {
+	ccObject.value.reset();
 	themeId = newRoute.params.themeId as string || "";
 	themeIdCheck();
 });
 
-themeId = route.params.themeId as string || "";
-themeIdCheck();
+onMounted(() => {
+	themeId = route.params.themeId as string || "";
+	themeIdCheck();
+});
 </script>
 
 <template>
-	<div id="page_container">
-		<ThemeSelector
-			heading-for="Characters"
-			v-if="showSelector"
-			cc-filter
-			@theme-clicked="(theme) => themeClicked(theme.cc_theme_id)"/>
-		<CCObject v-show="showObject" ref="cc-object" @char-saved="charSaved"/>
+	<div>
+		<Navbar :entries="[{
+			path: '/characters',
+			title: 'Characters'
+		}]" state="cc"/>
+		<div class="page_contents">
+			<theme-selector
+				heading-for="Characters"
+				v-if="showSelector"
+				cc-filter
+				@theme-clicked="(theme) => themeClicked(theme.cc_theme_id)"/>
+			<CCObject v-show="showObject" ref="cc-object" @char-saved="charSaved"/>
+		</div>
 	</div>
 </template>

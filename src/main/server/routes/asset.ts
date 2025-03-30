@@ -46,6 +46,12 @@ group.route("POST", "/api_v2/asset/delete/", (req, res) => {
 /*
 list
 */
+group.route("GET", "/api/asset/list", (req, res) => {
+	const filter = {
+		type: ["bg", "prop", "sound"] as any as Asset["type"]
+	};
+	res.json(AssetModel.list(filter, false));
+});
 group.route("POST", "/api_v2/assets/imported", (req, res) => {
 	if (!req.body.data.type) {
 		return res.status(400).json({msg:"Expected data.type on request body."});
@@ -229,21 +235,21 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 
 	try {
 		switch (info.type) {
-			// these 2 are very similar so they can be merged
+			// these two are very similar so they can be merged
 			case "bg":
 			case "watermark": {
 				if (info.type == "bg" && ext != "swf") {
 					stream = sharp(filepath)
 						.resize(550, 354, { fit: "fill" })
 						.toFormat("png");
-						// i dont kown
+					// i dont kown
 				} else {
 					stream = fs.createReadStream(filepath);
 				}
 				stream.pause();
 	
 				// save asset
-				info.id = await AssetModel.save(stream, ext, info);
+				info.id = await AssetModel.save(stream, ext == "swf" ? ext : "png", info);
 				break;
 			}
 			case "sound": {
@@ -283,7 +289,6 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 					info.id = await AssetModel.save(temppath, "flv", info);
 
 					// AssetModel.save doesn't have thumbnail support so we'll save it here while we're at it
-					// hell it might even make things easier
 					//
 					// define the command outside the promise because for whatever reason
 					// typescript does not like it when i use discriminated unions in callbacks

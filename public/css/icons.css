@@ -7,8 +7,8 @@
 
 i.ico {
 	font-family: "GlyphiconsRegular";
-    font-style: normal;
-    display: inline-block;
+	font-style: normal;
+	display: inline-block;
 }
 i.ico.arr_r::before {
 	content: '\E369';
@@ -21,6 +21,9 @@ i.ico.briefcase::before {
 }
 i.ico.brush::before {
 	content: '\E235';
+}
+i.ico.cloud::before {
+	content: '\2601';
 }
 i.ico.coat::before {
 	content: '\E384';
@@ -55,8 +58,17 @@ i.ico.blist::before {
 i.ico.left::before {
 	content: "\E225";
 }
+i.ico.newfolder::before {
+	content: '\E146';
+}
+i.ico.magnify::before {
+	content: '\E028';
+}
 i.ico.person::before {
 	content: '\E004';
+}
+i.ico.phone::before {
+	content: '\E164';
 }
 i.ico.play::before {
 	content: '\E174';

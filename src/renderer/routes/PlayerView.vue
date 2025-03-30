@@ -1,5 +1,5 @@
 <style lang="css" scoped>
-#page_container {
+#full_page_container {
 	padding: 0;
 	height: 100%;
 }
@@ -13,10 +13,10 @@
 /**
 previewer is open
 **/
-#page_container.popup_mode {
+#full_page_container.popup_mode {
 	background: radial-gradient(#333, #111);
 }
-#page_container.popup_mode #studio_object {
+#full_page_container.popup_mode #studio_object {
 	height: 1px;
 }
 </style>
@@ -84,7 +84,7 @@ displayPlayer(movieId);
 </script>
 
 <template>
-	<div id="page_container">
+	<div>
 		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
 			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 		</object>

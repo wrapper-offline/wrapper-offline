@@ -13,7 +13,7 @@
 .importer_asset .asset_metadata .asset_preview {
 	margin: 4px;
 	margin-right: 8px;
-    object-fit: contain;
+	object-fit: contain;
 	width: 40px;
 	height: 40px;
 }
@@ -78,20 +78,20 @@ upload status
 	margin-bottom: 6px;
 }
 .loading_track {
-    background: #e9e9ec;
-    border: 2px solid #d4d4d4;
-    height: 14px;
-    border-radius: 999px;
-    overflow: hidden;
+	background: #e9e9ec;
+	border: 2px solid #d4d4d4;
+	height: 14px;
+	border-radius: 999px;
+	overflow: hidden;
 }
 .loading_thumb {
-    background: #ff3888;
+	background: #ff3888;
 	border: 1px solid #dedee3;
-    border-radius: 99px;
+	border-radius: 99px;
 	animation: 3s linear infinite trackmove;
-    margin-left: -27px;
-    width: 140px;
-    height: 10px;
+	margin-left: -27px;
+	width: 140px;
+	height: 10px;
 }
 @keyframes trackmove {
 	0%   { margin-left: -140px; }
@@ -112,6 +112,7 @@ enter animation
 
 <script setup lang="ts">
 import { apiServer } from "../../controllers/AppInit";
+import locale from "../../locale/en_US";
 import { PendingFile } from "./AssetImporter.vue";
 import { Ref, ref, toValue, useTemplateRef, watch } from "vue";
 
@@ -148,26 +149,7 @@ watch(status, (newStatus:AssetStatus) => emit("statusUpdated", newStatus));
  * @param type flat type id
  */
 function flatTypeName(type:string): string {
-	switch (type) {
-		case "bgmusic":
-			return "Music";
-		case "soundeffect":
-			return "Sound effect";
-		case "voiceover":
-			return "Voiceover";
-		case "bg":
-			return "Background";
-		case "prop":
-			return "Prop";
-		case "video":
-			return "Video";
-		case "placeable":
-			return "Placeable prop";
-		case "holdable":
-			return "Handheld prop";
-		case "wearable":
-			return "Head gear";
-	}
+	return locale.asset.flat_type_map[type];
 }
 
 /**

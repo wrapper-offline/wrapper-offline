@@ -222,7 +222,7 @@ export default class AssetModel {
 			} else {
 				info.id = `${generateId()}.${idOrExt}`;
 			}
-			Database.insert("assets", info)
+			Database.insert("assets", info as Asset)
 
 			let writeStream = fs.createWriteStream(path.join(this.folder, info.id));
 			if (Buffer.isBuffer(data)) { // 

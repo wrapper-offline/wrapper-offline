@@ -51,7 +51,7 @@ onMounted(() => {
 	};
 	//@ts-expect-error
 	window.characterSaved = function characterSaved(id:string) {
-		showObject.value = false;
+		reset();
 		setTimeout(() => {
 			emit("charSaved", id);
 		}, 55);

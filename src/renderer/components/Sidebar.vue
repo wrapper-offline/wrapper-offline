@@ -1,25 +1,22 @@
 <style lang="css" scoped>
 .app_sidebar {
-	background: #eeedf2;
-	border-right: 1px solid #c8c6dd;
-	box-shadow: 0 0 2px #0001;
+	background: #313145;
+	box-shadow: inset -2px 0 3px #0001;
 	z-index: 8;
 	user-select: none;
 	display: flex;
 	flex-direction: column;
 	flex-shrink: 0;
-	padding: 0 6px 8px;
 }
 
 /**
 logo container
 **/
 .app_sidebar #logo_container {
-	background: #1e1b2b;
-	border-right: 1px solid #2c293e;
+	background: #1c1c27;
+	border-bottom: 1px solid #3d3d57;
 	padding: 4px 8px;
-	transform: translateX(-6px);
-	width: 250px;
+	transform: translateX(0);
 	height: 50px;
 }
 .app_sidebar #logo_container .toggle_btn {
@@ -54,15 +51,16 @@ sidebar sections *OR* grouped link containers
 .app_sidebar ul {
 	list-style: none;
 	margin: 0;
-	padding: 0 2px;
+	padding: 2px 8px;
 }
 /* sections */
 .app_sidebar>ul:first-of-type {
-	border-bottom: 1px dashed #ceccde;
+	border-bottom: 1px dashed hsl(240 17% 38% / 1);
 }
 .app_sidebar>ul:last-of-type {
-	border-top: 1px dashed #ceccde;
+	border-top: 1px dashed hsl(240 17% 38% / 1);
 	margin-top: auto;
+	padding-bottom: 8px;
 }
 /* grouped links (faq & discord) */
 .app_sidebar .group>ul {
@@ -73,6 +71,11 @@ sidebar sections *OR* grouped link containers
 .app_sidebar .group>ul>.link {
 	margin-bottom: 0;
 	width: calc(50% - 2.5px);
+}
+.app_sidebar .group>ul>.divider {
+	background: hsl(240 14% 32% / 1);
+	margin: 7px 0 5px;
+	width: 1px;
 }
 
 /* icons */
@@ -85,23 +88,28 @@ sidebar sections *OR* grouped link containers
 links
 **/
 .app_sidebar .link {
-	background: #f9f9fa;
-	border-bottom: 1px solid #bfb9da;
-	box-shadow: 0 0 1px #0009;
-	border-radius: 3px;
+	border-radius: 4px;
 	transition: 0.2s var(--button-anim);
 	overflow: hidden;
 	display: flex;
-	margin: 5px 0;
+	margin: 3px 0;
 	height: 35px;
+}
+.app_sidebar .link>a {
+	color: #fff;
+	text-decoration: none;
+	display: flex;
+	padding: 5px 8px;
+	height: 100%;
+	width: calc(100% - 14px);
 }
 .app_sidebar .link>button {
 	background: #0000;
 	border: none;
-	color: #232323;
+	color: #fff;
 	cursor: pointer;
 	display: flex;
-	padding: 8px 12px;
+	padding: 8px 8px;
 	width: calc(100% - 14px);
 }
 /* remove ugly button styling */
@@ -113,28 +121,19 @@ links
 	border-style: dashed;
 	box-shadow: inset 0 0 0 1px #1b1a21;
 }
-.app_sidebar .link>a {
-	color: #232323;
-	text-decoration: none;
-	display: flex;
-	padding: 4px 12px;
-	height: 100%;
-	width: calc(100% - 14px);
-}
 .app_sidebar .link::after {
 	content: "";
-	background: linear-gradient(90deg, #0000 0, #f5f5fa 10px);
+	background: linear-gradient(90deg, #0000 0, #313145 10px);
 	width: 14px;
 	height: 100%;
 }
 /* states */
 .app_sidebar .link:hover {
-	background: #ffeaf4;
-	border-color: #e4b0c5;
+	background: hsl(240 17% 28% / 1);
 	transition: none;
 }
 .app_sidebar .link:hover::after {
-	background: linear-gradient(90deg, #0000 0, #ffeaf4 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(240 17% 28% / 1) 10px);
 }
 .app_sidebar .link.sel {
 	background: #ffdbe8;
@@ -166,7 +165,7 @@ create button
 
 /* spacer */
 .app_sidebar .spacer {
-	margin-bottom: 10px;
+	margin-bottom: 7px;
 }
 
 
@@ -176,9 +175,10 @@ dragger
 .app_sidebar .dragger {
 	cursor: col-resize;
 	position: absolute;
+	top: 50px;
 	float: right;
 	width: 6px;
-	height: 100%;
+	height: calc(100% - 50px);
 }
 .app_sidebar .dragger:hover {
 	background: #489cf7a3;
@@ -195,9 +195,9 @@ pinned links
 .app_sidebar h3 {
 	color: #918fa0;
 	font-size: 13px;
-    font-weight: bold;
+	font-weight: bold;
 	text-transform: uppercase;
-    margin: 5px 0;
+	margin: 5px 0;
 }
 /* page folders unpin button */
 .app_sidebar .user_custom .link>button.unpin {
@@ -241,13 +241,11 @@ pinned links
 dark mode recoloring
 ***/
 html.dark .app_sidebar {
-	background: #22212b;
-	border-color: #2c2b38;
-	box-shadow: 0 0 2px #0002;
+	background: hsl(246 11% 12% / 1);
 }
 html.dark .app_sidebar #logo_container {
-	background: #15141a;
-	border-right-color: #1c1b22;
+	background: hsl(246 11% 9% / 1);
+	border-color: hsl(246 11% 16% / 1);
 }
 html.dark .app_sidebar #logo_container .toggle_btn:hover {
 	background: #1b1924;
@@ -260,10 +258,6 @@ html.dark .app_sidebar>ul:last-of-type {
 	border-color: #343242;
 }
 /* links */
-html.dark .app_sidebar .link {
-	background: #2c2b36;
-	border-bottom-color: #1a1925;
-}
 html.dark .app_sidebar .link>a {
 	color: #ddd;
 }
@@ -519,14 +513,20 @@ defineExpose({ slideMode, width });
 						</button>
 					</li>
 				</template>
-				<RouterLink to="/videos/create" class="dropdown_item">Create a video</RouterLink>
+				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator></DropdownSeparator>
 				<DropdownItem>Upload a video</DropdownItem>
 				<DropdownItem>Upload a character</DropdownItem>
 			</Dropdown>
 			<div class="spacer"></div>
 			<li class="link">
-				<RouterLink to="/videos" @click="onLinkClick">
+				<RouterLink to="/characters" @click="onLinkClick">
+					<i class="ico person"></i>
+					<div class="link_text">Characters</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/movies" @click="onLinkClick">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
@@ -538,9 +538,9 @@ defineExpose({ slideMode, width });
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/characters" @click="onLinkClick">
-					<i class="ico person"></i>
-					<div class="link_text">Characters</div>
+				<RouterLink to="/assets" @click="onLinkClick">
+					<i class="ico cloud"></i>
+					<div class="link_text">Your Library</div>
 				</RouterLink>
 			</li>
 		</ul>
@@ -562,6 +562,7 @@ defineExpose({ slideMode, width });
 							<div class="link_text">FAQ</div>
 						</a>
 					</li>
+					<div class="divider"></div>
 					<li class="link">
 						<a href="javascript:window.appWindow.openDiscord();">
 							<i class="ico speech"></i>

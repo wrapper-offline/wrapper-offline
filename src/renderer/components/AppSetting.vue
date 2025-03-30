@@ -1,21 +1,21 @@
 <style lang="css" scoped>
 .app_setting {
-    border-bottom: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
 	user-select: none;
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    padding: 0 0 12px;
-    margin-bottom: 12px;
+	display: flex;
+	justify-content: space-between;
+	margin: auto;
+	padding: 0 0 12px;
+	margin-bottom: 12px;
 }
 .app_setting h3 {
-    margin: 0;
-    font-size: 15px;
+	margin: 0;
+	font-size: 15px;
 }
 .app_setting p {
-    color: #738096;
-    margin: 0;
-    font-size: 13px;
+	color: #738096;
+	margin: 0;
+	font-size: 13px;
 }
 
 .app_setting.binary {

@@ -1,6 +1,7 @@
 <style lang="css" scoped>
-#page_container {
+#full_page_container {
 	padding: 0;
+	width: 100%;
 	height: 100%;
 }
 main {
@@ -18,10 +19,10 @@ main {
 /**
 previewer is open
 **/
-#page_container.popup_mode {
+#full_page_container.popup_mode {
 	background: var(--popup-gradient-bg);
 }
-#page_container.popup_mode #studio_object {
+#full_page_container.popup_mode #studio_object {
 	height: 1px;
 }
 </style>
@@ -226,7 +227,7 @@ if (movieId) {
 </script>
 
 <template>
-	<div id="page_container" :class="{ popup_mode: showPreviewer || showCCModal }">
+	<div id="full_page_container" :class="{ popup_mode: showPreviewer || showCCModal }">
 		<ThemeSelector heading-for="Create a video" v-if="showSelector" @theme-clicked="(theme) => themeSelected(theme.id)"/>
 		<main>
 			<AssetImporter

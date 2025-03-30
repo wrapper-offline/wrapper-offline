@@ -26,7 +26,7 @@
 }
 .popup .popup_head {
 	background: #dbd9e4;
-    border-bottom: 1px solid #c1bfce;
+	border-bottom: 1px solid #c1bfce;
 	user-select: none;
 	font-size: 20px;
 	font-weight: 700;
@@ -84,7 +84,7 @@
 
 .popup .popup_foot {
 	background: #e2e1ea;
-    border-top: 1px solid #c7c5d3;
+	border-top: 1px solid #c7c5d3;
 	display: flex;
 	justify-content: flex-end;
 	padding: 2px 20px;

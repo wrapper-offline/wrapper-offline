@@ -29,21 +29,10 @@ body.col_resize {
 	flex-direction: row;
 	height: 100%;
 }
-
-#app_right {
-	width: 100%;
-}
-
-#page_container {
-	background: #0000;
-	overflow: auto;
-	padding: 25px 20px;
-	width: 100%;
-	height: calc(100% - 50px);
-}
 </style>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const params = new URLSearchParams(window.location.search);
@@ -53,11 +42,15 @@ if (params.get("redirect")) {
 	router.push(to);
 }
 
+onMounted(() => {
+	document.getElementById("noscript").remove();
+});
+
 </script>
 
 <template>
 	<RouterView/>
-	<noscript>
+	<noscript id="noscript">
 		<h1>Wrapper: Offline</h1>
 		<h2>JavaScript Required</h2>
 		<p>This page requires JavaScript to function.</p>
