@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <list version="1.0">
 	<fvm_meta theme_code="" is_biz="0"/>
+	
 	<theme id="custom" name="Comedy World" cc_theme_id="family" col="1"/>
 	<theme id="politics2" name="White Houserz" col="1"/>
 	<theme id="anime" name="Anime" cc_theme_id="anime" col="1"/>
@@ -9,7 +10,6 @@
 	<theme id="fullenergy" name="Full Energy" col="1"/>
 	<theme id="akon" name="AKON" col="1"/>
 
-	<theme id="botdf" name="Blood on the Dance Floor" cc_theme_id="botdf" col="2"/>
 	<theme id="ben10" name="Ben 10" col="2"/>
 	<theme id="bunny" name="It's Happy Bunny" col="2"/>
 	<theme id="chowder" name="Chowder" col="2"/>
