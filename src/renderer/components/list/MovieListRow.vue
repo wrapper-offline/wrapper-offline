@@ -1,8 +1,14 @@
+<style>
+tr.movie td.title img {
+	width: initial;
+}
+</style>
+
 <script setup lang="ts" generic="T extends Movie">
 import { apiServer } from "../../controllers/AppInit";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import { inject } from "vue";
-import type { Movie } from "../../routes/MovieListView.vue";
+import type { Movie } from "../../interfaces/Movie";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 
 const props = defineProps<{
@@ -31,7 +37,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 </script>
 
 <template>
-	<tr>
+	<tr class="movie">
 		<!-- :class="{
 			movie: true,
 			sel: (selection['movie'] || []).includes(movie.id)

@@ -3,9 +3,7 @@
 	display: flex;
 }
 .tab_selector .tab_col {
-	border-right: 1px solid #ccc;
-	margin-right: 14px;
-	padding-right: 14px;
+	margin-right: 16px;
 	width: 160px;
 }
 .tab_selector .tab_col .btn {
@@ -32,8 +30,8 @@ html.dark .tab_selector .tab_col {
 
 <script setup lang="ts">
 import AppSetting from "./AppSetting.vue";
-import Button from "./controls/Button.vue";
-import Popup from "./Popup.vue";
+import Button from "../controls/Button.vue";
+import Popup from "../Popup.vue";
 import { ref } from "vue";
 
 const tabs = [

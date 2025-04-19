@@ -29,7 +29,7 @@
 	background: #42404f;
 }
 .dark .btn.primary {
-	background: #a82447;
+	background: hsl(344deg 62% 50%);
 }
 </style>
 

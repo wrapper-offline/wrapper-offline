@@ -1,18 +1,18 @@
 import type { Ref } from "vue";
 
 /** required values in a list entry */
-export type EntryBase = {
+export type GenericListEntry = {
 	id: string
 };
-export interface ListFieldColumn<T extends EntryBase> {
+/** column to be displayed on a list */
+export interface ListFieldColumn<T extends GenericListEntry> {
 	id: FieldIdOf<T>,
-	title: string,
 	width: Ref<number>,
 };
 /* field id of a list entry */
-export type FieldIdOf<T extends EntryBase> = keyof T;
+export type FieldIdOf<T extends GenericListEntry> = keyof T;
 
-export interface SelectedListSort<T extends EntryBase> {
+export interface SelectedListSort<T extends GenericListEntry> {
 	id: FieldIdOf<T>,
 	descending: boolean,
 };

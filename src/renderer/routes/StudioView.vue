@@ -36,11 +36,11 @@ import {
 	swfUrlBase,
 	toAttrString
 } from "../controllers/AppInit";
-import AssetImporter from "../components/importer/AssetImporter.vue";
-import type { AssetStatus } from "../components/importer/ImporterFile.vue";
-import CCModal from "../components/CCModal.vue";
+import AssetImporter from "../components/studio/importer/AssetImporter.vue";
+import type { AssetStatus } from "../components/studio/importer/ImporterFile.vue";
+import CCModal from "../components/studio/CCModal.vue";
 import { onMounted, ref, toValue, useTemplateRef } from "vue";
-import PreviewPlayer from "../components/PreviewPlayer.vue";
+import MoviePreviewModal from "../components/studio/MoviePreviewModal.vue";
 import SettingsController from "../controllers/SettingsController";
 import ThemeSelector from "../components/ThemeSelector.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -51,10 +51,10 @@ import { useRoute, useRouter } from "vue-router";
 */
 
 type CCModalType = InstanceType<typeof CCModal>;
-type PreviewPlayerType = InstanceType<typeof PreviewPlayer>;
+type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
 
 const ccModal = useTemplateRef<CCModalType>("ccModal");
-const previewPlayer = useTemplateRef<PreviewPlayerType>("previewPlayer");
+const previewModal = useTemplateRef<MoviePreviewModalType>("previewPlayer");
 const router = useRouter();
 const studio = useTemplateRef<HTMLObjectElement>("studio-object");
 const showCCModal = ref(false);
@@ -123,7 +123,7 @@ function exitPreviewer() {
 }
 function showSavePopup() {
 	//@ts-ignore
-	studio.value.onExternalPreviewPlayerPublish();
+	studio.value.onExternalMoviePreviewModalPublish();
 }
 
 onMounted(() => {
@@ -146,10 +146,10 @@ onMounted(() => {
 		}
 	};
 	//@ts-ignore
-	window.initPreviewPlayer = function (movieXml:string, startFrame:number) {
+	window.initMoviePreviewModal = function (movieXml:string, startFrame:number) {
 		showPreviewer.value = true;
 		showImporter.value = false;
-		previewPlayer.value.displayPlayer(movieXml, startFrame);
+		previewModal.value.displayPlayer(movieXml, startFrame);
 	};
 	//@ts-ignore
 	window.showCCWindow = function (themeId:string) {
@@ -241,6 +241,6 @@ if (movieId) {
 			</object>
 		</main>
 		<CCModal :show="showCCModal == true" ref="ccModal" @exit="exitCCModal" @char-saved="charSaved"/>
-		<PreviewPlayer :show="showPreviewer == true" ref="previewPlayer" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
+		<MoviePreviewModal :show="showPreviewer == true" ref="previewModal" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
 	</div>
 </template>

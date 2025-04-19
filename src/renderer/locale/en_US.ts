@@ -11,7 +11,16 @@ export default {
 			"video": "Video",
 			"placeable": "Placeable prop",
 			"holdable": "Handheld prop",
-			"wearable": "Head gear"
+			"wearable": "Head gear",
+		}
+	},
+	"list": {
+		"column_name": {
+			"id": "ID",
+			"title": "Name",
+			"type": "Type",
+			"duration": "Duration",
+			"date": "Modified",
 		}
 	}
 };

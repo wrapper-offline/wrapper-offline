@@ -12,13 +12,11 @@
 	flex-grow: 1;
 }
 
-html.dark {
-	--popup-gradient-bg: radial-gradient(#1e1d25, #0e0d11);
+html.dark #right_page_container {
+	background: hsl(250 10% 9% / 1);
 }
-
-html.dark, html.dark>body {
-	background: #1e1d25;
-	color: #eee;
+html.dark .page_contents {
+	background: hsl(250 9% 16% / 1);
 }
 
 /* html.dark #app_right {

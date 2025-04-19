@@ -11,9 +11,9 @@
 </style>
 
 <script setup lang="ts">
-import Button from "./controls/Button.vue";
-import CCObject from "./CCObject.vue";
-import Popup from "./Popup.vue";
+import Button from "../controls/Button.vue";
+import CCObject from "../CCObject.vue";
+import Popup from "../Popup.vue";
 import { useTemplateRef } from "vue";
 
 const emit = defineEmits<{

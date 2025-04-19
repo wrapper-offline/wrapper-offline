@@ -1,7 +1,6 @@
 <style lang="css" scoped>
 .app_sidebar {
 	background: #313145;
-	box-shadow: inset -2px 0 3px #0001;
 	z-index: 8;
 	user-select: none;
 	display: flex;
@@ -55,10 +54,10 @@ sidebar sections *OR* grouped link containers
 }
 /* sections */
 .app_sidebar>ul:first-of-type {
-	border-bottom: 1px dashed hsl(240 17% 38% / 1);
+	border-bottom: 1px solid hsl(240 14% 32% / 1);
 }
 .app_sidebar>ul:last-of-type {
-	border-top: 1px dashed hsl(240 17% 38% / 1);
+	border-top: 1px solid hsl(240 14% 32% / 1);
 	margin-top: auto;
 	padding-bottom: 8px;
 }
@@ -149,7 +148,7 @@ links
 create button
 **/
 .app_sidebar .link.create {
-	background: #fc4f7d;
+	background: hsl(344deg 97% 65%);
 	border-bottom-color: #ac0633;
 }
 .app_sidebar .link.create>button {
@@ -241,11 +240,11 @@ pinned links
 dark mode recoloring
 ***/
 html.dark .app_sidebar {
-	background: hsl(246 11% 12% / 1);
+	background: hsl(250 10% 13% / 1);
 }
 html.dark .app_sidebar #logo_container {
-	background: hsl(246 11% 9% / 1);
-	border-color: hsl(246 11% 16% / 1);
+	background: hsl(250 10% 9% / 1);
+	border-color: hsl(250 10% 16% / 1);
 }
 html.dark .app_sidebar #logo_container .toggle_btn:hover {
 	background: #1b1924;
@@ -268,7 +267,7 @@ html.dark .app_sidebar .link i {
 	color: #9f9eab;
 }
 html.dark .app_sidebar .link::after {
-	background: linear-gradient(90deg, #0000 0, #2c2b36 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(250 11% 13% / 1) 10px);
 }
 html.dark .app_sidebar .link.pin_btn {
 	background: #23222d;
@@ -287,14 +286,14 @@ html.dark .app_sidebar .link.sel {
 }
 /* create button */
 html.dark .app_sidebar .link.create {
-	background: #a82447;
+	background: hsl(344deg 62% 50%);
 	border-bottom-color: #732137;
 }
 html.dark .app_sidebar .link.create i {
-	color: #ccc;
+	color: #eee;
 }
 html.dark .app_sidebar .link.create::after {
-	background: linear-gradient(90deg, #0000 0, #a82447 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(344deg 62% 50%) 10px);
 }
 html.dark .app_sidebar .user_custom .link>button:hover {
 	background: #573344;
@@ -390,7 +389,7 @@ import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref, toValue } from "vue";
-import SettingsModal from "./SettingsModal.vue";
+import SettingsModal from "./settings/SettingsModal.vue";
 
 const inResize = ref(false);
 const collapsed = ref(false);

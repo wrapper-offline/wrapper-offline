@@ -73,6 +73,9 @@ i.ico.phone::before {
 i.ico.play::before {
 	content: '\E174';
 }
+i.ico.pause::before {
+	content: '\E175';
+}
 i.ico.redo::before {
 	content: '\E435';
 }

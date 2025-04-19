@@ -94,8 +94,8 @@ header .search_box:focus {
 }
 
 html.dark header {
-	background: hsl(246 10% 12% / 1);
-	border-color: hsl(246 11% 19% / 1);
+	background: hsl(250 9% 13% / 1);
+	border-color: hsl(246 9% 19% / 1);
 }
 html.dark header .link:hover {
 	background: #262531;

@@ -29,6 +29,15 @@ body.col_resize {
 	flex-direction: row;
 	height: 100%;
 }
+
+html.dark {
+	--popup-gradient-bg: radial-gradient(#1e1d25, #0e0d11);
+}
+
+html.dark, html.dark>body {
+	background: #fff;
+	color: #eee;
+}
 </style>
 
 <script setup lang="ts">

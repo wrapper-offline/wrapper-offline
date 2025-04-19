@@ -91,7 +91,7 @@ initial message
 
 <script setup lang="ts">
 import type { AssetStatus } from "./ImporterFile.vue";
-import Button from "../controls/Button.vue";
+import Button from "../../controls/Button.vue";
 import { filesize } from "filesize";
 import ImporterFile from "./ImporterFile.vue";
 import { ref, toValue, useTemplateRef } from "vue";

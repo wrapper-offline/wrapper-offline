@@ -6,7 +6,7 @@
 	justify-content: space-between;
 	margin: auto;
 	padding: 0 0 12px;
-	margin-bottom: 12px;
+	margin-bottom: 11px;
 }
 .app_setting h3 {
 	margin: 0;
@@ -22,6 +22,10 @@
 	cursor: pointer;
 }
 
+.app_setting:last-of-type {
+	border: none;
+}
+
 html.dark .app_setting {
 	border-color: #313041;
 }
@@ -32,7 +36,7 @@ html.dark .app_setting p {
 
 <script setup lang="ts">
 import { ref, toValue } from "vue";
-import SettingsController from "../controllers/SettingsController";
+import SettingsController from "../../controllers/SettingsController";
 
 const props = defineProps<{
 	id: string,

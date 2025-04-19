@@ -1,16 +1,15 @@
-import { apiServer } from "./controllers/AppInit";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { createMemoryHistory, createRouter } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import SettingsController from "./controllers/SettingsController";
 
-import AssetListView from "./routes/AssetListView.vue";
-import CCView from "./routes/CCView.vue";
 import Error404View from "./routes/Error404View.vue";
-import MovieListView from "./routes/MovieListView.vue";
 import PlayerView from "./routes/PlayerView.vue";
 import StudioView from "./routes/StudioView.vue";
+import UserCharacters from "./routes/UserCharacters.vue";
+import UserMovies from "./routes/UserMovies.vue";
+import UserStudioAssets from "./routes/UserStudioAssets.vue";
 
 import DefaultLayout from "./DefaultLayout.vue"
 
@@ -25,7 +24,7 @@ const routes:RouteRecordRaw[] = [
 		path: "/assets",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:AssetListView },
+			{ path:"", component:UserStudioAssets },
 		],
 		meta: {
 			title: "Your Library"
@@ -35,7 +34,7 @@ const routes:RouteRecordRaw[] = [
 		path: "/characters/:themeId?",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:CCView },
+			{ path:"", component:UserCharacters },
 		],
 		meta: {
 			title: "Characters"
@@ -48,7 +47,7 @@ const routes:RouteRecordRaw[] = [
 			{ 
 				name: "movie_list",
 				path: "",
-				component: MovieListView,
+				component: UserMovies,
 			},
 		],
 		meta: {
@@ -83,7 +82,7 @@ const routes:RouteRecordRaw[] = [
 			{
 				name: "starter_list",
 				path: "",
-				component: MovieListView,
+				component: UserMovies,
 			},
 		],
 		meta: {
