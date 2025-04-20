@@ -52,7 +52,7 @@ export default class CharModel {
 	static save(xml:Buffer, info:Partial<Char>): string {
 		// save asset info
 		info.id ||= generateId();
-		Database.insert("assets", info);
+		Database.insert("assets", info as Char);
 
 		// fix handheld props for v2 cc themes by inserting version="2.0"
 		if (!this.isSkeleton(info.themeId) && xml.indexOf("version=\"2.0\"") == -1) {

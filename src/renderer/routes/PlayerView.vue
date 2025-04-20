@@ -1,6 +1,7 @@
 <style lang="css" scoped>
 #full_page_container {
 	padding: 0;
+	width: 100%;
 	height: 100%;
 }
 #studio_object {
@@ -64,7 +65,7 @@ let params:Params = {
 		clientThemePath: staticServer + staticPaths.clientUrl + "/<client_theme>"
 	},
 	allowScriptAccess: "always",
-	allowFullScreen: "always",
+	allowFullScreen: "true",
 };
 
 /**
@@ -84,7 +85,7 @@ displayPlayer(movieId);
 </script>
 
 <template>
-	<div>
+	<div id="full_page_container">
 		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
 			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 		</object>

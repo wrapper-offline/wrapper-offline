@@ -52,7 +52,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 				v-if="columnId == 'title'"
 				:src="`${apiServer}/file/movie/thumb/${movieInfo('id')}`"
 				alt="thumbnail"/>
-			<span>{{ movieInfo(columnId) }}</span>
+			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
 		</td>
 		<td class="actions">
 			<RouterLink class="action" :to="`?redirect=/movies/play/${movieInfo('id')}`" target="_blank">
