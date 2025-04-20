@@ -78,6 +78,7 @@ const createWindow = () => {
 	ipcMain.on("exit", () => process.exit(0));
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-github", openGithub);
+	ipcMain.on("open-faq", openFAQ);
 
 	let host:string, port:string;
 	if (IS_DEV) {
@@ -97,6 +98,9 @@ async function openDiscord() {
 }
 async function openGithub() {
 	await shell.openExternal("https://github.com/wrapper-offline/wrapper-offline");
+}
+async function openFAQ() {
+	await shell.openExternal("https://github.com/wrapper-offline/wrapper-offline/wiki/FAQ");
 }
 
 app.whenReady().then(() => {
@@ -119,11 +123,7 @@ function setMenuBar(mainWindow:BrowserWindow) {
 		{
 			label: "Home",
 			click: () => {
-				if (root.startsWith("http")) {
-					mainWindow.loadURL(root);
-					return;
-				}
-				mainWindow.loadFile(root);
+				mainWindow.loadURL(root);
 			}
 		},
 		{

@@ -5,7 +5,6 @@
 </style>
 
 <script setup lang="ts">
-
 import { apiServer } from "../controllers/AppInit";
 import type { Asset } from "../interfaces/Asset";
 import AssetListRow from "../components/list/AssetListRow.vue";
@@ -32,30 +31,34 @@ const navbarEntries = ref<NavbarEntry[]>([]);
 /** list of user assets */
 const assetList = ref<Asset[]>();
 
-/* movie list columns */
-let sortOptions:ListFieldColumn<Asset>[] = [
+let columnWidths = JSON.parse(localStorage.getItem("sasset_list-columnWidths")) ??
+	{ "title":280, "id":120, "type":150 };
+let columns:ListFieldColumn<Asset>[] = [
 	{
 		id: "title",
-		width: ref(280),
+		width: ref(columnWidths["title"]),
 	},
 	{
 		id: "id",
-		width: ref(120),
+		width: ref(columnWidths["id"]),
 	},
 	{
 		id: "type",
-		width: ref(150),
+		width: ref(columnWidths["type"]),
 	},
 ];
 
 /** list sort option that is currently selected */
-const selectedSort = ref<SelectedListSort<Asset>>({
-	id: "title",
-	descending: true
-});
+const selectedSort = ref<SelectedListSort<Asset>>(
+	JSON.parse(localStorage.getItem("sasset_list-selectedSort")) ??
+		{
+			id: "title",
+			descending: true
+		}
+);
 
 /**
- * resets the movie list object to a blank value
+ * clears the asset list array
  */
 function initList() {
 	assetList.value = [];
@@ -88,7 +91,6 @@ function assetSortCb(asset1:Asset, asset2:Asset): number {
  * @param newSort sort option to switch to
  */
 function changeSort(newSort:FieldIdOf<Asset>) {
-	// TODO : store sort option
 	if (selectedSort.value.id == newSort) {
 		selectedSort.value.descending = !selectedSort.value.descending;
 	} else {
@@ -97,29 +99,18 @@ function changeSort(newSort:FieldIdOf<Asset>) {
 			descending: true,
 		};
 	}
+	localStorage.setItem("sasset_list-selectedSort", JSON.stringify(toValue(selectedSort)));
 	assetList.value = assetList.value.sort(assetSortCb);
 }
 
 /**
  * called when the user resizes a movie list column
- * @param id sort option id
- * @param e mouse event
+ * @param id column id
+ * @param newWidth new width in pixels
  */
-function draggerDown(id:FieldIdOf<Asset>, e:MouseEvent) {
-	document.body.classList.add("col_resize");
-	const option = sortOptions.find(v => v.id == id);
-	const startX = e.clientX;
-	const startWidth = toValue(option.width);
-	const moveCb = (moveE2:MouseEvent) => {
-		let newWidth = Math.max(startWidth - startX + moveE2.clientX, 95);
-		newWidth = Math.min(newWidth, 400);
-		option.width.value = newWidth;
-	};
-	window.addEventListener("mousemove", moveCb);
-	window.addEventListener("mouseup", () => {
-		window.removeEventListener("mousemove", moveCb);
-		document.body.classList.remove("col_resize");
-	});
+function columnResized(id:FieldIdOf<Asset>, newWidth:number) {
+	columnWidths[id] = newWidth;
+	localStorage.setItem("sasset_list-columnWidths", JSON.stringify(columnWidths));
 }
 
 /**
@@ -157,10 +148,10 @@ async function loadAssetList() {
 	navbarEntries.value = [
 		{
 			path: "/assets",
-			title: "Your Library"
+			title: `Your Library`
 		}
 	];
-	assetList.value = response;
+	assetList.value = response.sort(assetSortCb);
 }
 
 watch(() => route.path, routeUpdated);
@@ -175,17 +166,22 @@ provide(zoomLevelKey, zoomLevel);
 
 <template>
 	<div>
-		<Navbar :entries="navbarEntries" state="movielist"/>
+		<Navbar
+			:count="assetList.length"
+			:entries="navbarEntries"
+			state="movielist"/>
+
 		<div class="page_contents">
 			<ListTree
 				ref="base-tree"
 				:data="{ folders:[], entries:assetList }"
 				:component="AssetListRow"
+				:columns="columns"
 				:selected-sort="selectedSort"
-				:sort-options="sortOptions"
 				:restrictions="{
 					mode: 'list'
 				}"
+				@column-resize="columnResized"
 				@sort-change="changeSort"/>
 		</div>
 	</div>

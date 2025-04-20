@@ -10,6 +10,7 @@ process.env.VITE_STATIC_SERVER_PORT = config.STATIC_SERVER_PORT;
 process.env.VITE_SWF_URL = config.SWF_URL;
 process.env.VITE_STORE_URL = config.STORE_URL;
 process.env.VITE_CLIENT_URL = config.CLIENT_URL;
+process.env.VITE_WRAPPER_VER = config.WRAPPER_VER;
 
 export default defineConfig({
 	base: "",

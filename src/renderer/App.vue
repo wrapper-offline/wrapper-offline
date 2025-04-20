@@ -13,8 +13,7 @@
 general
 **/
 html, body {
-	background: #e4e2e9;
-	color: #505969;
+	color: hsl(218deg 14% 36%);
 	font: 15px/1.7 "Lato", Arial, sans-serif;
 	overflow: hidden;
 	width: 100%;
@@ -35,8 +34,7 @@ html.dark {
 }
 
 html.dark, html.dark>body {
-	background: #fff;
-	color: #eee;
+	color: hsl(0deg 0% 82%);
 }
 </style>
 

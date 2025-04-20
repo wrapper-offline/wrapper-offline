@@ -1,5 +1,16 @@
 <style lang="css">
 
+.list_tree_container {
+	background: repeating-linear-gradient(
+		#0000 0,
+		#0000 v-bind("zoomLevel"),
+		hsl(257deg 14% 96.5%) v-bind("zoomLevel"),
+		hsl(257deg 14% 96.5%) calc(v-bind("zoomLevel") * 2)
+	) 0 36px;
+	overflow-x: auto;
+	min-height: 100%;
+}
+
 /***
 list view
 ***/
@@ -15,7 +26,9 @@ table.list_tree {
 list head
 *s*/
 thead.list_head {
+	background-color: #eeedf2;
 	border-bottom: 1px solid hsl(240 12% 76% / 1);
+	top: 0;
 }
 thead.list_head th {
 	border-left: 1px solid;
@@ -27,10 +40,15 @@ thead.list_head .space.side_padding {
 	width: 25px;
 }
 thead.list_head .sort_option {
+	color: hsl(218deg 14% 24%);
 	transition: background 0.2s var(--button-anim);
+	font-weight: normal;
 	text-align: left;
-	padding: 10px 6px;
 	line-height: 15px;
+	padding: 10px 6px;
+}
+thead.list_head .sort_option.active {
+	font-weight: bold;
 }
 thead.list_head .sort_option.active::after {
 	content: "🞃";
@@ -90,10 +108,6 @@ grid view
 /**
 movie row
 **/
-table.list_tree tbody tr:nth-child(2n) {
-	background: hsl(257deg 14% 96.5%);
-}
-
 table.list_tree tbody tr {
 	align-items: center;
 	height: v-bind("zoomLevel");
@@ -126,10 +140,10 @@ table.list_tree tbody tr:first-of-type td:first-of-type {
 	overflow: hidden;
 }
 table.list_tree tbody tr:hover {
-	background: hsl(340 95% 94% / 1);
+	background: hsl(344 95% 94% / 1);
 }
 table.list_tree tbody tr.sel {
-	background: hsl(340 100% 70% / 1);
+	background: hsl(344 100% 70% / 1);
 	color: #fff;
 }
 
@@ -198,17 +212,26 @@ div.movie:hover {
 /**
 dark mode reskinning
 **/
-/* movie rows */
-html.dark {
-	border-color: hsl(246 11% 21% / 1);
+/* list mode */
+html.dark .list_tree_container {
+	background: repeating-linear-gradient(
+		#0000 0,
+		#0000 v-bind("zoomLevel"),
+		hsl(250 8% 17.5% / 1) v-bind("zoomLevel"),
+		hsl(250 8% 17.5% / 1) calc(v-bind("zoomLevel") * 2)
+	) 0 36px;
 }
-html.dark table.list_tree tbody tr:nth-child(2n) {
-	background: hsl(250 8% 17.5% / 1);
+html.dark thead.list_head {
+	background-color: hsl(250 9% 16% / 1);
+	border-color: hsl(250 9% 24% / 1);
+}
+html.dark thead.list_head .sort_option {
+	color: hsl(0deg 0% 92%);
 }
 html.dark table.list_tree tbody tr:hover {
-	background: #422b3d;
+	background: hsl(328 20% 20% / 1);
 }
-/* movie tiles */
+/* grid mode */
 html.dark div.movie {
 	border-color: #2b2a37;
 }
@@ -221,13 +244,14 @@ html.dark div.movie:hover {
 <script setup lang="ts" generic="ListEntry extends GenericListEntry">
 import { genericColumnIdKey, zoomLevelKey } from "../../keys/listTreeKeys";
 import type {
+	FieldIdOf,
 	GenericListEntry,
 	ListFieldColumn,
 	SelectedListSort
 } from "../../interfaces/ListTypes";
 import FolderIcon from "../icons/FolderIcon.vue";
 import GenericListRow from "./GenericListRow.vue";
-import { inject, provide, ref } from "vue";
+import { inject, provide, ref, toValue } from "vue";
 import locale from "../../locale/en_US";
 import { useRoute, useRouter } from "vue-router";
 import { view } from "../../controllers/listRefs";
@@ -244,6 +268,8 @@ interface ListData {
 };
 
 const emit = defineEmits<{
+	/** emitted when a column has been resized. [id, new width] */
+	columnResize: [string, number],
 	/** id of the new entry field to sort by */
 	sortChange: [string],
 }>();
@@ -251,7 +277,7 @@ const props = defineProps<{
 	/** list of entries and folders */
 	data: ListData,
 	/** list of columns to display */
-	sortOptions: ListFieldColumn<ListEntry>[],
+	columns: ListFieldColumn<ListEntry>[],
 	/** id of the column to sort by */
 	selectedSort: SelectedListSort<ListEntry>,
 	restrictions?: {
@@ -266,9 +292,8 @@ const modeRestriction = props?.restrictions?.mode ?? false;
 const route = useRoute();
 const router = useRouter();
 
-const columns = props.sortOptions.map((v) => v.id);
+const columnIds = props.columns.map((v) => v.id);
 const mode = modeRestriction ? modeRestriction : view;
-
 const zoomLevel = inject(zoomLevelKey, ref("15px"));
 
 /**
@@ -293,54 +318,75 @@ function sortOptionClicked(fieldId:string) {
 	emit("sortChange", fieldId);
 }
 
-function draggerDown(id, event) {
-
+/**
+ * called when the user resizes a movie list column
+ * @param id sort option id
+ * @param e mouse event
+ */
+function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
+	document.body.classList.add("col_resize");
+	const option = props.columns.find(v => v.id == id);
+	const startX = e.clientX;
+	const startWidth = toValue(option.width);
+	const moveCb = (moveE2:MouseEvent) => {
+		let newWidth = Math.max(startWidth - startX + moveE2.clientX, 95);
+		newWidth = Math.min(newWidth, 400);
+		option.width.value = newWidth;
+	};
+	window.addEventListener("mousemove", moveCb);
+	window.addEventListener("mouseup", () => {
+		window.removeEventListener("mousemove", moveCb);
+		document.body.classList.remove("col_resize");
+		emit("columnResize", id.toString(), option.width.value);
+	});
 }
 
-provide(genericColumnIdKey<ListEntry>(), columns);
+provide(genericColumnIdKey<ListEntry>(), columnIds);
 
 </script>
 
 <template>
-	<table class="list_tree">
-		<thead class="list_head">
-			<tr>
-				<th class="space side_padding"></th>
-				<th
-					v-for="field in sortOptions" 
-					:class="{
-						active: selectedSort.id == field.id,
-						desc: selectedSort.descending,
-						sort_option: true
-					}"
-					:style="{
-						width: mode == 'list' ? field.width.value + 'px' : '150px'
-					}"
-					@click.self="sortOptionClicked(field.id.toString())">
-					{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
-					<div v-if="mode == 'list'"
-						class="dragger"
-						:style="{marginLeft: field.width.value - 11 + 'px'}"
-						@mousedown.stop.prevent="(e) => draggerDown(field.id, e)"></div>
-				</th>
-				<th class="space"></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr class="entry folder" v-for="folder in data.folders" @click="folderClicked(folder.id)">
-				<td></td>
-				<template v-for="columnId in columns">
-					<td v-if="columnId == 'title'" class="title">
-						<FolderIcon :color="folder.color"/>
-						<span>
-							{{ folder.title }}
-						</span>
-					</td>
-					<td v-else></td>
-				</template>
-				<td></td>
-			</tr>
-			<component v-for="entry in data.entries" :entry="entry"/>
-		</tbody>
-	</table>
+	<div class="list_tree_container">
+		<table class="list_tree">
+			<thead class="list_head">
+				<tr>
+					<th class="space side_padding"></th>
+					<th
+						v-for="field in columns" 
+						:class="{
+							active: selectedSort.id == field.id,
+							desc: selectedSort.descending,
+							sort_option: true
+						}"
+						:style="{
+							width: mode == 'list' ? field.width.value + 'px' : '150px'
+						}"
+						@click.self="sortOptionClicked(field.id.toString())">
+						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
+						<div v-if="mode == 'list'"
+							class="dragger"
+							:style="{marginLeft: field.width.value - 11 + 'px'}"
+							@mousedown.stop.prevent="(e) => draggerDown(field.id, e)"></div>
+					</th>
+					<th class="space"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="entry folder" v-for="folder in data.folders" @click="folderClicked(folder.id)">
+					<td></td>
+					<template v-for="columnId in columnIds">
+						<td v-if="columnId == 'title'" class="title">
+							<FolderIcon :color="folder.color"/>
+							<span>
+								{{ folder.title }}
+							</span>
+						</td>
+						<td v-else></td>
+					</template>
+					<td></td>
+				</tr>
+				<component v-for="entry in data.entries" :entry="entry"/>
+			</tbody>
+		</table>
+	</div>
 </template>

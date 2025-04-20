@@ -244,7 +244,7 @@ html.dark .app_sidebar {
 }
 html.dark .app_sidebar #logo_container {
 	background: hsl(250 10% 9% / 1);
-	border-color: hsl(250 10% 16% / 1);
+	border-color: hsl(250 10% 22% / 1);
 }
 html.dark .app_sidebar #logo_container .toggle_btn:hover {
 	background: #1b1924;
@@ -258,10 +258,10 @@ html.dark .app_sidebar>ul:last-of-type {
 }
 /* links */
 html.dark .app_sidebar .link>a {
-	color: #ddd;
+	color: #ccc;
 }
 html.dark .app_sidebar .link>button {
-	color: #ddd;
+	color: #ccc;
 }
 html.dark .app_sidebar .link i {
 	color: #9f9eab;
@@ -274,10 +274,10 @@ html.dark .app_sidebar .link.pin_btn {
 	box-shadow: inset 0 0 0 1px #1b1a21;
 }
 html.dark .app_sidebar .link:hover {
-	background: #422b3d;
+	background: hsl(250 10% 18% / 1);
 }
 html.dark .app_sidebar .link:hover::after {
-	background: linear-gradient(90deg, #0000 0, #422b3d 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(250 10% 18% / 1) 10px);
 }
 html.dark .app_sidebar .link.sel {
 	background: #3c2234;
@@ -289,6 +289,7 @@ html.dark .app_sidebar .link.create {
 	background: hsl(344deg 62% 50%);
 	border-bottom-color: #732137;
 }
+html.dark .app_sidebar .link.create button,
 html.dark .app_sidebar .link.create i {
 	color: #eee;
 }
@@ -390,6 +391,7 @@ import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref, toValue } from "vue";
 import SettingsModal from "./settings/SettingsModal.vue";
+import { wrapperVer } from "../controllers/AppInit";
 
 const inResize = ref(false);
 const collapsed = ref(false);
@@ -555,14 +557,14 @@ defineExpose({ slideMode, width });
 		<ul>
 			<li class="group">
 				<ul>
-					<li class="link">
-						<a href="javascript:window.appWindow.openFaq();">
+					<li class="link" title="Get answers to various questions you may have">
+						<a href="javascript:window.appWindow.openFAQ();">
 							<i class="ico interr"></i>
 							<div class="link_text">FAQ</div>
 						</a>
 					</li>
 					<div class="divider"></div>
-					<li class="link">
+					<li class="link" title="Need help with Wrapper? Chat with our community on Discord!">
 						<a href="javascript:window.appWindow.openDiscord();">
 							<i class="ico speech"></i>
 							<div class="link_text">Discord</div>
@@ -570,13 +572,13 @@ defineExpose({ slideMode, width });
 					</li>
 				</ul>
 			</li>
-			<li class="link">
+			<li class="link" title="Configure Wrapper">
 				<button @click="openSettings">
 					<i class="ico cog"></i>
 					<div class="link_text">Settings</div>
 				</button>
 			</li>
-			<span id="wrapper_ver">2.1.0</span>
+			<span id="wrapper_ver">{{ wrapperVer }}</span>
 		</ul>
 		<div
 			v-if="!slideMode.enabled"

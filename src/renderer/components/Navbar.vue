@@ -95,7 +95,7 @@ header .search_box:focus {
 
 html.dark header {
 	background: hsl(250 9% 13% / 1);
-	border-color: hsl(246 9% 19% / 1);
+	border-color: hsl(250 9% 24% / 1);
 }
 html.dark header .link:hover {
 	background: #262531;
@@ -172,6 +172,8 @@ function zoomSliderMoved(e:InputEvent) {
 }
 
 defineProps<{
+	/** display a number at the end of a final link */
+	count?: number,
 	/** address entries */
 	entries: NavbarEntry[],
 	/** specifies which options to display on the right */
@@ -191,6 +193,9 @@ defineProps<{
 				</RouterLink>
 				<span v-if="entries.length > 0" class="link final_link">
 					{{ entries[entries.length - 1].title }}
+					<template v-if="count">
+						({{ count }})
+					</template>
 				</span>
 			</div>
 		</div>

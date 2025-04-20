@@ -1,6 +1,5 @@
 import { ref, toValue } from "vue";
 
-export const currentSortKey = Symbol() as InjectionKey<Ref<CurrentListSort<ListEntry>>>;
 /** list view, grid or list */
 export const view = ref(localStorage.getItem("list_view") || "list");
 export function setView(newView:"list"|"grid") {

@@ -37,31 +37,35 @@ const movieList = ref<{
 	entries: Movie[]
 }>();
 
-/* movie list columns */
-let sortOptions:ListFieldColumn<Movie>[] = [
+let columnWidths = JSON.parse(localStorage.getItem("movie_list-columnWidths")) ??
+	{ "title":250, "id":100, "duration":100, "date":180 };
+let columns:ListFieldColumn<Movie>[] = [
 	{
 		id: "title",
-		width: ref(250),
+		width: ref(columnWidths["title"]),
 	},
 	{
 		id: "id",
-		width: ref(100),
+		width: ref(columnWidths["id"]),
 	},
 	{
 		id: "duration",
-		width: ref(100),
+		width: ref(columnWidths["duration"]),
 	},
 	{
 		id: "date",
-		width: ref(180),
+		width: ref(columnWidths["date"]),
 	}
 ];
 
 /** list sort option that is currently selected */
-const selectedSort = ref<SelectedListSort<Movie>>({
-	id: "title",
-	descending: true
-});
+const selectedSort = ref<SelectedListSort<Movie>>(
+	JSON.parse(localStorage.getItem("movie_list-selectedSort")) ??
+		{
+			id: "title",
+			descending: true
+		}
+);
 
 /**
  * resets the movie list object to a blank value
@@ -119,7 +123,6 @@ function movieSortCb(movie1:Movie, movie2:Movie): number {
  * @param newSort sort option to switch to
  */
 function changeSort(newSort:FieldIdOf<Movie>) {
-	// TODO : store sort option
 	if (selectedSort.value.id == newSort) {
 		selectedSort.value.descending = !selectedSort.value.descending;
 	} else {
@@ -128,29 +131,18 @@ function changeSort(newSort:FieldIdOf<Movie>) {
 			descending: true,
 		};
 	}
+	localStorage.setItem("movie_list-selectedSort", JSON.stringify(toValue(selectedSort)));
 	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
 }
 
 /**
  * called when the user resizes a movie list column
- * @param id sort option id
- * @param e mouse event
+ * @param id column id
+ * @param newWidth new width in pixels
  */
-function draggerDown(id:FieldIdOf<Movie>, e:MouseEvent) {
-	document.body.classList.add("col_resize");
-	const option = sortOptions.find(v => v.id == id);
-	const startX = e.clientX;
-	const startWidth = toValue(option.width);
-	const moveCb = (moveE2:MouseEvent) => {
-		let newWidth = Math.max(startWidth - startX + moveE2.clientX, 95);
-		newWidth = Math.min(newWidth, 400);
-		option.width.value = newWidth;
-	};
-	window.addEventListener("mousemove", moveCb);
-	window.addEventListener("mouseup", () => {
-		window.removeEventListener("mousemove", moveCb);
-		document.body.classList.remove("col_resize");
-	});
+function columnResized(id:FieldIdOf<Movie>, newWidth:number) {
+	columnWidths[id] = newWidth;
+	localStorage.setItem("movie_list-columnWidths", JSON.stringify(columnWidths));
 }
 
 /**
@@ -241,6 +233,7 @@ async function loadMovieList() {
 		];
 		movieList.value = response.list_data;
 	}
+	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
 }
 
 watch(() => route.path, routeUpdated);
@@ -255,14 +248,19 @@ provide(zoomLevelKey, zoomLevel);
 
 <template>
 	<div>
-		<Navbar :entries="navbarEntries" state="movielist"/>
+		<Navbar
+			:count="movieList.entries.length"
+			:entries="navbarEntries"
+			state="movielist"/>
+
 		<div class="page_contents">
 			<ListTree
 				ref="base-tree"
 				:data="movieList"
 				:component="MovieListRow"
+				:columns="columns"
 				:selected-sort="selectedSort"
-				:sort-options="sortOptions"
+				@column-resize="columnResized"
 				@sort-change="changeSort"/>
 		</div>
 	</div>

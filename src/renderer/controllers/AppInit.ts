@@ -26,6 +26,12 @@ export const staticPaths = {
 	clientUrl: import.meta.env.VITE_CLIENT_URL,
 };
 export const swfUrlBase = staticServer + staticPaths.swfUrl;
+/**
+ * wrapper version
+ */
+//@ts-pmo
+//@ts-ignore
+export const wrapperVer = import.meta.env.VITE_WRAPPER_VER;
 
 /**
  * converts an object to a query string
