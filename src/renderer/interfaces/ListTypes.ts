@@ -2,7 +2,8 @@ import type { Ref } from "vue";
 
 /** required values in a list entry */
 export type GenericListEntry = {
-	id: string
+	id: string,
+	title: string
 };
 /** column to be displayed on a list */
 export interface ListFieldColumn<T extends GenericListEntry> {

@@ -34,7 +34,11 @@ const routes:RouteRecordRaw[] = [
 		path: "/characters/:themeId?",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:UserCharacters },
+			{
+				name: "cc_page",
+				path: "",
+				component: UserCharacters
+			},
 		],
 		meta: {
 			title: "Characters"

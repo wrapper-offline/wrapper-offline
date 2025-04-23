@@ -30,6 +30,8 @@ const route = useRoute();
 const navbarEntries = ref<NavbarEntry[]>([]);
 /** list of user assets */
 const assetList = ref<Asset[]>();
+/** is the asset list currently being loaded */
+const isLoading = ref(false);
 
 let columnWidths = JSON.parse(localStorage.getItem("sasset_list-columnWidths")) ??
 	{ "title":280, "id":120, "type":150 };
@@ -136,6 +138,7 @@ function getAssetList(): Promise<Asset[]> {
  * called when the route updates, gathers information before reloading the list
  */
 async function routeUpdated() {
+	isLoading.value = true;
 	await loadAssetList();
 }
 
@@ -152,6 +155,9 @@ async function loadAssetList() {
 		}
 	];
 	assetList.value = response.sort(assetSortCb);
+	setTimeout(() => {
+		isLoading.value = false;
+	}, 80);
 }
 
 watch(() => route.path, routeUpdated);
@@ -169,10 +175,16 @@ provide(zoomLevelKey, zoomLevel);
 		<Navbar
 			:count="assetList.length"
 			:entries="navbarEntries"
-			state="movielist"/>
+			:supported="{
+				search: true,
+				zoom: true
+			}"/>
 
 		<div class="page_contents">
 			<ListTree
+				:class="{
+					load_state: isLoading
+				}"
 				ref="base-tree"
 				:data="{ folders:[], entries:assetList }"
 				:component="AssetListRow"

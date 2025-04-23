@@ -42,24 +42,24 @@ header .link_container {
 	overflow: hidden;
 	white-space: nowrap;
 }
-header .link {
+header .link_container .link {
 	color: #454257;
 	border-radius: 3px;
 	transition: background 0.2s var(--button-anim);
 	padding: 4px 8px;
 	height: 100%;
 }
-header .link:hover {
+header .link_container .link:hover {
 	background: #323143;
 	transition: none;
 }
 /* previous links */
-header .parent_link {
+header .link_container .parent_link {
 	color: #fff;
 	text-decoration: none;
 	margin: 0 20px 0 0;
 }
-header .parent_link .caret {
+header .link_container .parent_link .caret {
 	opacity: 0.6;
 	pointer-events: none;
 	font-size: 12px;
@@ -69,7 +69,7 @@ header .parent_link .caret {
 	left: 24px;
 }
 /* current link */
-header .final_link {
+header .link_container .final_link {
 	user-select: none;
 	font-weight: bold;
 }
@@ -93,12 +93,33 @@ header .search_box:focus {
 	outline: none;
 }
 
+/**
+dark mode
+**/
 html.dark header {
 	background: hsl(250 9% 13% / 1);
 	border-color: hsl(250 9% 24% / 1);
 }
-html.dark header .link:hover {
-	background: #262531;
+html.dark header .nav_btn {
+	color: hsl(0deg 0% 82%);
+}
+html.dark header .nav_btn:hover {
+	background: hsl(328 21% 21% / 1);
+	color: hsl(328 23% 88% / 1);
+}
+html.dark header .link_container .link {
+	color: hsl(0deg 0% 85%);
+}
+html.dark header .link_container .link:hover {
+	background: hsl(250 9% 17% / 1);
+}
+html.dark header .search_box {
+	background: hsl(250 9% 16% / 1);
+	border-color: hsl(250 9% 24% / 1);
+	color: hsl(0deg 0% 82%);
+}
+html.dark header .search_box:focus {
+	border-color: #5589d8;
 }
 </style>
 
@@ -106,40 +127,35 @@ html.dark header .link:hover {
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
-import { setView, setZoomLevel, view, zoomLevel } from "../controllers/listRefs";
+import { searchInput, setView, setZoomLevel, view, zoomLevel } from "../controllers/listRefs";
 
 export interface NavbarEntry {
 	path: string,
 	title: string,
 };
 
-const router = useRouter();
-const isMovieList = ref(false);
+const emit = defineEmits<{
+	newFolderClick: []
+}>();
+defineProps<{
+	/** display a number at the end of a final link */
+	count?: number,
+	/** address entries */
+	entries: NavbarEntry[],
+	/** specify supported features to show */
+	supported?: {
+		/** displays a new folder icon */
+		newFolder?: boolean,
+		/** display a search box */
+		search?: boolean,
+		/** display view mode toggle (list or grid) */
+		viewMode?: boolean,
+		/** display a zoom slider */
+		zoom?: boolean,
+	}
+}>();
 
-/**
- * Builds an address using the current route
- * @param route vue-router route
- */
-async function parsePath(route) {
-	// parents.value = [];
-	// finalPath.value = "";
-	// if (route.path.startsWith("/characters")) {
-	// 	const themeId = route.params.themeId as string | void;
-	// 	if (!themeId) {
-	// 		return;
-	// 	}
-	// 	const themeList = await useThemeList();
-	// 	const theme = themeList.find(t => t.cc_theme_id == themeId);
-	// 	parents.value.push({
-	// 		path: "/characters",
-	// 		title: "Characters"
-	// 	});
-	// 	finalPath.value = `${theme.name} Characters`;
-	// 	isMovieList.value = false;
-	// 	return;
-	// }
-}
+const router = useRouter();
 
 function backButtonClick() {
 	router.back();
@@ -150,9 +166,15 @@ function forwardButtonClick() {
 
 function onSearchInput(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
-	// search.value = target.value;
+	searchInput(target.value);
 }
 
+/**
+ * called when the new folder icon is clicked, emits event for it
+ */
+function newFolderClick() {
+	emit("newFolderClick");
+}
 
 /**
  * called when the user clicks the view buttons
@@ -170,15 +192,6 @@ function zoomSliderMoved(e:InputEvent) {
 	const newVal = target.valueAsNumber;
 	setZoomLevel(newVal);
 }
-
-defineProps<{
-	/** display a number at the end of a final link */
-	count?: number,
-	/** address entries */
-	entries: NavbarEntry[],
-	/** specifies which options to display on the right */
-	state: "cc" | "charlist" | "movielist"
-}>();
 </script>
 
 <template>
@@ -199,21 +212,24 @@ defineProps<{
 				</span>
 			</div>
 		</div>
-		<div v-if="state == 'movielist'" class="head_right">
+		<div class="head_right">
 			<!-- new folder button -->
-			<div class="nav_btn" title="New folder">
+			<div v-if="supported?.newFolder"
+				class="nav_btn"
+				title="New folder"
+				@click="newFolderClick">
 				<i class="ico newfolder"></i>
 			</div>
 			<!-- search box -->
-			<input
+			<input v-if="supported?.search"
 				class="search_box"
 				type="text"
-				placeholder="Search movies..."
+				placeholder="Search"
 				@input="onSearchInput"/>
 			<!-- zoom slider -->
-			<Dropdown align="right">
+			<Dropdown v-if="supported?.zoom" align="right">
 				<template #toggle>
-					<div class="nav_btn" title="Change zoom">
+					<div class="nav_btn" title="Adjust zoom level">
 						<i class="ico magnify"></i>
 					</div>
 				</template>
@@ -222,15 +238,15 @@ defineProps<{
 				</DropdownItem>
 			</Dropdown>
 			<!-- view options -->
-			<div class="nav_btn"
+			<div v-if="supported?.viewMode && view == 'list'"
+				class="nav_btn"
 				title="Grid view"
-				v-if="view == 'list'"
 				@click="() => changeView('grid')">
 				<i class="ico grid"></i>
 			</div>
-			<div class="nav_btn"
+			<div v-if="supported?.viewMode && view == 'grid'"
+				class="nav_btn"
 				title="List view"
-				v-if="view == 'grid'"
 				@click="() => changeView('list')">
 				<i class="ico blist"></i>
 			</div>

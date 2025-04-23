@@ -1,5 +1,10 @@
 import { ref, toValue } from "vue";
 
+/** searcg box input */
+export const search = ref("");
+export function searchInput(newValue:string) {
+	search.value = newValue.toLowerCase();
+};
 /** list view, grid or list */
 export const view = ref(localStorage.getItem("list_view") || "list");
 export function setView(newView:"list"|"grid") {

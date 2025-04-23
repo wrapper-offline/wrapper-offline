@@ -15,17 +15,25 @@
 
 <script setup lang="ts">
 import CCObject from "../components/CCObject.vue";
-import Navbar from "../components/Navbar.vue";
+import Navbar, { NavbarEntry } from "../components/Navbar.vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
-import { onMounted, ref, useTemplateRef } from "vue";
+import { onMounted, Ref, ref, useTemplateRef } from "vue";
 import ThemeSelector from "../components/ThemeSelector.vue";
+import { useThemeList } from "../controllers/themelist";
 
+type CCObjectType = InstanceType<typeof CCObject>;
+
+const baseNavbarEntry = {
+	path: "/characters",
+	title: "Characters"
+};
+
+const navbarEntries:Ref<NavbarEntry[]> = ref([]);
 const route = useRoute();
 const router = useRouter();
 const showObject = ref(false);
 const showSelector = ref(false);
 let themeId = "";
-type CCObjectType = InstanceType<typeof CCObject>;
 const ccObject = useTemplateRef<CCObjectType>("cc-object");
 
 /**
@@ -39,7 +47,18 @@ function initObject(id:string) {
 	ccObject.value.displayBrowser(themeId);
 }
 
+function ccEntered() {
+	navbarEntries.value.push({
+		path: "this will never be used",
+		title: "Creating a character"
+	});
+}
+
+/**
+ * called when a character is saved, returns to browser
+ */
 function charSaved() {
+	popNavbar();
 	ccObject.value.displayBrowser(themeId);
 }
 
@@ -48,6 +67,7 @@ function charSaved() {
  */
 function themeIdCheck() {
 	if (themeId.length > 0) {
+		popNavbar();
 		initObject(themeId);
 	} else {
 		showSelector.value = true;
@@ -56,11 +76,31 @@ function themeIdCheck() {
 }
 
 /**
+ * populates the navbar with the base link and theme chars link
+ */
+async function popNavbar() {
+	const themeList = await useThemeList();
+	const theme = themeList.find(t => t.cc_theme_id == themeId);
+	navbarEntries.value = [
+		baseNavbarEntry,
+		{
+			path: "/characters/",
+			title: `${theme.name} Characters`
+		}
+	];
+}
+
+/**
  * called when a theme has been clicked in the theme selector
  * @param id theme id
  */
 function themeClicked(id:string) {
-	router.push(route.path + "/" + id);
+	router.push({
+		name: "cc_page",
+		params: {
+			themeId: id
+		}
+	});
 }
 
 onBeforeRouteUpdate((newRoute) => {
@@ -77,17 +117,14 @@ onMounted(() => {
 
 <template>
 	<div>
-		<Navbar :entries="[{
-			path: '/characters',
-			title: 'Characters'
-		}]" state="cc"/>
+		<Navbar :entries="navbarEntries" state="cc"/>
 		<div class="page_contents">
 			<theme-selector
 				heading-for="Characters"
 				v-if="showSelector"
 				cc-filter
 				@theme-clicked="(theme) => themeClicked(theme.cc_theme_id)"/>
-			<CCObject v-show="showObject" ref="cc-object" @char-saved="charSaved"/>
+			<CCObject v-show="showObject" ref="cc-object" @cc-enter="ccEntered" @char-saved="charSaved"/>
 		</div>
 	</div>
 </template>

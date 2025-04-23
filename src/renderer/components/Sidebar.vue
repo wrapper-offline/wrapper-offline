@@ -115,11 +115,6 @@ links
 .app_sidebar .link>button:focus {
 	outline: none;
 }
-.app_sidebar .link.pin_btn {
-	background: #23222d;
-	border-style: dashed;
-	box-shadow: inset 0 0 0 1px #1b1a21;
-}
 .app_sidebar .link::after {
 	content: "";
 	background: linear-gradient(90deg, #0000 0, #313145 10px);
@@ -268,10 +263,6 @@ html.dark .app_sidebar .link i {
 }
 html.dark .app_sidebar .link::after {
 	background: linear-gradient(90deg, #0000 0, hsl(250 11% 13% / 1) 10px);
-}
-html.dark .app_sidebar .link.pin_btn {
-	background: #23222d;
-	box-shadow: inset 0 0 0 1px #1b1a21;
 }
 html.dark .app_sidebar .link:hover {
 	background: hsl(250 10% 18% / 1);
@@ -546,13 +537,13 @@ defineExpose({ slideMode, width });
 			</li>
 		</ul>
 		<ul class="user_custom">
-			<h3>Pinned Links</h3>
-			<li class="link pin_btn" data-toggle @click="pin">
+			<h3>Recent</h3>
+			<!-- <li class="link pin_btn" data-toggle @click="pin">
 				<button>
 					<i class="ico arr_r"></i>
 					<div class="link_text">Pin current page</div>
 				</button>
-			</li>
+			</li> -->
 		</ul>
 		<ul>
 			<li class="group">
@@ -578,7 +569,7 @@ defineExpose({ slideMode, width });
 					<div class="link_text">Settings</div>
 				</button>
 			</li>
-			<span id="wrapper_ver">{{ wrapperVer }}</span>
+			<span id="wrapper_ver">2.1.0</span>
 		</ul>
 		<div
 			v-if="!slideMode.enabled"

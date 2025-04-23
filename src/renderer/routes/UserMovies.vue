@@ -36,6 +36,8 @@ const movieList = ref<{
 	folders: [],
 	entries: Movie[]
 }>();
+/** is the movie list currently being loaded */
+const isLoading = ref(false);
 
 let columnWidths = JSON.parse(localStorage.getItem("movie_list-columnWidths")) ??
 	{ "title":250, "id":100, "duration":100, "date":180 };
@@ -205,6 +207,7 @@ async function routeUpdated() {
 	if (listPage == "movie") {
 		currentFolder.value = route.params.folderId as string || "";
 	}
+	isLoading.value = true;
 	await loadMovieList();
 }
 
@@ -234,6 +237,9 @@ async function loadMovieList() {
 		movieList.value = response.list_data;
 	}
 	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
+	setTimeout(() => {
+		isLoading.value = false;
+	}, 80);
 }
 
 watch(() => route.path, routeUpdated);
@@ -251,10 +257,18 @@ provide(zoomLevelKey, zoomLevel);
 		<Navbar
 			:count="movieList.entries.length"
 			:entries="navbarEntries"
-			state="movielist"/>
+			:supported="{
+				newFolder: listPage != 'starter',
+				search: true,
+				viewMode: true,
+				zoom: true
+			}"/>
 
 		<div class="page_contents">
 			<ListTree
+				:class="{
+					load_state: isLoading
+				}"
 				ref="base-tree"
 				:data="movieList"
 				:component="MovieListRow"

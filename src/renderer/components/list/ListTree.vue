@@ -92,6 +92,7 @@ list view
 ***/
 
 table.list_tree tbody {
+	transition: 0.08s var(--slide-anim);
 	height: 100%;
 }
 
@@ -209,6 +210,12 @@ div.movie:hover {
 	transition: none;
 }
 
+.list_tree_container.load_state tbody {
+	transition: none;
+	transform: translateX(-40px);
+	opacity: 0;
+}
+
 /**
 dark mode reskinning
 **/
@@ -251,10 +258,10 @@ import type {
 } from "../../interfaces/ListTypes";
 import FolderIcon from "../icons/FolderIcon.vue";
 import GenericListRow from "./GenericListRow.vue";
-import { inject, provide, ref, toValue } from "vue";
+import { inject, provide, ref, toValue, watch } from "vue";
 import locale from "../../locale/en_US";
 import { useRoute, useRouter } from "vue-router";
-import { view } from "../../controllers/listRefs";
+import { search, view } from "../../controllers/listRefs";
 
 interface Folder {
 	id: string,
@@ -293,7 +300,17 @@ const route = useRoute();
 const router = useRouter();
 
 const columnIds = props.columns.map((v) => v.id);
+/** list of ids to display filtered by the current search box input */
+const filteredEntryIds:{
+	folders: string[],
+	entries: string[],
+} = {
+	folders: [],
+	entries: [],
+};
+/** current view mode */
 const mode = modeRestriction ? modeRestriction : view;
+/** size of list rows */
 const zoomLevel = inject(zoomLevelKey, ref("15px"));
 
 /**
@@ -341,6 +358,25 @@ function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 	});
 }
 
+/**
+ * filters entries or folders by name
+ * @param v entry or folder to check
+ * @param shouldContain string to check for
+ * @param resultArray array containing resulting ids
+ */
+function dataFilterFunc(v:Folder|ListEntry, shouldContain:string, resultArray:string[]) {
+	if (v.title.toLowerCase().includes(shouldContain)) {
+		resultArray.push(v.id);
+	}
+}
+
+watch(search, (newSearch:string) => {
+	filteredEntryIds.entries = [];
+	filteredEntryIds.folders = [];
+	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries));
+	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
+});
+
 provide(genericColumnIdKey<ListEntry>(), columnIds);
 
 </script>
@@ -372,20 +408,30 @@ provide(genericColumnIdKey<ListEntry>(), columnIds);
 				</tr>
 			</thead>
 			<tbody>
-				<tr class="entry folder" v-for="folder in data.folders" @click="folderClicked(folder.id)">
-					<td></td>
-					<template v-for="columnId in columnIds">
-						<td v-if="columnId == 'title'" class="title">
-							<FolderIcon :color="folder.color"/>
-							<span>
-								{{ folder.title }}
-							</span>
-						</td>
-						<td v-else></td>
-					</template>
-					<td></td>
-				</tr>
-				<component v-for="entry in data.entries" :entry="entry"/>
+				<template v-for="folder in data.folders">
+					<tr
+						v-if="search.length > 0 ? filteredEntryIds.folders.includes(folder.id) : true"
+						class="entry folder"
+						@click="folderClicked(folder.id)">
+						<td></td>
+						<template v-for="columnId in columnIds">
+							<td v-if="columnId == 'title'" class="title">
+								<FolderIcon :color="folder.color"/>
+								<span>
+									{{ folder.title }}
+								</span>
+							</td>
+							<td v-else></td>
+						</template>
+						<td></td>
+					</tr>
+				</template>
+				<!-- list entries -->
+				<template v-for="entry in data.entries">
+					<component
+						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
+						:entry="entry"/>
+				</template>
 			</tbody>
 		</table>
 	</div>

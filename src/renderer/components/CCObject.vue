@@ -10,7 +10,9 @@ import {
 import { onMounted, ref } from "vue";
 
 const emit = defineEmits<{
-	charSaved: [string]
+	/** emitted when the object switches to the cc */
+	ccEnter: [],
+	charSaved: [string],
 }>();
 
 const showObject = ref(false);
@@ -49,6 +51,10 @@ onMounted(() => {
 			copyCharacter(assetId);
 		}, 55);
 	};
+	/**
+	 * character is saved, wait on parent to either begin new cc session or exit
+	 * @param id new character id
+	 */
 	//@ts-expect-error
 	window.characterSaved = function characterSaved(id:string) {
 		reset();
@@ -90,6 +96,7 @@ function copyCharacter(assetId:string) {
 }
 
 function displayCreator() {
+	emit("ccEnter");
 	swfUrl = swfUrlBase + "/cc.swf";
 	params.movie = swfUrl;
 	showObject.value = true;
