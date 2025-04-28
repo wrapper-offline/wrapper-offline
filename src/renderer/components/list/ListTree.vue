@@ -236,7 +236,7 @@ html.dark thead.list_head .sort_option {
 	color: hsl(0deg 0% 92%);
 }
 html.dark table.list_tree tbody tr:hover {
-	background: hsl(328 20% 20% / 1);
+	background: hsl(328 21% 21% / 1);
 }
 /* grid mode */
 html.dark div.movie {

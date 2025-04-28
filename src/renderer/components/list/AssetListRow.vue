@@ -3,7 +3,7 @@ import type { Asset } from "../../interfaces/Asset";
 import AssetImage from "../AssetImage.vue";
 import AssetInfoModal from "../AssetInfoModal.vue";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject, ref } from "vue";
+import { inject, ref, toValue } from "vue";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { flattenAssetType } from "../../utils/flattenAssetType";
 import locale from "../../locale/en_US";
@@ -11,9 +11,10 @@ import locale from "../../locale/en_US";
 const props = defineProps<{
 	entry: T
 }>();
+const key = ref("assetlist-entry" + props.entry.id);
 
+/** list of columns to be displayed */
 const columns = inject(genericColumnIdKey<T>(), []);
-
 const showPreview = ref(false);
 
 /**
@@ -33,8 +34,19 @@ function assetPreviewCloseClicked() {
 }
 
 /**
- * returns a fixed date string for a movie
- * @param entry movie object
+ * called when the asset info has been updated in the preview modal
+ * @param param0 object containing new asset info
+ */
+function assetInfoUpdated({ title }:Partial<T>) {
+	props.entry.title = title;
+	const origKey = toValue(key);
+	key.value = null;
+	key.value = origKey;
+}
+
+/**
+ * returns normalized asset info to be displayed
+ * @param field id of field to return
  */
 function assetInfo(field:FieldIdOf<T>): string {
 	switch (field) {
@@ -53,7 +65,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 </script>
 
 <template>
-	<tr @click="assetEntryClicked">
+	<tr :key="key" @click="assetEntryClicked">
 		<!-- :class="{
 			movie: true,
 			sel: (selection['movie'] || []).includes(movie.id)
@@ -75,7 +87,8 @@ function assetInfo(field:FieldIdOf<T>): string {
 			<AssetInfoModal
 				v-if="showPreview"
 				:asset="entry"
-				@close-clicked="assetPreviewCloseClicked"/>
+				@close-clicked="assetPreviewCloseClicked"
+				@update="assetInfoUpdated"/>
 		</Teleport>
 	</tr>
 </template>

@@ -47,6 +47,20 @@ group.route("POST", "/api_v2/text_component/add", (_, r) => {
 	r.json({status:"ok", data:[]})
 });
 
+group.route("OPTIONS", "*", (req, res) => {
+	const origin = req.headers.origin;
+	if (
+		!origin.includes("127.0.0.1") &&
+		!(origin.includes("localhost") && !origin.includes("."))
+	) {
+		return res.status(400).end();
+	}
+	res.writeHead(200, {
+		"access-control-allow-headers": "*",
+		"access-control-allow-origin": "*",
+	}).end();
+});
+
 group.route("*", "*", async (req, res) => {
 	if (res.writableEnded) {
 		return;

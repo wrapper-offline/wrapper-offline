@@ -50,12 +50,11 @@ header .link_container .link {
 	height: 100%;
 }
 header .link_container .link:hover {
-	background: #323143;
+	background: hsl(255 13% 92% / 1);
 	transition: none;
 }
 /* previous links */
 header .link_container .parent_link {
-	color: #fff;
 	text-decoration: none;
 	margin: 0 20px 0 0;
 }

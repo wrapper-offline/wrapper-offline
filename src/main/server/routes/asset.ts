@@ -184,14 +184,17 @@ group.route("POST", "/api_v2/asset/update/", (req, res) => {
 	const id = req.body.data?.id ?? req.body.data?.starter_id ?? null;
 	const title = req.body.data?.title ?? null;
 	const tags = req.body.data?.tags ?? null;
-	if (!id || title === null || tags === null) {
+	if (!id || title === null) {
 		return res.status(400).json({status:"error"});
 	}
 
 	const update:Partial<Asset> = {
-		tags: tags,
 		title: title
 	};
+	if (tags) {
+		update.tags = tags;
+	}
+
 	try {
 		AssetModel.updateInfo(id, update);
 		res.json({status:"ok"});
@@ -236,8 +239,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 	try {
 		switch (info.type) {
 			// these two are very similar so they can be merged
-			case "bg":
-			case "watermark": {
+			case "bg": {
 				if (info.type == "bg" && ext != "swf") {
 					stream = sharp(filepath)
 						.resize(550, 354, { fit: "fill" })

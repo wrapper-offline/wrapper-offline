@@ -8,7 +8,7 @@ export default {
 			"tts": "Text-to-speech",
 			"bg": "Background",
 			"prop": "Prop",
-			"video": "Video",
+			"video": "Video prop",
 			"placeable": "Placeable prop",
 			"holdable": "Handheld prop",
 			"wearable": "Head gear",

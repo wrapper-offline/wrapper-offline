@@ -8,6 +8,7 @@ import path from "path";
 type Sound = {
 	type: "sound",
 	subtype: "bgmusic" | "soundeffect" | "voiceover" | "tts",
+	tags?: string,
 	title: string,
 	duration: number,
 	id: string,
@@ -15,6 +16,7 @@ type Sound = {
 type Background = {
 	type: "bg",
 	subtype: "0",
+	tags?: string,
 	title: string,
 	id: string,
 };
@@ -28,19 +30,21 @@ type Prop = {
 	type: "prop",
 	subtype: "0",
 	ptype: "placeable" | "headable" | "holdable" | "wearable",
+	tags?: string,
 	title: string,
 	id: string,
 };
 type Video = {
 	type: "prop",
 	subtype: "video",
+	tags?: string,
 	title: string,
 	duration: number,
 	width: number,
 	height: number,
 	id: string,
 };
-export type Asset = Sound | Background | Watermark | Prop | Video | Char;
+export type Asset = Sound | Background | Prop | Video | Char;
 
 const header = process.env.XML_HEADER;
 
