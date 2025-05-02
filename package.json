@@ -51,7 +51,7 @@
 		"concurrently": "^9.1.2",
 		"electron": "^11.5.0",
 		"electron-packager": "^15.5.1",
-		"esbuild": "0.24.0",
+		"esbuild": "0.25.0",
 		"js-base64": "^3.7.2",
 		"mocha": "^10.0.0",
 		"supertest": "^6.2.3",
