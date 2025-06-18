@@ -120,6 +120,9 @@ table.list_tree tbody tr td {
 	white-space: nowrap;
 	padding: 10px 6px;
 }
+table.list_tree tbody tr td.hidden {
+	opacity: 0;
+}
 /* name column */
 table.list_tree tbody tr td.title {
 	display: flex;
@@ -143,9 +146,16 @@ table.list_tree tbody tr:first-of-type td:first-of-type {
 table.list_tree tbody tr:hover {
 	background: hsl(344 95% 94% / 1);
 }
-table.list_tree tbody tr.sel {
+table.list_tree tbody tr.checked {
 	background: hsl(344 100% 70% / 1);
 	color: #fff;
+}
+table.list_tree tbody tr:hover td.hidden,
+table.list_tree tbody tr.checked td.hidden {
+	opacity: 1;
+}
+table.list_tree tbody tr.checked td.actions.hidden {
+	opacity: 0;
 }
 
 
@@ -238,6 +248,9 @@ html.dark thead.list_head .sort_option {
 html.dark table.list_tree tbody tr:hover {
 	background: hsl(328 21% 21% / 1);
 }
+html.dark table.list_tree tbody tr.checked {
+	background: hsl(328 26% 26% / 1);
+}
 /* grid mode */
 html.dark div.movie {
 	border-color: #2b2a37;
@@ -300,6 +313,7 @@ const route = useRoute();
 const router = useRouter();
 
 const columnIds = props.columns.map((v) => v.id);
+const selectedEntryIds = ref<string[]>([]);
 /** list of ids to display filtered by the current search box input */
 const filteredEntryIds:{
 	folders: string[],
@@ -314,16 +328,15 @@ const mode = modeRestriction ? modeRestriction : view;
 const zoomLevel = inject(zoomLevelKey, ref("15px"));
 
 /**
- * called when folder is clicked, navigates to it
- * @param folderId folder id
+ * filters entries or folders by name
+ * @param v entry or folder to check
+ * @param shouldContain string to check for
+ * @param resultArray array containing resulting ids
  */
-function folderClicked(folderId:string) {
-	router.push({
-		name: route.name,
-		params: {
-			folderId
-		}
-	});
+function dataFilterFunc(v:Folder|ListEntry, shouldContain:string, resultArray:string[]) {
+	if (v.title.toLowerCase().includes(shouldContain)) {
+		resultArray.push(v.id);
+	}
 }
 
 /**
@@ -359,14 +372,42 @@ function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 }
 
 /**
- * filters entries or folders by name
- * @param v entry or folder to check
- * @param shouldContain string to check for
- * @param resultArray array containing resulting ids
+ * called when folder is clicked, navigates to it
+ * @param folderId folder id
  */
-function dataFilterFunc(v:Folder|ListEntry, shouldContain:string, resultArray:string[]) {
-	if (v.title.toLowerCase().includes(shouldContain)) {
-		resultArray.push(v.id);
+function folderClicked(folderId:string) {
+	router.push({
+		name: route.name,
+		params: {
+			folderId
+		}
+	});
+}
+
+/**
+ * called when a list entry has been selected
+ * @param id entry id
+ */
+function entrySelect(id:string) {
+	selectedEntryIds.value.push(id);
+}
+
+/**
+ * called when a list entry has been deselected
+ * @param id entry id
+ */
+function entryDeselect(id:string) {
+	const index = toValue(selectedEntryIds).indexOf(id);
+	selectedEntryIds.value.splice(index, 1);
+}
+
+function selectAllClick() {
+	const equal = props.data.entries.length == toValue(selectedEntryIds).length;
+	const allSelected = equal && props.data.entries.length > 0;
+	if (allSelected) {
+		selectedEntryIds.value = [];
+	} else {
+		selectedEntryIds.value = props.data.entries.map(v => v.id);
 	}
 }
 
@@ -377,12 +418,31 @@ watch(search, (newSearch:string) => {
 	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
 });
 
+watch(selectedEntryIds, (newSels, oldSels) => {
+	console.log(newSels);
+	console.log(oldSels);
+	const neg = oldSels > newSels;
+	const diff = (neg ? oldSels : newSels).filter((v) => {
+		return (neg ? newSels : oldSels).includes(v);
+	});
+	console.log(diff);
+}, { deep: true })
+
 provide(genericColumnIdKey<ListEntry>(), columnIds);
 
 </script>
 
 <template>
 	<div class="list_tree_container">
+		<div v-if="selectedEntryIds.length > 0" class="select_mode">
+			<div class="side_padding">
+				<input type="checkbox"
+					:value="selectedEntryIds.length == data.entries.length && 
+						data.entries.length > 0"
+					@input="selectAllClick"/>
+			</div>
+			{{ selectedEntryIds.length }} selected
+		</div>
 		<table class="list_tree">
 			<thead class="list_head">
 				<tr>
@@ -430,7 +490,10 @@ provide(genericColumnIdKey<ListEntry>(), columnIds);
 				<template v-for="entry in data.entries">
 					<component
 						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
-						:entry="entry"/>
+						:checked="selectedEntryIds.includes(entry.id)"
+						:entry="entry"
+						@entry-select="entrySelect(entry.id)"
+						@entry-deselect="entryDeselect(entry.id)"/>
 				</template>
 			</tbody>
 		</table>

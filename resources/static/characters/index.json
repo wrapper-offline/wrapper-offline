@@ -1,0 +1,839 @@
+{
+	"custom": [
+		{
+			"id": 53773026,
+			"name": "Diesel Busters",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1293816,
+			"name": "Macusoper Busters",
+			"category": "​Specialties"
+		},
+		{
+			"id": 53767560,
+			"name": "Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1294027,
+			"name": "Basketball Loser",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1294011,
+			"name": "Basketball Player",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1313482,
+			"name": "Buff Soldier",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1313447,
+			"name": "Cheerleader",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1484879,
+			"name": "Crackhead",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411192,
+			"name": "Crewman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1293961,
+			"name": "Drunk",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1347769,
+			"name": "Eric",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1344561,
+			"name": "Farmer",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1293932,
+			"name": "Fat chef",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1313465,
+			"name": "Fat Gladiator",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1293881,
+			"name": "Fat Sergeant",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1302387,
+			"name": "Fat Soldier",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084254,
+			"name": "GA4S Man",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084241,
+			"name": "GA4S Basket-Ball Player",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084260,
+			"name": "GA4S Old Man",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084270,
+			"name": "GA4S Fat Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084290,
+			"name": "GA4S Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084283,
+			"name": "GA4S Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084277,
+			"name": "GA4S Cheerleader",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084296,
+			"name": "GA4S Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084304,
+			"name": "GA4S Strong Person",
+			"category": "​Specialties"
+		},
+		{
+			"id": 325084300,
+			"name": "GA4S Strong Man",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1302330,
+			"name": "Hip Hop Artist",
+			"category": "​Specialties"
+		},
+		{
+			"id": 832054,
+			"name": "Mac Guy",
+			"category": "​Specialties"
+		},
+		{
+			"id": 49180875,
+			"name": "Man",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1484652,
+			"name": "Maynard",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1302334,
+			"name": "Ninja",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1331355,
+			"name": "Nurse",
+			"category": "​Specialties"
+		},
+		{
+			"id": 832304,
+			"name": "PC Guy",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1344319,
+			"name": "Pirate",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1331376,
+			"name": "Pretty Girl",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411199,
+			"name": "Punk",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1294044,
+			"name": "Punk",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1313298,
+			"name": "Punk Girl",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1026022,
+			"name": "Santa Claus",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1026072,
+			"name": "Santa Girl",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1331383,
+			"name": "Secretary",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1313367,
+			"name": "Sexy Cheerleader",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1302396,
+			"name": "Soldier",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1484789,
+			"name": "Stripper",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411239,
+			"name": "Superhero",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411231,
+			"name": "SuperHero",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411203,
+			"name": "Superhero",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1411185,
+			"name": "Superhero",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1302326,
+			"name": "Superhero",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1335340,
+			"name": "Ugly Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1331308,
+			"name": "Ugly Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1344472,
+			"name": "Waiter",
+			"category": "​Specialties"
+		},
+		{
+			"id": 49182005,
+			"name": "Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 49181325,
+			"name": "Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1347770,
+			"name": "Woman",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1443033,
+			"name": "Zombie",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1443026,
+			"name": "Zombie",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1443023,
+			"name": "Zombie",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1443013,
+			"name": "Zombie",
+			"category": "​Specialties"
+		},
+		{
+			"id": 1443007,
+			"name": "Zombie",
+			"category": "​Specialties"
+		},
+		{
+			"id": 874292,
+			"name": "A. Mahmoud",
+			"category": "Celebrities"
+		},
+		{
+			"id": 874645,
+			"name": "A. Michael",
+			"category": "Celebrities"
+		},
+		{
+			"id": 832231,
+			"name": "A. Michael",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857830,
+			"name": "B. Ben",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853503,
+			"name": "B. David",
+			"category": "Celebrities"
+		},
+		{
+			"id": 877672,
+			"name": "B. George",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834785,
+			"name": "B. George",
+			"category": "Celebrities"
+		},
+		{
+			"id": 850852,
+			"name": "B. Gordon",
+			"category": "Celebrities"
+		},
+		{
+			"id": 877693,
+			"name": "B. Joe",
+			"category": "Celebrities"
+		},
+		{
+			"id": 870449,
+			"name": "B. Joe",
+			"category": "Celebrities"
+		},
+		{
+			"id": 907603,
+			"name": "B. Silvio",
+			"category": "Celebrities"
+		},
+		{
+			"id": 832311,
+			"name": "B. Steve",
+			"category": "Celebrities"
+		},
+		{
+			"id": 907743,
+			"name": "B. Tyra",
+			"category": "Celebrities"
+		},
+		{
+			"id": 836751,
+			"name": "C. Bill",
+			"category": "Celebrities"
+		},
+		{
+			"id": 930614,
+			"name": "C. Cho",
+			"category": "Celebrities"
+		},
+		{
+			"id": 870204,
+			"name": "C. Dick",
+			"category": "Celebrities"
+		},
+		{
+			"id": 870068,
+			"name": "C. Edward",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857578,
+			"name": "C. Hillary",
+			"category": "Celebrities"
+		},
+		{
+			"id": 836602,
+			"name": "C. Jackie",
+			"category": "Celebrities"
+		},
+		{
+			"id": 832043,
+			"name": "C. Jason",
+			"category": "Celebrities"
+		},
+		{
+			"id": 930524,
+			"name": "C. Vincent",
+			"category": "Celebrities"
+		},
+		{
+			"id": 924223,
+			"name": "D. Albus",
+			"category": "Celebrities"
+		},
+		{
+			"id": 930604,
+			"name": "D. Cedric",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834824,
+			"name": "E. Albert",
+			"category": "Celebrities"
+		},
+		{
+			"id": 924347,
+			"name": "F. Argus",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853582,
+			"name": "G. Al",
+			"category": "Celebrities"
+		},
+		{
+			"id": 877843,
+			"name": "G. Bill",
+			"category": "Celebrities"
+		},
+		{
+			"id": 832050,
+			"name": "G. Bill",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857300,
+			"name": "G. Hermione",
+			"category": "Celebrities"
+		},
+		{
+			"id": 873881,
+			"name": "G. Mahatma",
+			"category": "Celebrities"
+		},
+		{
+			"id": 870015,
+			"name": "G. Nancy",
+			"category": "Celebrities"
+		},
+		{
+			"id": 870238,
+			"name": "G. Robert",
+			"category": "Celebrities"
+		},
+		{
+			"id": 874238,
+			"name": "G. Timothy",
+			"category": "Celebrities"
+		},
+		{
+			"id": 881353,
+			"name": "H. Ariana",
+			"category": "Celebrities"
+		},
+		{
+			"id": 874412,
+			"name": "H. Ariana",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857960,
+			"name": "H. Eric",
+			"category": "Celebrities"
+		},
+		{
+			"id": 869946,
+			"name": "H. Steny",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853510,
+			"name": "H. William",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834550,
+			"name": "J. Angelina",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853866,
+			"name": "J. Michael",
+			"category": "Celebrities"
+		},
+		{
+			"id": 880741,
+			"name": "J. Steve",
+			"category": "Celebrities"
+		},
+		{
+			"id": 850837,
+			"name": "J. Steve",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834689,
+			"name": "K. Jong Il",
+			"category": "Celebrities"
+		},
+		{
+			"id": 836941,
+			"name": "K. Larry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834818,
+			"name": "L. Abraham",
+			"category": "Celebrities"
+		},
+		{
+			"id": 930373,
+			"name": "L. Cilderoy",
+			"category": "Celebrities"
+		},
+		{
+			"id": 836650,
+			"name": "L. David",
+			"category": "Celebrities"
+		},
+		{
+			"id": 850664,
+			"name": "L. Jay",
+			"category": "Celebrities"
+		},
+		{
+			"id": 930636,
+			"name": "L. Luna",
+			"category": "Celebrities"
+		},
+		{
+			"id": 907675,
+			"name": "M. Angela",
+			"category": "Celebrities"
+		},
+		{
+			"id": 880989,
+			"name": "M. Dmitry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857921,
+			"name": "M. Dmitry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 896765,
+			"name": "M. Draco",
+			"category": "Celebrities"
+		},
+		{
+			"id": 869998,
+			"name": "M. Mitch",
+			"category": "Celebrities"
+		},
+		{
+			"id": 896868,
+			"name": "M.Minerva",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834767,
+			"name": "O. Barack",
+			"category": "Celebrities"
+		},
+		{
+			"id": 850821,
+			"name": "O. Mitchelle",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834641,
+			"name": "P. Colin",
+			"category": "Celebrities"
+		},
+		{
+			"id": 877711,
+			"name": "P. Henry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 874264,
+			"name": "P. Henry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 874342,
+			"name": "P. Nancy",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853538,
+			"name": "P. Sarah",
+			"category": "Celebrities"
+		},
+		{
+			"id": 907553,
+			"name": "P. Vladimir",
+			"category": "Celebrities"
+		},
+		{
+			"id": 873972,
+			"name": "R. Harry",
+			"category": "Celebrities"
+		},
+		{
+			"id": 880835,
+			"name": "R. Kevin",
+			"category": "Celebrities"
+		},
+		{
+			"id": 832021,
+			"name": "R. Kevin",
+			"category": "Celebrities"
+		},
+		{
+			"id": 907815,
+			"name": "R. John",
+			"category": "Celebrities"
+		},
+		{
+			"id": 1005521,
+			"name": "S. Bella",
+			"category": "Celebrities"
+		},
+		{
+			"id": 49182323,
+			"name": "S. Colonel",
+			"category": "Celebrities"
+		},
+		{
+			"id": 853575,
+			"name": "S. Nicolas",
+			"category": "Celebrities"
+		},
+		{
+			"id": 836540,
+			"name": "T. Jalal",
+			"category": "Celebrities"
+		},
+		{
+			"id": 850783,
+			"name": "W. Oprah",
+			"category": "Celebrities"
+		},
+		{
+			"id": 834804,
+			"name": "W. Oprah",
+			"category": "Celebrities"
+		},
+		{
+			"id": 857226,
+			"name": "W. Ron",
+			"category": "Celebrities"
+		},
+		{
+			"id": 1769478,
+			"name": "Z. Jose",
+			"category": "Celebrities"
+		},
+		{
+			"id": 327412169,
+			"name": "GoTube",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327275957,
+			"name": "LukeAnimate",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764308,
+			"name": "BrentAnimate",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764453,
+			"name": "RareYellowWUUTBee",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764148,
+			"name": "CanadianScout",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764650,
+			"name": "Isaac Anderson Animations",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764579,
+			"name": "NathanWin7587",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764259,
+			"name": "Tbone Animate",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764372,
+			"name": "African Vulture",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764522,
+			"name": "The FunEditor4",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764594,
+			"name": "samster5677",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 330469767,
+			"name": "Fartnoise9",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001002,
+			"name": "GoTest334",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327764590,
+			"name": "Brendan Barney",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 327779791,
+			"name": "Richie Verdi",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001004,
+			"name": "Rack Animate",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001003,
+			"name": "Poke Animations",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001005,
+			"name": "VittorioTheVyonder2003",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 330470251,
+			"name": "HanIflmranAnimator",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 330873615,
+			"name": "Cewyah",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001001,
+			"name": "papermariofan",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001008,
+			"name": "TheVideoEditorGuy6579",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001034,
+			"name": "TBPG Studios",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001036,
+			"name": "Real GoTest",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001039,
+			"name": "Maple Animations",
+			"category": "GoAnimators"
+		},
+		{
+			"id": 400001035,
+			"name": "octanuary (Project Owner, Developer)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 400001006,
+			"name": "GoTube (Creator of Mega CW, Project Staff)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 400001038,
+			"name": "Jyvee (Developer, Project Staff)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 327068826,
+			"name": "benson (Creator of Wrapper: Offline, Former Owner &amp; Developer)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 400001013,
+			"name": "GoTest334 (Former Owner)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 400001007,
+			"name": "2Epik4u (Former Developer)",
+			"category": "W:O credits"
+		},
+		{
+			"id": 400001037,
+			"name": "yeaimsammi (Former Developer)",
+			"category": "W:O credits"
+		}
+	]
+}

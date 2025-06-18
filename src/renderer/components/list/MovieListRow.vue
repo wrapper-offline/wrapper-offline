@@ -6,16 +6,35 @@ tr.movie td.title img {
 
 <script setup lang="ts" generic="T extends Movie">
 import { apiServer } from "../../controllers/AppInit";
-import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject } from "vue";
-import type { Movie } from "../../interfaces/Movie";
+import Checkbox from "../controls/Checkbox.vue";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
+import { genericColumnIdKey } from "../../keys/listTreeKeys";
+import { inject, Ref, useTemplateRef } from "vue";
+import type { Movie } from "../../interfaces/Movie";
 
+const emit = defineEmits<{
+	entryDeselect: [],
+	entrySelect: [],
+}>();
 const props = defineProps<{
+	checked: Ref<boolean>,
 	entry: T
 }>();
 
 const columns = inject(genericColumnIdKey<T>(), []);
+const checkbox = useTemplateRef<HTMLInputElement>("cb");
+
+/**
+ * called when the checkbox value has been updated
+ */
+function checkboxUpdate() {
+	const value = checkbox.value.checked;
+	if (value) {
+		emit("entrySelect");
+	} else {
+		emit("entryDeselect");
+	}
+}
 
 /**
  * returns a fixed date string for a movie
@@ -33,11 +52,13 @@ function movieInfo(field:FieldIdOf<T>): string {
 	}
 }
 
-
+defineExpose<{
+	
+}>()
 </script>
 
 <template>
-	<tr class="movie">
+	<tr class="movie" :class="{ checked }">
 		<!-- :class="{
 			movie: true,
 			sel: (selection['movie'] || []).includes(movie.id)
@@ -46,7 +67,10 @@ function movieInfo(field:FieldIdOf<T>): string {
 		@mousedown.exact="clearSelection(); select('movie', movie.id)"
 		@mousedown.ctrl="select('movie', movie.id)"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
-		<td></td>
+		<td class="hidden">
+			<!-- <Checkbox :value="checked"/> -->
+			<input type="checkbox" :value="checked" @input="checkboxUpdate" ref="cb"/>
+		</td>
 		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
 			<img
 				v-if="columnId == 'title'"
@@ -54,7 +78,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 				alt="thumbnail"/>
 			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
 		</td>
-		<td class="actions">
+		<td class="actions hidden">
 			<RouterLink class="action" :to="`?redirect=/movies/play/${movieInfo('id')}`" target="_blank">
 				<i class="ico play"></i>
 			</RouterLink>

@@ -6,7 +6,6 @@ License: MIT
 const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
-import directories from "./storage/directories";
 import { createWriteStream } from "fs";
 import { join } from "path";
 import settings from "./storage/settings";

@@ -14,7 +14,6 @@ const readEnv = () => {
 	for (const [key, val] of Object.entries(env)) {
 		envObj["process.env." + key] = `'${val}'`;
 	}
-	envObj["window.IS_DEVELOPMENT"] = "true";
 	return envObj;
 };
 
@@ -33,7 +32,6 @@ const restartMainPlugin = (cb) => {
 
 const BASE_OPTIONS = {
 	bundle: true,
-	define: readEnv(),
 	external: [
 		"@ffmpeg-installer/ffmpeg",
 		"@ffprobe-installer/ffprobe",
@@ -43,24 +41,20 @@ const BASE_OPTIONS = {
 	],
 	platform: "node",
 	target: "node14",
-}
+};
 
 /** @type {Record<string, import("esbuild").BuildOptions>} */
 let options = {
 	main: {
 		...BASE_OPTIONS,
+		define: readEnv(),
 		entryPoints: ["src/main/index.ts"],
 		outfile: "dist/main.js",
 	},
 	preload: {
-		bundle: true,
+		...BASE_OPTIONS,
 		entryPoints: ["src/preload.js"],
-		external: [
-			"electron",
-		],
 		outfile: "dist/preload.js",
-		platform: "node",
-		target: "node14",
 	},
 };
 

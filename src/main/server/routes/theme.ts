@@ -1,10 +1,14 @@
 import Directories from "../../storage/directories";
 import fileUtil from "../utils/fileUtil.js";
 import fs from "fs";
+import http from "http";
 import httpz from "@octanuary/httpz";
 import { join } from "path";
 import settings from "../../storage/settings";
 
+const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST;
+const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT;
+const STORE_URL = process.env.STORE_URL;
 const THEME_FOLDER = Directories.store;
 const group = new httpz.Group();
 
@@ -59,10 +63,12 @@ group.route("POST", "/goapi/getTheme/", async (req, res) => {
 		return res.status(400).json({msg:"Expected parameter 'themeId' on the request body."});
 	}
 
-	const xmlPath = join(THEME_FOLDER, `${id}/theme.xml`);
-	const zip = await fileUtil.zippy(xmlPath, "theme.xml");
-	res.setHeader("Content-Type", "application/zip");
-	res.end(zip);
+	const host = `${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}`;
+	console.log(host)
+	const path = `${STORE_URL}/${id}/${id}.zip`;
+	http.get(host + path, (staticRes) => {
+		staticRes.pipe(res)
+	});
 });
 
 export default group;

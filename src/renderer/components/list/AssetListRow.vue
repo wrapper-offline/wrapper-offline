@@ -74,7 +74,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 		@mousedown.exact="clearSelection(); select('movie', movie.id)"
 		@mousedown.ctrl="select('movie', movie.id)"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
-		<td></td>
+		<td class="hidden"></td>
 		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
 			<!-- thumbnail block for title column -->
 			<template v-if="columnId == 'title'" class="title">
@@ -82,7 +82,9 @@ function assetInfo(field:FieldIdOf<T>): string {
 			</template>
 			<span>{{ assetInfo(columnId) }}</span>
 		</td>
-		<td></td>
+		<td class="hidden">
+			delete button
+		</td>
 		<Teleport to="body">
 			<AssetInfoModal
 				v-if="showPreview"
