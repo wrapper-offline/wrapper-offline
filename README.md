@@ -1,6 +1,7 @@
 <div class="head" align="center">
   <h1>Wrapper: Offline</h1>
   <p><b>This project is not affiliated with or endorsed by GoAnimate Inc., or their product, Vyond. Wrapper: Offline is a decentralized, open-source initiative developed exclusively for archival purposes. It operates on a non-profit basis and does not accept any form of donations.</b></p>
+  <br/>
 </div>
 
 Wrapper: Offline is a program designed to provide readily obtainable, irrevocable access to GoAnimate's retired assets in the modern era. It achieves this by replicating the original API and asset servers entirely on the user's computer while providing a simplistic frontend to interact with them. This project is important for archival purposes, as the ability to use the legacy GoAnimate editor and themes would be far trickier without it.
@@ -12,7 +13,7 @@ To run Wrapper: Offline, you must first download the [latest release](https://gi
 For support, the first thing you should do is to [read through our wiki](https://github.com/wrapper-offline/wrapper-offline/wiki), as it most likely has what you want to know. Alternatively, if you can't find what you need, you can join the [Discord server](https://discord.gg/Kf7BzSw). Joining the server is recommended, as there is a whole community that can help you out.
 
 ## Development
-To start the development server, run the following under the root folder of Offline:
+To run Offline with a development server, run the following under the root folder of Offline:
 ```
 npm run dev
 ```
