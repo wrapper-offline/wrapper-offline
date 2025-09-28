@@ -277,7 +277,7 @@ html.dark .app_sidebar .link.sel {
 }
 /* create button */
 html.dark .app_sidebar .link.create {
-	background: hsl(344deg 62% 50%);
+	background: hsl(342deg 55% 48%);
 	border-bottom-color: #732137;
 }
 html.dark .app_sidebar .link.create button,
@@ -285,7 +285,7 @@ html.dark .app_sidebar .link.create i {
 	color: #eee;
 }
 html.dark .app_sidebar .link.create::after {
-	background: linear-gradient(90deg, #0000 0, hsl(344deg 62% 50%) 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(342deg 55% 48%) 10px);
 }
 html.dark .app_sidebar .user_custom .link>button:hover {
 	background: #573344;

@@ -36,6 +36,7 @@ html.dark .app_setting p {
 
 <script setup lang="ts">
 import { ref, toValue } from "vue";
+import LocalSettings from "../../controllers/LocalSettings";
 import SettingsController from "../../controllers/SettingsController";
 
 const props = defineProps<{
@@ -46,13 +47,7 @@ const props = defineProps<{
 }>();
 const value = ref<boolean | string>();
 if (props.local) {
-	let newValue:boolean|string = localStorage.getItem(props.id);
-	if (newValue == "true") {
-		newValue = true;
-	} else if (newValue == "false") {
-		newValue = false;
-	}
-	value.value = newValue;
+	value.value = LocalSettings[props.id];
 } else {
 	value.value = SettingsController.get(props.id);
 }
@@ -76,20 +71,22 @@ function optionSelected(e:MouseEvent) {
 
 /**
  * new setting
- * @param newValue value to set to
+ * @param strValue value to set to
  */
-function set(newValue:string) {
+function set(strValue:string) {
+	let value = props.binary ? strValue == "true" : strValue;
+	console.log(value);
 	if (props.local) {
-		if (props.id == "DARK_MODE") {
-			if (newValue == "true") {
+		if (props.id == "darkMode") {
+			if (value == true) {
 				document.documentElement.classList.add("dark");
 			} else {
 				document.documentElement.classList.remove("dark");
 			}
 		}
-		localStorage.setItem(props.id, newValue);
+		LocalSettings[props.id] = value;
 	} else {
-		SettingsController.set(props.id, newValue);
+		SettingsController.set(props.id, value);
 	}
 }
 </script>

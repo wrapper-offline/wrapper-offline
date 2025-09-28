@@ -10,12 +10,14 @@ import ListTree from "../components/list/ListTree.vue";
 import Navbar from "../components/Navbar.vue";
 import type { NavbarEntry } from "../components/Navbar.vue";
 import type { Movie } from "../interfaces/Movie";
+import MovieEntryOptions from "../components/list/options/MovieEntryOptions.vue";
 import MovieListRow from "../components/list/MovieListRow.vue";
 import {
 	onMounted,
 	provide,
 	ref,
 	toValue,
+	useTemplateRef,
 	watch
 } from "vue";
 import { useRoute } from "vue-router";
@@ -31,6 +33,7 @@ const currentFolder = ref<string>();
 
 /** list of links to display in the navbar's address */
 const navbarEntries = ref<NavbarEntry[]>([]);
+const listTree = useTemplateRef("list-tree");
 /** list of movies and folders (if applicable) */
 const movieList = ref<{
 	folders: [],
@@ -203,6 +206,7 @@ function getMovieTree(filter:"movie"|"starter", folderId?:string) {
  * called when the route updates, gathers information before reloading the list
  */
 async function routeUpdated() {
+	listTree.value.reset();
 	listPage = route.name == "movie_list" ? "movie" : "starter";
 	if (listPage == "movie") {
 		currentFolder.value = route.params.folderId as string || "";
@@ -269,9 +273,10 @@ provide(zoomLevelKey, zoomLevel);
 				:class="{
 					load_state: isLoading
 				}"
-				ref="base-tree"
+				ref="list-tree"
 				:data="movieList"
-				:component="MovieListRow"
+				:entry-component="MovieListRow"
+				:entry-options-component="MovieEntryOptions"
 				:columns="columns"
 				:selected-sort="selectedSort"
 				@column-resize="columnResized"

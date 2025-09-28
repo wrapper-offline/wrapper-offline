@@ -22,9 +22,52 @@ table.list_tree {
 	width: 100%;
 }
 
+
+/**
+select mode
+**/
+.select_mode_options {
+	background-color: #eeedf2;
+	opacity: 0;
+	transition: none;
+	transform: translateX(-15px);
+	display: flex;
+	height: 0;
+}
+.select_mode_options .side_padding {
+	margin-right: 6px;
+	padding: 1px 6px;
+}
+.list_tree_container.select_mode thead.list_head {
+	border: none;
+	visibility: hidden;
+}
+.list_tree_container.select_mode thead.list_head .sort_option {
+	line-height: 0;
+	padding: 0 6px;
+}
+.list_tree_container.select_mode .select_mode_options {
+	opacity: 1;
+	padding: 5px 0;
+	transition: transform 0.1s var(--slide-anim);
+	transform: none;
+	height: 33px;
+}
+.list_tree_container.select_mode .select_mode_options::after {
+	content: "";
+	height: 1px;
+	width: 100%;
+	display: block;
+	background-color: hsl(240 12% 76% / 1);
+	position: absolute;
+    margin-top: 30px;
+}
+
+
 /**
 list head
-*s*/
+**/
+
 thead.list_head {
 	background-color: #eeedf2;
 	border-bottom: 1px solid hsl(240 12% 76% / 1);
@@ -54,13 +97,13 @@ thead.list_head .sort_option.active::after {
 	content: "🞃";
 	opacity: 0.7;
 	float: right;
-	transform: translate(-2px, -1px);
+	transform: translate(-2px, 0);
 }
 thead.list_head .sort_option.active.desc::after {
-	transform: translate(-2px, 3px) rotate(180deg);
+	transform: translate(-2px, 0) rotate(180deg);
 }
 thead.list_head .sort_option:hover {
-	background: #ffeaf4;
+	background: hsl(338deg 55% 91%);
 	transition: none;
 }
 /* resize dragger */
@@ -75,15 +118,6 @@ thead.list_head th .dragger {
 thead.list_head th .dragger:hover {
 	background: #489cf7a3;
 	transition: 0.1s ease-in;
-}
-html.dark thead.list_head {
-	border-color: #32313f;
-}
-html.dark thead.list_head th {
-	border-color: #32313f;
-}
-html.dark thead.list_head .sort_option:hover {
-	background: #422b3d;
 }
 
 
@@ -144,10 +178,10 @@ table.list_tree tbody tr:first-of-type td:first-of-type {
 	overflow: hidden;
 }
 table.list_tree tbody tr:hover {
-	background: hsl(344 95% 94% / 1);
+	background: hsl(338deg 55% 91%);
 }
 table.list_tree tbody tr.checked {
-	background: hsl(344 100% 70% / 1);
+	background: hsl(344 80% 50% / 0.55);
 	color: #fff;
 }
 table.list_tree tbody tr:hover td.hidden,
@@ -238,18 +272,28 @@ html.dark .list_tree_container {
 		hsl(250 8% 17.5% / 1) calc(v-bind("zoomLevel") * 2)
 	) 0 36px;
 }
+html.dark .select_mode_options {
+	background-color: hsl(250 9% 16% / 1);
+}
+html.dark .list_tree_container.select_mode .select_mode_options::after {
+	background-color: hsl(250 9% 24% / 1);
+}
 html.dark thead.list_head {
 	background-color: hsl(250 9% 16% / 1);
 	border-color: hsl(250 9% 24% / 1);
 }
+html.dark thead.list_head th {
+	border-color: #32313f;
+}
 html.dark thead.list_head .sort_option {
 	color: hsl(0deg 0% 92%);
 }
+html.dark thead.list_head .sort_option:hover,
 html.dark table.list_tree tbody tr:hover {
-	background: hsl(328 21% 21% / 1);
+	background: hsl(330 26% 21% / 1);
 }
 html.dark table.list_tree tbody tr.checked {
-	background: hsl(328 26% 26% / 1);
+	background: hsl(342 47% 40% / 0.45);
 }
 /* grid mode */
 html.dark div.movie {
@@ -270,8 +314,9 @@ import type {
 	SelectedListSort
 } from "../../interfaces/ListTypes";
 import FolderIcon from "../icons/FolderIcon.vue";
+import GenericEntryOptions from "./options/GenericEntryOptions.vue";
 import GenericListRow from "./GenericListRow.vue";
-import { inject, provide, ref, toValue, watch } from "vue";
+import { inject, provide, ref, toValue, useTemplateRef, watch } from "vue";
 import locale from "../../locale/en_US";
 import { useRoute, useRouter } from "vue-router";
 import { search, view } from "../../controllers/listRefs";
@@ -301,11 +346,13 @@ const props = defineProps<{
 	/** id of the column to sort by */
 	selectedSort: SelectedListSort<ListEntry>,
 	restrictions?: {
-		/** restrict supported modes */
-		mode?: "list"|"grid",
+		/** restrict supported view modes */
+		mode?: "list" | "grid",
 	},
 	/** row component to use when displaying entries */
-	component: typeof GenericListRow<ListEntry>,
+	entryComponent: typeof GenericListRow<ListEntry>,
+	/** component to use for entry options */
+	entryOptionsComponent: typeof GenericEntryOptions,
 }>();
 const modeRestriction = props?.restrictions?.mode ?? false;
 
@@ -313,6 +360,7 @@ const route = useRoute();
 const router = useRouter();
 
 const columnIds = props.columns.map((v) => v.id);
+const selectAllBox = useTemplateRef("select-all-box")
 const selectedEntryIds = ref<string[]>([]);
 /** list of ids to display filtered by the current search box input */
 const filteredEntryIds:{
@@ -322,6 +370,7 @@ const filteredEntryIds:{
 	folders: [],
 	entries: [],
 };
+const listRows = useTemplateRef<typeof GenericListRow<ListEntry>[]>("list-row");
 /** current view mode */
 const mode = modeRestriction ? modeRestriction : view;
 /** size of list rows */
@@ -372,6 +421,28 @@ function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 }
 
 /**
+ * syncs the select all box with the current selection
+ */
+function syncSelectAllBox() {
+	const allSelected = toValue(selectedEntryIds).length ==
+		props.data.entries.length;
+	selectAllBox.value.checked = allSelected;
+}
+
+function selectAllClick() {
+	const equal = props.data.entries.length == toValue(selectedEntryIds).length;
+	const allSelected = equal && props.data.entries.length > 0;
+	if (allSelected) {
+		selectedEntryIds.value = [];
+	} else {
+		selectedEntryIds.value = props.data.entries.map(v => v.id);
+	}
+	for (const rowElem of listRows.value) {
+		rowElem.setSelectState(!allSelected);
+	}
+}
+
+/**
  * called when folder is clicked, navigates to it
  * @param folderId folder id
  */
@@ -389,7 +460,9 @@ function folderClicked(folderId:string) {
  * @param id entry id
  */
 function entrySelect(id:string) {
+	console.log(id);
 	selectedEntryIds.value.push(id);
+	syncSelectAllBox();
 }
 
 /**
@@ -399,49 +472,72 @@ function entrySelect(id:string) {
 function entryDeselect(id:string) {
 	const index = toValue(selectedEntryIds).indexOf(id);
 	selectedEntryIds.value.splice(index, 1);
+	syncSelectAllBox();
 }
 
-function selectAllClick() {
-	const equal = props.data.entries.length == toValue(selectedEntryIds).length;
-	const allSelected = equal && props.data.entries.length > 0;
-	if (allSelected) {
-		selectedEntryIds.value = [];
-	} else {
-		selectedEntryIds.value = props.data.entries.map(v => v.id);
+/**
+ * called when a list entry has been clicked on
+ * clears previous selection and selects the entry
+ * @param id entry id
+ */
+function entrySelfSelect(id:string) {
+	selectedEntryIds.value = [];
+	for (const rowElem of listRows.value) {
+		if (rowElem.id == id) continue;
+		rowElem.setSelectState(false);
 	}
+	selectedEntryIds.value.push(id);
+	syncSelectAllBox();
+}
+
+/**
+ * called when a movie is deleted, removes it from list
+ * @param id movie id
+ */
+function entryDelete(id:string) {
+	const index = props.data.entries.findIndex((v) => v.id == id);
+	props.data.entries.splice(index, 1);
+}
+
+function reset() {
+	selectedEntryIds.value = [];
+	syncSelectAllBox();
 }
 
 watch(search, (newSearch:string) => {
+	// clear selection
+	selectedEntryIds.value = [];
+	for (const rowElem of listRows.value) {
+		rowElem.setSelectState(false);
+	}
 	filteredEntryIds.entries = [];
 	filteredEntryIds.folders = [];
 	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries));
 	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
 });
 
-watch(selectedEntryIds, (newSels, oldSels) => {
-	console.log(newSels);
-	console.log(oldSels);
-	const neg = oldSels > newSels;
-	const diff = (neg ? oldSels : newSels).filter((v) => {
-		return (neg ? newSels : oldSels).includes(v);
-	});
-	console.log(diff);
-}, { deep: true })
-
 provide(genericColumnIdKey<ListEntry>(), columnIds);
+
+defineExpose({ reset });
 
 </script>
 
 <template>
-	<div class="list_tree_container">
-		<div v-if="selectedEntryIds.length > 0" class="select_mode">
+	<div :class="{
+		list_tree_container: true,
+		select_mode: selectedEntryIds.length > 0
+	}">
+		<div class="select_mode_options">
 			<div class="side_padding">
-				<input type="checkbox"
+				<input
+					ref="select-all-box"
+					type="checkbox"
 					:value="selectedEntryIds.length == data.entries.length && 
 						data.entries.length > 0"
 					@input="selectAllClick"/>
 			</div>
 			{{ selectedEntryIds.length }} selected
+			<entryOptionsComponent :entry="selectedEntryIds"/>
 		</div>
 		<table class="list_tree">
 			<thead class="list_head">
@@ -488,12 +584,15 @@ provide(genericColumnIdKey<ListEntry>(), columnIds);
 				</template>
 				<!-- list entries -->
 				<template v-for="entry in data.entries">
-					<component
+					<entryComponent
 						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
+						ref="list-row"
 						:checked="selectedEntryIds.includes(entry.id)"
 						:entry="entry"
+						@entry-delete="entryDelete"
 						@entry-select="entrySelect(entry.id)"
-						@entry-deselect="entryDeselect(entry.id)"/>
+						@entry-deselect="entryDeselect(entry.id)"
+						@entry-self-select="entrySelfSelect(entry.id)"/>
 				</template>
 			</tbody>
 		</table>

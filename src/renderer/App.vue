@@ -5,7 +5,7 @@
 
 :root {
 	--popup-gradient-bg: radial-gradient(#333, #111);
-	--slide-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
+	--slide-anim: cubic-bezier(0, 1.15, 0.7, 1);
 	--button-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
 }
 
@@ -34,6 +34,7 @@ html.dark {
 }
 
 html.dark, html.dark>body {
+	background: #000;
 	color: hsl(0deg 0% 82%);
 }
 </style>

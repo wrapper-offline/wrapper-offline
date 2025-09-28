@@ -6,34 +6,71 @@ tr.movie td.title img {
 
 <script setup lang="ts" generic="T extends Movie">
 import { apiServer } from "../../controllers/AppInit";
-import Checkbox from "../controls/Checkbox.vue";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import { inject, Ref, useTemplateRef } from "vue";
 import type { Movie } from "../../interfaces/Movie";
+import MovieEntryOptions from "./options/MovieEntryOptions.vue";
 
 const emit = defineEmits<{
+	entryDelete: [string],
 	entryDeselect: [],
 	entrySelect: [],
+	entrySelfSelect: [],
 }>();
 const props = defineProps<{
 	checked: Ref<boolean>,
 	entry: T
 }>();
+defineExpose({ setSelectState, id:props.entry.id });
 
 const columns = inject(genericColumnIdKey<T>(), []);
-const checkbox = useTemplateRef<HTMLInputElement>("cb");
+const selectBox = useTemplateRef<HTMLInputElement>("select-box");
 
 /**
- * called when the checkbox value has been updated
+ * called when the `tr` element is clicked, deselects
  */
-function checkboxUpdate() {
-	const value = checkbox.value.checked;
+function entryElem_dblClick() {
+	setSelectState(false);
+	selectBox_click();
+}
+
+/**
+ * called when the entry element is clicked, emits event to parent
+ */
+function entryElem_click() {
+	setSelectState(true);
+	emit("entrySelfSelect");
+}
+
+/**
+ * called when the entry element is clicked and ctrl is held down
+ * flips selection state and emits event
+ */
+function entryElem_ctrlClick() {
+	const origValue = selectBox.value.checked;
+	setSelectState(!origValue);
+	selectBox_click();
+}
+
+/**
+ * called when the select box is clicked, emits event to parent list
+ */
+function selectBox_click() {
+	const value = selectBox.value.checked;
 	if (value) {
 		emit("entrySelect");
 	} else {
 		emit("entryDeselect");
 	}
+}
+
+/**
+ * updates the select box with the new selection state
+ * @param newState new selection state
+ */
+function setSelectState(newState:boolean) {
+	selectBox.value.checked = newState;
 }
 
 /**
@@ -51,25 +88,22 @@ function movieInfo(field:FieldIdOf<T>): string {
 		default: return props.entry[field].toString();
 	}
 }
-
-defineExpose<{
-	
-}>()
 </script>
 
 <template>
-	<tr class="movie" :class="{ checked }">
+	<tr
+		:class="{ checked, movie:true }"
+		@dblclick="entryElem_dblClick"
+		@click.ctrl.exact="entryElem_ctrlClick"
+		@click.exact="entryElem_click">
 		<!-- :class="{
 			movie: true,
 			sel: (selection['movie'] || []).includes(movie.id)
 		}"
 		draggable="true"
-		@mousedown.exact="clearSelection(); select('movie', movie.id)"
-		@mousedown.ctrl="select('movie', movie.id)"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
 		<td class="hidden">
-			<!-- <Checkbox :value="checked"/> -->
-			<input type="checkbox" :value="checked" @input="checkboxUpdate" ref="cb"/>
+			<input ref="select-box" type="checkbox" @input="selectBox_click" @click.stop/>
 		</td>
 		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
 			<img
@@ -78,16 +112,8 @@ defineExpose<{
 				alt="thumbnail"/>
 			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
 		</td>
-		<td class="actions hidden">
-			<RouterLink class="action" :to="`?redirect=/movies/play/${movieInfo('id')}`" target="_blank">
-				<i class="ico play"></i>
-			</RouterLink>
-			<RouterLink class="action" :to="`/movies/edit/${movieInfo('id')}`">
-				<i class="ico brush"></i>
-			</RouterLink>
-			<!-- <a href="/file/movie/file/${tbl.id}"  title="Download files -- NOT AN EXPORTER"></a> -->
-			<!--<a href="javascript:;" onclick="popupExport('${tbl.id}')" title="Export"></a>-->
-			<!-- <a href="javascript:;" onclick="destructive('${tbl.id}', 'delete')" title="Delete"></a> -->
+		<td class="actions hidden" @click.stop>
+			<MovieEntryOptions :entry="entry"/>
 		</td>
 	</tr>
 </template>

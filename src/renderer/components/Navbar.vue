@@ -27,9 +27,9 @@ header .nav_btn i {
 	transform: translateY(1px);
 }
 header .nav_btn:hover {
-	background: hsl(344deg 90% 89% / 35%);
-    border-color: hsl(344deg 57% 58% / 45%);
-	color: hsl(344deg 20% 30% / 1);
+	background: hsl(338deg 37% 83%);
+	border-color: hsl(344deg 57% 58% / 45%);
+	color: hsl(344deg 15% 30% / 1);
 	transition: none;
 	cursor: pointer;
 }
@@ -50,7 +50,7 @@ header .link_container .link {
 	height: 100%;
 }
 header .link_container .link:hover {
-	background: hsl(255 13% 92% / 1);
+	background: hsl(338deg 37% 83%);
 	transition: none;
 }
 /* previous links */
@@ -81,7 +81,7 @@ header .btn {
 }
 header .search_box {
 	background: hsl(255 13% 90% / 1);
-    border: 1px solid hsl(255 12% 73% / 1);
+	border: 1px solid hsl(255 12% 73% / 1);
 	border-radius: 3px;
 	transition: 0.2s var(--button-anim);
 	padding: 5px 6px;
@@ -110,7 +110,7 @@ html.dark header .link_container .link {
 	color: hsl(0deg 0% 85%);
 }
 html.dark header .link_container .link:hover {
-	background: hsl(250 9% 17% / 1);
+	background: hsl(328 21% 21% / 1);
 }
 html.dark header .search_box {
 	background: hsl(250 9% 16% / 1);

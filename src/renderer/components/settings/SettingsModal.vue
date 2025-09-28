@@ -1,4 +1,10 @@
-<style lang="css" scoped>
+<style lang="css">
+.popup_container.settings_popup .contents {
+	overflow-y: scroll;
+	width: 776px;
+	height: 400px;
+}
+
 .tab_selector {
 	display: flex;
 }
@@ -7,6 +13,8 @@
 	width: 160px;
 }
 .tab_selector .tab_col .btn {
+	font-size: 15px;
+	font-weight: normal;
 	margin: 0 0 9px;
 	display: block;
 }
@@ -42,6 +50,10 @@ const tabs = [
 	{
 		id: "appearance",
 		name: "Appearance"
+	},
+	{
+		id: "watermarks",
+		name: "Watermarks"
 	}
 ];
 const selectedTab = ref(tabs[0].id);
@@ -53,7 +65,7 @@ function switchTab(id:string) {
 
 <template>
 	<div class="settings_modal">
-		<Popup>
+		<Popup class="settings_popup">
 			<template #small-heading>Wrapper: Offline</template>
 			<template #large-heading>App settings</template>
 	
@@ -64,16 +76,17 @@ function switchTab(id:string) {
 					</Button>
 				</div>
 				<div v-if="selectedTab == 'behavior'" class="tab">
-					<AppSetting id="truncatedThemeList" binary>
-						<template #title>Truncated themelist</template>
-						<template #description>Shows a limited selection of themes.</template>
+					<AppSetting id="onMovieDclick" :options="{
+						play: 'Open video player',
+						edit: 'Open video editor',
+						none: 'Do nothing',
+					}" local>
+						<template #title>When double clicking a video...</template>
 					</AppSetting>
 
-					<AppSetting id="showWaveforms" binary>
-						<template #title>Show waveforms</template>
-						<template #description>By default, waveforms for audio are generated in the video editor.<br/>
-							While useful, the editor freezes while it generates, which could be too annoying or slow for some.<br/>
-							Turning this off will simply add a repeating pre-made pattern in place of true waveforms.</template>
+					<AppSetting id="hideNavbar" binary>
+						<template #title>Auto-hide navbar</template>
+						<template #description><i>You must restart the program for this change to take effect.</i></template>
 					</AppSetting>
 
 					<AppSetting id="saveLogFiles" binary>
@@ -83,9 +96,9 @@ function switchTab(id:string) {
 					</AppSetting>
 				</div>
 				<div v-if="selectedTab == 'appearance'" class="tab">
-					<AppSetting id="DARK_MODE" binary local>
+					<AppSetting id="darkMode" binary local>
 						<template #title>Dark mode</template>
-						<template #description><i>Does not apply in the Video Maker or Character Creator.</i></template>
+						<template #description><i>Does not apply in the video editor or the character creator.</i></template>
 					</AppSetting>
 
 					<AppSetting id="isWide" :options="{
@@ -93,14 +106,23 @@ function switchTab(id:string) {
 						true: '16:9'
 					}">
 						<template #title>Aspect ratio</template>
-						<template #description>The Video Maker has 2 choices for aspect ratios, 14:9 and 16:9.<br/>
-						By default it's set to 16:9, however you can choose to use 14:9 instead.</template>
+						<template #description>This controls the aspect ratio videos are displayed in.</template>
 					</AppSetting>
 
-					<AppSetting id="hideNavbar" binary>
-						<template #title>Auto-hide navbar</template>
-						<template #description><i>You must restart the program for this change to take effect.</i></template>
+					<AppSetting id="showWaveforms" binary>
+						<template #title>Show waveforms</template>
+						<template #description>By default, waveforms for audio are generated in the video editor.<br/>
+							While useful, the editor freezes while it generates, which could be too annoying or slow for some.<br/>
+							Turning this off will simply add a repeating pre-made pattern in place of true waveforms.</template>
 					</AppSetting>
+
+					<AppSetting id="truncatedThemeList" binary>
+						<template #title>Truncated themelist</template>
+						<template #description>Shows a limited selection of themes.</template>
+					</AppSetting>
+				</div>
+				<div v-if="selectedTab == 'watermarks'" class="tab">
+					watermark manager here
 				</div>
 			</div>
 			
