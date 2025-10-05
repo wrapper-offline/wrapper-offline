@@ -23,38 +23,15 @@ import Button from "../controls/Button.vue";
 import Popup from "../Popup.vue";
 import { onMounted, ref } from "vue";
 
-
-/*
-==== BEGIN STUDIO CALLBACKS ====
-*/
+const emit = defineEmits<{
+	exitClicked: [],
+	saveVideo: [],
+}>();
+const { show = true } = defineProps<{
+	show?: boolean
+}>();
 
 let globalXml = "";
-onMounted(() => {
-	//@ts-ignore
-	window.retrievePreviewPlayerData = function () {
-		const movieXml = globalXml.slice();
-		globalXml = "";
-		return movieXml;
-	}
-});
-
-function displayPlayer(movieXml:string, startFrame:number) {
-	globalXml = movieXml;
-	params.movie = swfUrl;
-	params.flashvars.startFrame = startFrame.toString();
-	showObject.value = true;
-}
-
-defineExpose({ displayPlayer });
-
-/*
-==== END STUDIO CALLBACKS ====
-*/
-
-
-const showObject = ref(false);
-const swfUrl = swfUrlBase + "/player.swf";
-
 let params:Params = {
 	flashvars: {
 		isEmbed: "1",
@@ -70,23 +47,41 @@ let params:Params = {
 	allowScriptAccess: "always",
 	movie: ""
 };
+const showObject = ref(false);
+const swfUrl = swfUrlBase + "/player.swf";
 
-const { show = true } = defineProps<{
-	show?: boolean
-}>();
-const emit = defineEmits<{
-	exitClicked: [],
-	saveVideo: [],
-}>();
+onMounted(() => {
+	//@ts-ignore
+	window.retrievePreviewPlayerData = function () {
+		const movieXml = globalXml.slice();
+		globalXml = "";
+		return movieXml;
+	}
+});
 
-function exitClicked() {
+/**
+ * initializes the player object
+ * @param movieXml movie xml
+ * @param startFrame frame to start from
+ */
+function displayPlayer(movieXml:string, startFrame:number) {
+	globalXml = movieXml;
+	params.movie = swfUrl;
+	params.flashvars.startFrame = startFrame.toString();
+	showObject.value = true;
+}
+
+function exitButton_click() {
 	showObject.value = false;
 	emit("exitClicked");
 }
-function saveVideo() {
-	exitClicked();
+function saveButton_click() {
+	exitButton_click();
 	emit("saveVideo");
 }
+
+defineExpose({ displayPlayer });
+
 </script>
 
 <template>
@@ -100,8 +95,8 @@ function saveVideo() {
 			</object>
 	
 			<template #foot>
-				<Button @click="exitClicked">Exit preview</Button>
-				<Button primary @click="saveVideo">Save video</Button>
+				<Button @click="exitButton_click">Exit preview</Button>
+				<Button primary @click="saveButton_click">Save</Button>
 			</template>
 		</Popup>
 	</div>

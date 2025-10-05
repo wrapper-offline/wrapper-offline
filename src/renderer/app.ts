@@ -62,21 +62,21 @@ const routes:RouteRecordRaw[] = [
 		path: "/movies/create/:themeId?",
 		component: StudioView,
 		meta: {
-			title: "Video Maker"
+			title: "Video Editor"
 		},
 	},
 	{
 		path: "/movies/edit/:movieId?",
 		component: StudioView,
 		meta: {
-			title: "Video Maker"
+			title: "Video Editor"
 		},
 	},
 	{
 		path: "/movies/play/:movieId",
 		component: PlayerView,
 		meta: {
-			title: "Playing a video"
+			title: "Video Player"
 		},
 	},
 	{

@@ -54,7 +54,7 @@ type CCModalType = InstanceType<typeof CCModal>;
 type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
 
 const ccModal = useTemplateRef<CCModalType>("ccModal");
-const previewModal = useTemplateRef<MoviePreviewModalType>("previewPlayer");
+const previewModal = useTemplateRef<MoviePreviewModalType>("previewModal");
 const router = useRouter();
 const studio = useTemplateRef<HTMLObjectElement>("studio-object");
 const showCCModal = ref(false);
@@ -123,7 +123,7 @@ function exitPreviewer() {
 }
 function showSavePopup() {
 	//@ts-ignore
-	studio.value.onExternalMoviePreviewModalPublish();
+	studio.value.onExternalPreviewPlayerPublish();
 }
 
 onMounted(() => {
@@ -146,10 +146,12 @@ onMounted(() => {
 		}
 	};
 	//@ts-ignore
-	window.initMoviePreviewModal = function (movieXml:string, startFrame:number) {
+	window.initPreviewPlayer = function (movieXml:string, startFrame:number) {
 		showPreviewer.value = true;
 		showImporter.value = false;
-		previewModal.value.displayPlayer(movieXml, startFrame);
+		setTimeout(() => {
+			previewModal.value.displayPlayer(movieXml, startFrame);
+		}, 55);
 	};
 	//@ts-ignore
 	window.showCCWindow = function (themeId:string) {
