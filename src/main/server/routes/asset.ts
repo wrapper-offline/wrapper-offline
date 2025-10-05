@@ -232,7 +232,8 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 	}, stream;
 
 	// validate the file type
-	if ((fileTypes[info.type] || []).indexOf(ext) < 0) {
+	const ok = info.subtype == "video" ? "video" : info.type;
+	if ((fileTypes[ok] || []).indexOf(ext) < 0) {
 		return res.status(400).json({msg:"Invalid file type."});
 	}
 
@@ -263,11 +264,17 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 				// save it to a tempfile so we can get the mp3 duration
 				const temppath = tempfile(".mp3");
 				const writeStream = fs.createWriteStream(temppath);
-				await new Promise(async (resolve, reject) => (
+				await new Promise(async (resolve, reject) => {
+					setTimeout(() => {
+						writeStream.close();
+						fs.unlinkSync(temppath);
+						return reject("read stream timed out");
+					}, 1.2e+6);
 					stream.on("end", resolve).pipe(writeStream)
-				));
+				});
 				info.duration = await mp3Duration(temppath) * 1e3;
 				info.id = await AssetModel.save(temppath, "mp3", info);
+				fs.unlinkSync(temppath);
 				break;
 			}
 			case "prop": {
@@ -316,7 +323,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 						default:
 							info.ptype = "placeable";
 					}
-					if (ext == "webp") {
+					if (ext == "webp" || ext == "tif" || ext == "avif") {
 						stream = sharp(filepath).toFormat("png");
 					} else {
 						stream = fs.createReadStream(filepath);

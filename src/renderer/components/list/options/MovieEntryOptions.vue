@@ -7,18 +7,28 @@ const props = defineProps<{
 	entry: T | string[]
 }>();
 const isSingular = !Array.isArray(props.entry);
+
+function playButton_click() {
+	const width = screen.width > 1280 ? 1280 : 560;
+	const height = screen.height > 720 ? 720 : 315;
+	window.open(
+		`?redirect=/movies/play/${(props.entry as T).id}`,
+		"MsgWindow",
+		`width=${width},height=${height},left=${screen.width / 2 - 640},top=${screen.height / 2 - 360}`
+	);
+}
 </script>
 
 <template>
 	<div class="list_entry_options">
-		<RouterLink
+		<a
 			v-show="isSingular"
 			class="option"
-			:to="`?redirect=/movies/play/${(entry as T).id}`"
-			target="_blank"
+			href="javascript:;"
+			@click="playButton_click"
 			title="Play">
 			<i class="ico play"></i>
-		</RouterLink>
+		</a>
 		<RouterLink
 			v-show="isSingular"
 			class="option"

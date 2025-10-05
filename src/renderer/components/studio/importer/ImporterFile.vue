@@ -128,6 +128,8 @@ const emit = defineEmits<{
 const props = defineProps<{
 	file: PendingFile
 }>();
+
+let baseType = ref("");
 let flatType = "";
 /** ["type", "subtype", "ptype"?] */
 let assetType:string[] = ["", ""];
@@ -176,18 +178,28 @@ function lvmTypesFromflatType(type:string): [string, string] {
  */
 function basicTypeFromExt(ext:string) {
 	switch (ext) {
+		case "flac":
 		case "ogg":
+		case "m4a":
 		case "mp3":
-		case "wma":
 		case "wav":
+		case "wma":
 			return "sound";
-		case "swf":
 		case "gif":
+		case "jpeg":
 		case "jpg":
 		case "png":
+		case "swf":
+		case "tiff":
+		case "tif":
 		case "webp":
 			return "image";
+		case "avi":
+		case "mkv":
+		case "mov":
 		case "mp4":
+		case "webm":
+		case "wmv":
 			return "video";
 	}
 }
@@ -204,6 +216,11 @@ function displayError(msg:string) {
 }
 
 /* events */
+
+function videoAsSound() {
+	baseType.value = "sound";
+	thumbUrl.value = `/img/importer/${baseType.value}.svg`;
+}
 
 /**
  * called when the user clicks on an asset subtype
@@ -318,8 +335,8 @@ function addToScene() {
 	emit("addToScene", importType, assetId);
 }
 
-const baseType = basicTypeFromExt(props.file.ext);
-thumbUrl.value = `/img/importer/${baseType}.svg`;
+baseType.value = basicTypeFromExt(props.file.ext);
+thumbUrl.value = `/img/importer/${baseType.value}.svg`;
 </script>
 
 <template>
@@ -354,6 +371,7 @@ thumbUrl.value = `/img/importer/${baseType}.svg`;
 				</div>
 				<div v-if="status == 'await_type' && baseType == 'video'" class="asset_btns">
 					<button @click="typeSelected('video')">Import</button>
+					<button @click="videoAsSound">Import as sound</button>
 					<button @click="$emit('cancelClicked')" class="cancel">Cancel</button>
 				</div>
 				<!-- step 2: prop type (if applicable) -->

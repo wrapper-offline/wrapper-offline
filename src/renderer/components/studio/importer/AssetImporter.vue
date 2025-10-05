@@ -70,6 +70,16 @@ initial message
 	margin-left: 10px;
 	padding: 0 20px;
 }
+.file_type_help ul summary {
+	cursor: pointer;
+	width: fit-content;
+}
+.file_type_help ul summary:hover {
+	opacity: 0.8;
+}
+.file_type_help ul summary:focus {
+	outline: none;
+}
 
 @keyframes importer-slide {
 	0% {
@@ -98,17 +108,28 @@ import { ref, toValue, useTemplateRef } from "vue";
 
 /* list of all file extensions supported by the file upload api */
 const supportedTypes = [
-	"ogg",
-	"mp3",
-	"wma",
 	"flac",
+	"ogg",
+	"m4a",
+	"mp3",
 	"wav",
-	"swf",
+	"wma",
+
 	"gif",
+	"jpeg",
 	"jpg",
 	"png",
+	"swf",
+	"tiff",
+	"tif",
 	"webp",
+
+	"avi",
+	"mkv",
+	"mov",
 	"mp4",
+	"webm",
+	"wmv",
 ];
 /* object passed to an ImporterFile element */
 export type PendingFile = {
@@ -145,6 +166,17 @@ function filesAdded(e:InputEvent) {
  */
 function fileDropped(e:DragEvent) {
 	const files = e.dataTransfer.files;
+	for (let i = 0; i < files.length; i++) {
+		addFile(files[i]);
+	}
+}
+
+/**
+ * called when a file has been pasted into the importer
+ * @param e event
+ */
+function filePasted(e:ClipboardEvent) {
+	const files = e.clipboardData.files;
 	for (let i = 0; i < files.length; i++) {
 		addFile(files[i]);
 	}
@@ -213,7 +245,8 @@ function onUploadSuccess(
 	<nav
 		id="importer"
 		@dragover.prevent.stop=""
-		@drop.prevent.stop="fileDropped">
+		@drop.prevent.stop="fileDropped"
+		@paste="filePasted">
 		<div id="import_head">
 			<Button primary @click="fileInput.click()">Select files</Button>
 			<h3 class="close_button" @click="$emit('exitClicked')">✖</h3>
@@ -247,28 +280,44 @@ function onUploadSuccess(
 			</div>
 			<h4>Supported file types:</h4>
 			<ul>
-				<li>Sounds:
-					<ul>
-						<li>OGG</li>
-						<li>MP3</li>
-						<li>WMA</li>
-						<li>FLAC</li>
-						<li>WAV</li>
-					</ul>
+				<li>
+					<details>
+						<summary>Sounds:</summary>
+						<ul>
+							<li>FLAC</li>
+							<li>OGG</li>
+							<li>M4A</li>
+							<li>MP3</li>
+							<li>WAV</li>
+							<li>WMA</li>
+						</ul>
+					</details>
 				</li>
-				<li>Backgrounds and props:
-					<ul>
-						<li>SWF</li>
-						<li>GIF</li>
-						<li>JPG</li>
-						<li>PNG</li>
-						<li>WEBP</li>
-					</ul>
+				<li>
+					<details>
+						<summary>Backgrounds and props:</summary>
+						<ul>
+							<li>GIF (will not animate)</li>
+							<li>JPEG/JPG</li>
+							<li>PNG</li>
+							<li>SWF</li>
+							<li>TIF/TIFF</li>
+							<li>WEBP</li>
+						</ul>
+					</details>
 				</li>
-				<li>Videos:
-					<ul>
-						<li>MP4</li>
-					</ul>
+				<li>
+					<details>
+						<summary>Videos:</summary>
+						<ul>
+							<li>AVI</li>
+							<li>MKV</li>
+							<li>MOV</li>
+							<li>MP4</li>
+							<li>WEBM</li>
+							<li>WMV</li>
+						</ul>
+					</details>
 				</li>
 			</ul>
 		</div>

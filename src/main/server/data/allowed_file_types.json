@@ -1,9 +1,10 @@
 {
 	"bg": [
-		"swf",
 		"gif",
-		"png",
 		"jpg",
+		"png",
+		"swf",
+		"tif",
 		"webp"
 	],
 	"watermark": [
@@ -13,19 +14,37 @@
 		"webp"
 	],
 	"prop": [
-		"swf",
 		"gif",
-		"png",
 		"jpg",
-		"mp4",
+		"png",
+		"swf",
+		"tif",
 		"webp"
 	],
 	"sound": [
-		"mp3",
-		"ogg",
-		"wav",
 		"asf",
 		"flac",
-		"wma"
+		"ogg",
+		"m4a",
+		"mp3",
+		"wav",
+		"wma",
+
+		"asf",
+		"avi",
+		"mkv",
+		"mov",
+		"mp4",
+		"webm",
+		"wmv"
+	],
+	"video": [
+		"asf",
+		"avi",
+		"mkv",
+		"mov",
+		"mp4",
+		"webm",
+		"wmv"
 	]
 }
