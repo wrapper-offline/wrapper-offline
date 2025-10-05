@@ -1,6 +1,9 @@
 class LocalSettings {
 	private static _instance:LocalSettings;
-	private settings = {
+	private settings:{
+		DARK_MODE: boolean,
+		ON_MOVIE_DCLICK: "edit" | "play" | "none"
+	} = {
 		DARK_MODE: false,
 		ON_MOVIE_DCLICK: "play"
 	};
@@ -33,7 +36,7 @@ class LocalSettings {
 	get darkMode() {
 		return this.settings["DARK_MODE"];
 	}
-	set darkMode(newValue:boolean) {
+	set darkMode(newValue) {
 		this.settings["DARK_MODE"] = newValue;
 		this.saveSetting("DARK_MODE");
 	}
@@ -41,7 +44,7 @@ class LocalSettings {
 	get onMovieDclick() {
 		return this.settings["ON_MOVIE_DCLICK"];
 	}
-	set onMovieDclick(newValue:string) {
+	set onMovieDclick(newValue) {
 		this.settings["ON_MOVIE_DCLICK"] = newValue;
 		this.saveSetting("ON_MOVIE_DCLICK");
 	}

@@ -28,13 +28,6 @@ const key = ref("assetlist-entry" + props.entry.id);
 const showPreview = ref(false);
 
 /**
- * called when the `tr` element is clicked, deselects
- */
-function entryElem_dblClick() {
-	emit("entryDblClick");
-}
-
-/**
  * called when the entry element is clicked, emits event to parent
  */
 function entryElem_click() {
@@ -49,6 +42,14 @@ function entryElem_ctrlClick() {
 	emit("entryCtrlClick");
 }
 
+/**
+ * called when the `tr` element is double clicked
+ * opens asset preview and emits event
+ */
+function entryElem_dblClick() {
+	showPreview.value = true;
+	emit("entryDblClick");
+}
 
 /**
  * called when the entry element is clicked as shift is held down

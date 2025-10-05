@@ -3,19 +3,17 @@
 <script setup lang="ts" generic="T extends Movie">
 import type { Movie } from "../../../interfaces/Movie";
 
+const emit = defineEmits<{
+	playClick: []
+}>();
 const props = defineProps<{
 	entry: T | string[]
 }>();
+
 const isSingular = !Array.isArray(props.entry);
 
 function playButton_click() {
-	const width = screen.width > 1280 ? 1280 : 560;
-	const height = screen.height > 720 ? 720 : 315;
-	window.open(
-		`?redirect=/movies/play/${(props.entry as T).id}`,
-		"MsgWindow",
-		`width=${width},height=${height},left=${screen.width / 2 - 640},top=${screen.height / 2 - 360}`
-	);
+	emit("playClick");
 }
 </script>
 

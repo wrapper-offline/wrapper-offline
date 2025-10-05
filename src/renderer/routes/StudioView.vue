@@ -139,8 +139,8 @@ onMounted(() => {
 		}
 	};
 	//@ts-ignore
-	window.quitStudio = function () {
-		const shouldQuit = confirm("Are you sure you want to exit the studio? You may have unsaved changes.");
+	window.quitStudio = function (skipAsk:boolean) {
+		const shouldQuit = skipAsk || confirm("Are you sure you want to exit the studio? You may have unsaved changes.");
 		if (shouldQuit) {
 			router.push("/");
 		}
@@ -187,7 +187,6 @@ let params:Params = {
 		isLogin: "Y",
 		isWide: SettingsController.get("isWide") ? "1" : "0",
 		lid: "0",
-		nextUrl: "/",
 		page: "",
 		retut: "1",
 		siteId: "go",

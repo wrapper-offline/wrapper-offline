@@ -9,8 +9,10 @@ import { apiServer } from "../../controllers/AppInit";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import { inject } from "vue";
+import LocalSettings from "../../controllers/LocalSettings";
 import type { Movie } from "../../interfaces/Movie";
 import MovieEntryOptions from "./options/MovieEntryOptions.vue";
+import { useRouter } from "vue-router";
 
 const emit = defineEmits<{
 	entryDelete: [string],
@@ -26,13 +28,7 @@ const props = defineProps<{
 defineExpose({ id:props.entry.id });
 
 const columns = inject(genericColumnIdKey<T>(), []);
-
-/**
- * called when the `tr` element is clicked, deselects
- */
-function entryElem_dblClick() {
-	emit("entryDblClick");
-}
+const router = useRouter();
 
 /**
  * called when the entry element is clicked, emits event to parent
@@ -49,6 +45,26 @@ function entryElem_ctrlClick() {
 	emit("entryCtrlClick");
 }
 
+/**
+ * called when the `tr` element is clicked
+ * does user action and emits event
+ */
+function entryElem_dblClick() {
+	switch (LocalSettings.onMovieDclick) {
+		case "edit": {
+			router.push(`/movies/edit/${props.entry.id}`);
+			break;
+		}
+		case "play": {
+			openPlayWindow();
+			break;
+		}
+		case "none":
+		default:
+			break;
+	}
+	emit("entryDblClick");
+}
 
 /**
  * called when the entry element is clicked as shift is held down
@@ -56,6 +72,19 @@ function entryElem_ctrlClick() {
  */
 function entryElem_shiftClick() {
 	emit("entryShiftClick");
+}
+
+/**
+ * opens a video player window
+ */
+function openPlayWindow() {
+	const width = screen.width > 1280 ? 1280 : 560;
+	const height = screen.height > 720 ? 720 : 315;
+	window.open(
+		`?redirect=/movies/play/${props.entry.id}`,
+		"MsgWindow",
+		`width=${width},height=${height},left=${screen.width / 2 - 640},top=${screen.height / 2 - 360}`
+	);
 }
 
 /**
@@ -99,7 +128,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
 		</td>
 		<td class="actions hidden" @click.stop>
-			<MovieEntryOptions :entry="entry"/>
+			<MovieEntryOptions :entry="entry" @play-click="openPlayWindow"/>
 		</td>
 	</tr>
 </template>

@@ -77,6 +77,7 @@ function containerClicked() {
 		<audio
 			v-if="asset.type == 'sound'"
 			:src="`${apiServer}/assets/${asset.id}`"
+			preload="none"
 			@ended="playing = false"
 			ref="audio">
 		</audio>

@@ -508,6 +508,14 @@ function entry_ctrlClick(id:string) {
 }
 
 /**
+ * called when a list entry has been double clicked on
+ * clears selection
+ */
+function entry_dblClick() {
+	resetSelection();
+}
+
+/**
  * called when a list entry has been selected as shift is held
  * selects anything between the entry and first selection
  * @param id entry id
@@ -620,6 +628,7 @@ defineExpose({ resetSelection });
 						@entry-delete="entry_delete"
 						@entry-click="entry_click(entry.id)"
 						@entry-ctrl-click="entry_ctrlClick(entry.id)"
+						@entry-dbl-click="entry_dblClick()"
 						@entry-shift-click="entry_shiftClick(entry.id)"/>
 				</template>
 			</tbody>
