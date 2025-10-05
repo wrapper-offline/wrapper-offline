@@ -1,17 +1,12 @@
 <script setup lang="ts" generic="T extends GenericListEntry">
 import type { GenericListEntry } from "../../interfaces/ListTypes";
 
-function setSelectState(newState:boolean) {
-
-}
-
 defineProps<{
+	checked: boolean,
 	entry: T
 }>();
 
-defineExpose({ setSelectState, id:"" });
+defineExpose({ id:"" });
 </script>
 
-<template>
-	entry1aa
-</template>
+<template></template>

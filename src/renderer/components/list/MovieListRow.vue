@@ -8,39 +8,37 @@ tr.movie td.title img {
 import { apiServer } from "../../controllers/AppInit";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject, Ref, useTemplateRef } from "vue";
+import { inject } from "vue";
 import type { Movie } from "../../interfaces/Movie";
 import MovieEntryOptions from "./options/MovieEntryOptions.vue";
 
 const emit = defineEmits<{
 	entryDelete: [string],
-	entryDeselect: [],
-	entrySelect: [],
-	entrySelfSelect: [],
+	entryClick: [],
+	entryCtrlClick: [],
+	entryDblClick: [],
+	entryShiftClick: [],
 }>();
 const props = defineProps<{
-	checked: Ref<boolean>,
+	checked: boolean,
 	entry: T
 }>();
-defineExpose({ setSelectState, id:props.entry.id });
+defineExpose({ id:props.entry.id });
 
 const columns = inject(genericColumnIdKey<T>(), []);
-const selectBox = useTemplateRef<HTMLInputElement>("select-box");
 
 /**
  * called when the `tr` element is clicked, deselects
  */
 function entryElem_dblClick() {
-	setSelectState(false);
-	selectBox_click();
+	emit("entryDblClick");
 }
 
 /**
  * called when the entry element is clicked, emits event to parent
  */
 function entryElem_click() {
-	setSelectState(true);
-	emit("entrySelfSelect");
+	emit("entryClick");
 }
 
 /**
@@ -48,29 +46,16 @@ function entryElem_click() {
  * flips selection state and emits event
  */
 function entryElem_ctrlClick() {
-	const origValue = selectBox.value.checked;
-	setSelectState(!origValue);
-	selectBox_click();
+	emit("entryCtrlClick");
 }
 
-/**
- * called when the select box is clicked, emits event to parent list
- */
-function selectBox_click() {
-	const value = selectBox.value.checked;
-	if (value) {
-		emit("entrySelect");
-	} else {
-		emit("entryDeselect");
-	}
-}
 
 /**
- * updates the select box with the new selection state
- * @param newState new selection state
+ * called when the entry element is clicked as shift is held down
+ * flips selection state and emits event
  */
-function setSelectState(newState:boolean) {
-	selectBox.value.checked = newState;
+function entryElem_shiftClick() {
+	emit("entryShiftClick");
 }
 
 /**
@@ -95,6 +80,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 		:class="{ checked, movie:true }"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
+		@click.shift.exact="entryElem_shiftClick"
 		@click.exact="entryElem_click">
 		<!-- :class="{
 			movie: true,
@@ -103,7 +89,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 		draggable="true"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
 		<td class="hidden">
-			<input ref="select-box" type="checkbox" @input="selectBox_click" @click.stop/>
+			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
 		</td>
 		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
 			<img

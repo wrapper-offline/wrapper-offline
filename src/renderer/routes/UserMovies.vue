@@ -206,7 +206,8 @@ function getMovieTree(filter:"movie"|"starter", folderId?:string) {
  * called when the route updates, gathers information before reloading the list
  */
 async function routeUpdated() {
-	listTree.value.reset();
+	listTree.value.resetSelection();
+	initList();
 	listPage = route.name == "movie_list" ? "movie" : "starter";
 	if (listPage == "movie") {
 		currentFolder.value = route.params.folderId as string || "";
@@ -219,7 +220,6 @@ async function routeUpdated() {
  * loads the movie/starter list along with the relevant navbar entries
  */
 async function loadMovieList() {
-	initList();
 	if (listPage == "movie") {
 		const response = await getMovieTree(listPage, toValue(currentFolder));
 		navbarEntries.value = [

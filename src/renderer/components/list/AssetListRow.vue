@@ -4,45 +4,41 @@ import AssetEntryOptions from "./options/AssetEntryOptions.vue";
 import AssetImage from "../AssetImage.vue";
 import AssetInfoModal from "../AssetInfoModal.vue";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject, Ref, ref, toValue, useTemplateRef } from "vue";
+import { inject, ref, toValue } from "vue";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { flattenAssetType } from "../../utils/flattenAssetType";
 import locale from "../../locale/en_US";
 
 const emit = defineEmits<{
 	entryDelete: [string],
-	entryDeselect: [],
-	entrySelect: [],
-	entrySelfSelect: [],
+	entryClick: [],
+	entryCtrlClick: [],
+	entryDblClick: [],
+	entryShiftClick: [],
 }>();
 const props = defineProps<{
-	checked: Ref<boolean>,
+	checked: boolean,
 	entry: T
 }>();
-defineExpose({ setSelectState, id:props.entry.id });
+defineExpose({ id:props.entry.id });
 
 /** list of columns to be displayed */
 const columns = inject(genericColumnIdKey<T>(), []);
 const key = ref("assetlist-entry" + props.entry.id);
-const selectBox = useTemplateRef<HTMLInputElement>("select-box");
 const showPreview = ref(false);
 
 /**
- * called when the `tr` element is clicked,
- * displays the asset preview modal and deselects
+ * called when the `tr` element is clicked, deselects
  */
 function entryElem_dblClick() {
-	showPreview.value = true;
-	setSelectState(false);
-	selectBox_click();
+	emit("entryDblClick");
 }
 
 /**
  * called when the entry element is clicked, emits event to parent
  */
 function entryElem_click() {
-	setSelectState(true);
-	emit("entrySelfSelect");
+	emit("entryClick");
 }
 
 /**
@@ -50,36 +46,23 @@ function entryElem_click() {
  * flips selection state and emits event
  */
 function entryElem_ctrlClick() {
-	const origValue = selectBox.value.checked;
-	setSelectState(!origValue);
-	selectBox_click();
+	emit("entryCtrlClick");
 }
 
-/**
- * called when the select box is clicked, emits event to parent list
- */
-function selectBox_click() {
-	const value = selectBox.value.checked;
-	if (value) {
-		emit("entrySelect");
-	} else {
-		emit("entryDeselect");
-	}
-}
 
 /**
- * updates the select box with the new selection state
- * @param newState new selection state
+ * called when the entry element is clicked as shift is held down
+ * flips selection state and emits event
  */
-function setSelectState(newState:boolean) {
-	selectBox.value.checked = newState;
+function entryElem_shiftClick() {
+	emit("entryShiftClick");
 }
 
 /**
  * called when the preview modal emits a closeClicked event
  * hides the modal
  */
-function assetPreviewCloseClicked() {
+function assetPreviewClose_click() {
 	showPreview.value = false;
 }
 
@@ -119,6 +102,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 		:class="{ checked }"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
+		@click.shift.exact="entryElem_shiftClick"
 		@click.exact="entryElem_click">
 		<!-- :class="{
 			movie: true,
@@ -129,7 +113,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 		@mousedown.ctrl="select('movie', movie.id)"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
 		<td class="hidden">
-			<input ref="select-box" type="checkbox" @input="selectBox_click" @click.stop/>
+			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
 		</td>
 		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
 			<!-- thumbnail block for title column -->
@@ -145,7 +129,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 			<AssetInfoModal
 				v-if="showPreview"
 				:asset="entry"
-				@close-clicked="assetPreviewCloseClicked"
+				@close-clicked="assetPreviewClose_click"
 				@update="assetInfoUpdated"/>
 		</Teleport>
 	</tr>

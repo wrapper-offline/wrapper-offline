@@ -188,7 +188,7 @@ table.list_tree tbody tr:hover td.hidden,
 table.list_tree tbody tr.checked td.hidden {
 	opacity: 1;
 }
-table.list_tree tbody tr.checked td.actions.hidden {
+.multiselect table.list_tree tbody tr td.actions.hidden {
 	opacity: 0;
 }
 
@@ -305,7 +305,8 @@ html.dark div.movie:hover {
 }
 </style>
 
-<script setup lang="ts" generic="ListEntry extends GenericListEntry">
+<script setup lang="ts" generic="ListEntry extends GenericListEntry,
+	ListRow extends (typeof GenericListRow<ListEntry>)">
 import { genericColumnIdKey, zoomLevelKey } from "../../keys/listTreeKeys";
 import type {
 	FieldIdOf,
@@ -350,18 +351,23 @@ const props = defineProps<{
 		mode?: "list" | "grid",
 	},
 	/** row component to use when displaying entries */
-	entryComponent: typeof GenericListRow<ListEntry>,
+	entryComponent: ListRow,
 	/** component to use for entry options */
 	entryOptionsComponent: typeof GenericEntryOptions,
 }>();
 const modeRestriction = props?.restrictions?.mode ?? false;
-
 const route = useRoute();
 const router = useRouter();
 
 const columnIds = props.columns.map((v) => v.id);
 const selectAllBox = useTemplateRef("select-all-box")
-const selectedEntryIds = ref<string[]>([]);
+const selection = ref<{
+	anchor: number,
+	entries: string[]
+}>({
+	anchor: 0,
+	entries: []
+});
 /** list of ids to display filtered by the current search box input */
 const filteredEntryIds:{
 	folders: string[],
@@ -370,7 +376,7 @@ const filteredEntryIds:{
 	folders: [],
 	entries: [],
 };
-const listRows = useTemplateRef<typeof GenericListRow<ListEntry>[]>("list-row");
+const listRows = useTemplateRef("list-row");
 /** current view mode */
 const mode = modeRestriction ? modeRestriction : view;
 /** size of list rows */
@@ -389,11 +395,29 @@ function dataFilterFunc(v:Folder|ListEntry, shouldContain:string, resultArray:st
 }
 
 /**
+ * syncs the select all box state with the current selection
+ */
+function syncSelectAllBox() {
+	const allSelected = selection.value.entries.length ==
+		props.data.entries.length;
+	selectAllBox.value.checked = allSelected;
+}
+
+/**
+ * resets list of selected entries
+ */
+function resetSelection() {
+	selection.value.anchor = 0;
+	selection.value.entries = [];
+	syncSelectAllBox();
+}
+
+/**
  * called when entry field in the `thead` is clicked.
  * emits an event requesting the parent to resort the list
  * @param fieldId id of the entry field to sort by
  */
-function sortOptionClicked(fieldId:string) {
+function sortOption_click(fieldId:string) {
 	emit("sortChange", fieldId);
 }
 
@@ -402,7 +426,7 @@ function sortOptionClicked(fieldId:string) {
  * @param id sort option id
  * @param e mouse event
  */
-function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
+function dragger_down(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 	document.body.classList.add("col_resize");
 	const option = props.columns.find(v => v.id == id);
 	const startX = e.clientX;
@@ -420,25 +444,13 @@ function draggerDown(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 	});
 }
 
-/**
- * syncs the select all box with the current selection
- */
-function syncSelectAllBox() {
-	const allSelected = toValue(selectedEntryIds).length ==
-		props.data.entries.length;
-	selectAllBox.value.checked = allSelected;
-}
-
-function selectAllClick() {
-	const equal = props.data.entries.length == toValue(selectedEntryIds).length;
+function selectAll_click() {
+	const equal = props.data.entries.length == selection.value.entries.length;
 	const allSelected = equal && props.data.entries.length > 0;
 	if (allSelected) {
-		selectedEntryIds.value = [];
+		resetSelection();
 	} else {
-		selectedEntryIds.value = props.data.entries.map(v => v.id);
-	}
-	for (const rowElem of listRows.value) {
-		rowElem.setSelectState(!allSelected);
+		selection.value.entries = props.data.entries.map(v => v.id);
 	}
 }
 
@@ -446,7 +458,7 @@ function selectAllClick() {
  * called when folder is clicked, navigates to it
  * @param folderId folder id
  */
-function folderClicked(folderId:string) {
+function folder_click(folderId:string) {
 	router.push({
 		name: route.name,
 		params: {
@@ -456,23 +468,12 @@ function folderClicked(folderId:string) {
 }
 
 /**
- * called when a list entry has been selected
- * @param id entry id
+ * called when a movie is deleted, removes it from list
+ * @param id movie id
  */
-function entrySelect(id:string) {
-	console.log(id);
-	selectedEntryIds.value.push(id);
-	syncSelectAllBox();
-}
-
-/**
- * called when a list entry has been deselected
- * @param id entry id
- */
-function entryDeselect(id:string) {
-	const index = toValue(selectedEntryIds).indexOf(id);
-	selectedEntryIds.value.splice(index, 1);
-	syncSelectAllBox();
+function entry_delete(id:string) {
+	const index = props.data.entries.findIndex((v) => v.id == id);
+	props.data.entries.splice(index, 1);
 }
 
 /**
@@ -480,36 +481,62 @@ function entryDeselect(id:string) {
  * clears previous selection and selects the entry
  * @param id entry id
  */
-function entrySelfSelect(id:string) {
-	selectedEntryIds.value = [];
-	for (const rowElem of listRows.value) {
-		if (rowElem.id == id) continue;
-		rowElem.setSelectState(false);
-	}
-	selectedEntryIds.value.push(id);
+function entry_click(id:string) {
+	selection.value.entries = [id];
+	selection.value.anchor = 0;
 	syncSelectAllBox();
 }
 
 /**
- * called when a movie is deleted, removes it from list
- * @param id movie id
+ * called when a list entry has been ctrl + clicked
+ * @param id entry id
  */
-function entryDelete(id:string) {
-	const index = props.data.entries.findIndex((v) => v.id == id);
-	props.data.entries.splice(index, 1);
+function entry_ctrlClick(id:string) {
+	const oI = selection.value.entries.indexOf(id);
+	if (oI > -1) { // already selected
+		selection.value.entries.splice(oI, 1);
+		if (oI - 1 < selection.value.entries.length - 1) {
+			selection.value.anchor = 0;
+		} else {
+			selection.value.anchor = oI - 1;
+		}
+	} else {
+		selection.value.entries.push(id);
+		selection.value.anchor = selection.value.entries.length - 1;
+	}
+	syncSelectAllBox();
 }
 
-function reset() {
-	selectedEntryIds.value = [];
+/**
+ * called when a list entry has been selected as shift is held
+ * selects anything between the entry and first selection
+ * @param id entry id
+ */
+function entry_shiftClick(id:string) {
+	const anchoredId = selection.value.entries[selection.value.anchor];
+	if (typeof anchoredId == "undefined") { // nothing is selected
+		selection.value.entries = [id];
+		selection.value.anchor = 0;
+		syncSelectAllBox();
+		return;
+	}
+	selection.value.entries = [anchoredId];
+	selection.value.anchor = 0;
+	const indicies = [
+		listRows.value.findIndex(e => e.id == anchoredId),
+		listRows.value.findIndex(e => e.id == id)
+	].sort();
+	for (let i = indicies[0]; i <= indicies[1]; i++) {
+		const id = listRows.value[i].id;
+		if (id == anchoredId) continue;
+		selection.value.entries.push(id);
+	}
 	syncSelectAllBox();
 }
 
 watch(search, (newSearch:string) => {
 	// clear selection
-	selectedEntryIds.value = [];
-	for (const rowElem of listRows.value) {
-		rowElem.setSelectState(false);
-	}
+	resetSelection();
 	filteredEntryIds.entries = [];
 	filteredEntryIds.folders = [];
 	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries));
@@ -518,26 +545,27 @@ watch(search, (newSearch:string) => {
 
 provide(genericColumnIdKey<ListEntry>(), columnIds);
 
-defineExpose({ reset });
+defineExpose({ resetSelection });
 
 </script>
 
 <template>
-	<div :class="{
+	<div @click.self="resetSelection" :class="{
 		list_tree_container: true,
-		select_mode: selectedEntryIds.length > 0
+		multiselect: selection.entries.length > 1,
+		select_mode: selection.entries.length > 0
 	}">
 		<div class="select_mode_options">
 			<div class="side_padding">
 				<input
 					ref="select-all-box"
 					type="checkbox"
-					:value="selectedEntryIds.length == data.entries.length && 
+					:value="selection.entries.length == data.entries.length && 
 						data.entries.length > 0"
-					@input="selectAllClick"/>
+					@input="selectAll_click"/>
 			</div>
-			{{ selectedEntryIds.length }} selected
-			<entryOptionsComponent :entry="selectedEntryIds"/>
+			{{ selection.entries.length }} selected
+			<entryOptionsComponent :entry="selection.entries"/>
 		</div>
 		<table class="list_tree">
 			<thead class="list_head">
@@ -553,12 +581,12 @@ defineExpose({ reset });
 						:style="{
 							width: mode == 'list' ? field.width.value + 'px' : '150px'
 						}"
-						@click.self="sortOptionClicked(field.id.toString())">
+						@click.self="sortOption_click(field.id.toString())">
 						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
 						<div v-if="mode == 'list'"
 							class="dragger"
 							:style="{marginLeft: field.width.value - 11 + 'px'}"
-							@mousedown.stop.prevent="(e) => draggerDown(field.id, e)"></div>
+							@mousedown.stop.prevent="(e) => dragger_down(field.id, e)"></div>
 					</th>
 					<th class="space"></th>
 				</tr>
@@ -568,7 +596,7 @@ defineExpose({ reset });
 					<tr
 						v-if="search.length > 0 ? filteredEntryIds.folders.includes(folder.id) : true"
 						class="entry folder"
-						@click="folderClicked(folder.id)">
+						@click="folder_click(folder.id)">
 						<td></td>
 						<template v-for="columnId in columnIds">
 							<td v-if="columnId == 'title'" class="title">
@@ -587,12 +615,12 @@ defineExpose({ reset });
 					<entryComponent
 						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
 						ref="list-row"
-						:checked="selectedEntryIds.includes(entry.id)"
+						:checked="selection.entries.includes(entry.id)"
 						:entry="entry"
-						@entry-delete="entryDelete"
-						@entry-select="entrySelect(entry.id)"
-						@entry-deselect="entryDeselect(entry.id)"
-						@entry-self-select="entrySelfSelect(entry.id)"/>
+						@entry-delete="entry_delete"
+						@entry-click="entry_click(entry.id)"
+						@entry-ctrl-click="entry_ctrlClick(entry.id)"
+						@entry-shift-click="entry_shiftClick(entry.id)"/>
 				</template>
 			</tbody>
 		</table>
