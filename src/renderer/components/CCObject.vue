@@ -48,7 +48,7 @@ onMounted(() => {
 	window.copyClicked = function copyClicked(assetId:string) {
 		showObject.value = false;
 		setTimeout(() => {
-			copyCharacter(assetId);
+			copyCharacter(params.flashvars.themeId, assetId);
 		}, 55);
 	};
 	/**
@@ -88,9 +88,11 @@ function createCharacter(themeId:string, bs:string) {
 
 /**
  * displays the character creator, copy character
+ * @param themeId cc theme id
  * @param assetId character id
  */
-function copyCharacter(assetId:string) {
+function copyCharacter(themeId:string, assetId:string) {
+	params.flashvars.themeId = themeId;
 	params.flashvars.original_asset_id = assetId;
 	displayCreator();
 }

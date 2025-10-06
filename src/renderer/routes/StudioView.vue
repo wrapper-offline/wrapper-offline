@@ -154,10 +154,16 @@ onMounted(() => {
 		}, 55);
 	};
 	//@ts-ignore
-	window.showCCWindow = function (themeId:string) {
+	window.createCharacter = function (themeId:string) {
 		showCCModal.value = true;
 		showImporter.value = false;
-		ccModal.value.display(themeId);
+		ccModal.value.displayBrowser(themeId);
+	}
+	//@ts-ignore
+	window.copyCharacter = function (themeId:string, assetId:string) {
+		showCCModal.value = true;
+		showImporter.value = false;
+		ccModal.value.copyCharacter(themeId, assetId);
 	}
 	//@ts-ignore
 	window.showImporter = function () {

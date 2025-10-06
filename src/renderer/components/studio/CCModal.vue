@@ -42,18 +42,27 @@ function charSaved(id:string) {
 }
 
 /**
- * initializes the cc object
+ * initializes the cc object on the browser
  * @param themeId cc theme id
  */
-function display(themeId:string) {
+function displayBrowser(themeId:string) {
 	ccObject.value.displayBrowser(themeId);
+}
+
+/**
+ * initializes the cc object on a character
+ * @param themeId cc theme id
+ * @param assetId character id
+ */
+function copyCharacter(themeId:string, assetId:string) {
+	ccObject.value.copyCharacter(themeId, assetId);
 }
 
 const { show = true } = defineProps<{
 	show?: boolean
 }>();
 
-defineExpose({ display });
+defineExpose({ displayBrowser, copyCharacter });
 </script>
 
 <template>

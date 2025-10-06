@@ -173,6 +173,7 @@ function fileDropped(e:DragEvent) {
 
 /**
  * called when a file has been pasted into the importer
+ * only has limited support due to an issue with old chromium
  * @param e event
  */
 function filePasted(e:ClipboardEvent) {
