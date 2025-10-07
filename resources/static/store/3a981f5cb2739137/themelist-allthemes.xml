@@ -8,20 +8,20 @@
 	<theme id="ninjaanime" name="Ninja Anime" cc_theme_id="ninjaanime" col="1"/>
 	<theme id="spacecitizen" name="Space Citizens" cc_theme_id="spacecitizen" col="1"/>
 	<theme id="fullenergy" name="Full Energy" col="1"/>
-	<theme id="akon" name="AKON" col="1"/>
 
-	<theme id="ben10" name="Ben 10" col="2"/>
-	<theme id="bunny" name="It's Happy Bunny" col="2"/>
-	<theme id="chowder" name="Chowder" col="2"/>
-	<theme id="domo" name="Domo" col="2"/>
-	<theme id="monkeytalk" name="SuperRica &amp; Rashy" col="2"/>
+	<theme id="action" name="Lil' Peepz" cc_theme_id="cc2" col="2"/>
+	<theme id="chibi" name="Chibi Peepz" cc_theme_id="chibi" col="2"/>
+	<theme id="space" name="Space Peepz" cc_theme_id="cc2" col="2"/>
+	<theme id="animal" name="Lil' Petz" cc_theme_id="cc2" col="2"/>
+	<theme id="ninja" name="Chibi Ninjas" cc_theme_id="ninja" col="2"/>
+	<theme id="vietnam" name="Jungle Warfare" cc_theme_id="cc2" col="2"/>
 
-	<theme id="action" name="Lil' Peepz" cc_theme_id="cc2" col="3"/>
-	<theme id="chibi" name="Chibi Peepz" cc_theme_id="chibi" col="3"/>
-	<theme id="space" name="Space Peepz" cc_theme_id="cc2" col="3"/>
-	<theme id="animal" name="Lil' Petz" cc_theme_id="cc2" col="3"/>
-	<theme id="ninja" name="Chibi Ninjas" cc_theme_id="ninja" col="3"/>
-	<theme id="vietnam" name="Jungle Warfare" cc_theme_id="cc2" col="3"/>
+	<theme id="ben10" name="Ben 10" col="3"/>
+	<theme id="bunny" name="It's Happy Bunny" col="3"/>
+	<theme id="chowder" name="Chowder" col="3"/>
+	<theme id="domo" name="Domo" col="3"/>
+	<theme id="monkeytalk" name="SuperRica &amp; Rashy" col="3"/>
+	<theme id="akon" name="AKON" col="3"/>
 
 	<theme id="retro" name="Cartoon Classics" col="4"/>
 	<theme id="stick" name="Stick Figure" col="4"/>

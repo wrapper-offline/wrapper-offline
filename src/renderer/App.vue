@@ -4,7 +4,7 @@
 @import "/css/icons.css";
 
 :root {
-	--popup-gradient-bg: radial-gradient(#333, #111);
+	--popup-gradient-bg: radial-gradient(hsl(240deg 16% 22%), hsl(240deg 16% 8%));
 	--slide-anim: cubic-bezier(0, 1.15, 0.7, 1);
 	--button-anim: cubic-bezier(0.2, 0.95, 0.25, 1);
 }

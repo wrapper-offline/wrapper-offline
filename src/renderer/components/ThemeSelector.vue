@@ -6,18 +6,26 @@
 	width: 70%;
 	min-width: 660px;
 	max-width: 950px;
+	max-height: calc(100% - 100px);
+}
+
+.theme_sel_popup .row {
+	border-bottom: 1px solid hsl(252deg 16% 87%);
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+.theme_sel_popup .row:last-of-type {
+	border: none;
+	margin: 0;
+	padding: 0;
 }
 
 /**
 theme
 **/
-.theme {
-	background-color: #fcfcfd;
-	background-position: center -30px;
-	background-blend-mode: overlay;
-	background-size: 100%;
-	border-bottom: 1px solid #c9c5de;
-	box-shadow: 0 0 2px 1px #00000015;
+.theme_sel_popup .theme {
+	background-color: hsl(252deg 16% 97%);
+	border: 1px solid hsl(252deg 16% 82%);
 	border-radius: 3px;
 	transition: 0.12s cubic-bezier(0.7, 0.5, 0.3, 1);
 	display: inline-flex;
@@ -25,40 +33,57 @@ theme
 	font-size: 19px;
 	font-weight: bold;
 	margin: 4px;
-	padding: 4px 8px;
 	width: calc(50% - 8px);
+	height: 78px;
 }
-.theme img {
+.theme_sel_popup .theme .icon {
 	border-radius: 100%;
-	transition: filter 0.1s linear;
-	margin-right: 12px;
-	display: block;
-	height: 70px;
+	margin: 0 12px 0 8px;
 	width: 70px;
+	height: 70px;
 }
-html div.theme:hover {
-	background-color: #babeea;
+.theme_sel_popup .theme .banner {
+	border-radius: 3px;
+	transition: 0.12s cubic-bezier(0, 0.7, 0.1, 0.75);
+	object-position: center -30px;
+	object-fit: cover;
+	opacity: 0.05;
+    margin-right: -100%;
+    width: 100%;
+    height: 100%;
+}
+.theme_sel_popup .theme:hover {
+	background-color: hsl(338deg 55% 85%);
+	border-color: hsl(338deg 55% 77%);
 	color: #fff;
 	text-shadow: 0 0 10px #000;
-	box-shadow: 0 2px 4px #00000010;
-	background-size: 105%;
-	background-position: center -15px;
 	cursor: pointer;
 }
-.theme:hover img {
-	filter: brightness(1.2) blur(0.5px);
+.theme_sel_popup .theme:hover .icon {
+	filter: brightness(1.1) blur(0.5px);
+}
+.theme_sel_popup .theme:hover .banner {
+	object-position: center -15px;
+	opacity: 0.5;
 }
 
-html.dark .theme {
-	background-color: #2c2c2c;
-	border-color: #373546;
-	background-blend-mode: color;
+html.dark .theme_sel_popup .row {
+	border-color: hsl(250deg 11% 20.5%);
 }
-html.dark .theme:hover {
+html.dark .theme_sel_popup .theme {
+	background-color: hsl(250deg 11% 17%);
+	border-color: hsl(250deg 11% 23%);
+}
+html.dark .theme_sel_popup .theme .banner {
+	opacity: 0.03;
+}
+html.dark .theme_sel_popup .theme:hover {
 	background-color: #5d4354;
 	border-color: #6b3f56;
 	color: #ffd2e3;
-	background-blend-mode: overlay;
+}
+html.dark .theme_sel_popup .theme:hover .banner {
+	opacity: 0.48;
 }
 
 @media (max-width: 700px) {
@@ -66,18 +91,19 @@ html.dark .theme:hover {
 		min-width: 310px;
 		width: 80%;
 	}
-	.theme {
+	.theme_sel_popup .theme {
 		font-size: 16px;
 		width: calc(100% - 8px);
+		height: 58px;
 	}
-	.theme img {
+	.theme_sel_popup .theme .icon {
 		width: 50px;
 		height: 50px;
 	}
 }
 
 @media (min-width: 1270px) {
-	.theme {
+	.theme_sel_popup .theme {
 		width: calc(33% - 8px);
 	}
 }
@@ -86,10 +112,13 @@ html.dark .theme:hover {
 	.popup_container.theme_sel_popup .popup {
 		max-width: 1200px;
 	}
-	.theme {
+	.theme_sel_popup .theme {
 		font-size: 22px;
-		padding: 10px 16px;
 		width: calc(33% - 8px);
+		height: 88px;
+	}
+	.theme_sel_popup .theme .icon {
+		margin: 0 12px 0 16px;
 	}
 }
 
@@ -108,16 +137,16 @@ html.dark .theme:hover {
 import Button from "./controls/Button.vue";
 import { onMounted, ref } from "vue";
 import Popup from "./Popup.vue";
-import { Theme, useThemeList } from "../controllers/themelist";
+import { Theme, useSortedList } from "../controllers/themelist";
 
 const props = defineProps<{
 	ccFilter?: boolean,
 	headingFor: string,
 }>();
-const themeList = ref<Theme[]>([]);
+const themeList = ref<Theme[][]>([]);
 
 onMounted(async () => {
-	themeList.value = await useThemeList(props.ccFilter);
+	themeList.value = await useSortedList(props.ccFilter);
 });
 </script>
 
@@ -126,12 +155,16 @@ onMounted(async () => {
 		<Popup class="theme_sel_popup hidden">
 			<template #small-heading>{{ props.headingFor }}</template>
 			<template #large-heading>Select a theme</template>
-	
-			<div v-for="theme in themeList" class="theme" :style="{
-				backgroundImage: `url('/img/themes/banners/${theme.id}.webp')`
-			}" :data-id="theme.id" @click="$emit('themeClicked', theme)">
-				<img :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
-				{{ theme.name }}
+
+			<div class="row" v-for="column in themeList">
+				<div v-for="theme in column"
+					class="theme"
+					:data-id="theme.id"
+					@click="$emit('themeClicked', theme)">
+					<img class="banner" :src="`/img/themes/banners/${theme.id}.webp`" alt=""/>
+					<img class="icon" :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
+					{{ theme.name }}
+				</div>
 			</div>
 			
 			<template #foot>
