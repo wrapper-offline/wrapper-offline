@@ -14,13 +14,18 @@
 import Button from "../controls/Button.vue";
 import CCObject from "../CCObject.vue";
 import Popup from "../Popup.vue";
-import { useTemplateRef } from "vue";
+import { onMounted, onUnmounted, useTemplateRef } from "vue";
+
+type CCObjectType = InstanceType<typeof CCObject>;
 
 const emit = defineEmits<{
 	charSaved: [string],
-	exit: [],
+	userClose: [],
 }>();
-type CCObjectType = InstanceType<typeof CCObject>;
+const { show = true } = defineProps<{
+	show?: boolean
+}>();
+
 const ccObject = useTemplateRef<CCObjectType>("cc-object");
 
 /**
@@ -28,7 +33,7 @@ const ccObject = useTemplateRef<CCObjectType>("cc-object");
  */
 function exit() {
 	ccObject.value.reset();
-	emit("exit");
+	emit("userClose");
 }
 
 /**
@@ -58,9 +63,24 @@ function copyCharacter(themeId:string, assetId:string) {
 	ccObject.value.copyCharacter(themeId, assetId);
 }
 
-const { show = true } = defineProps<{
-	show?: boolean
-}>();
+/**
+ * called on keypress, checks for escape
+ * emits close event
+ * @param e keyboard event
+ */
+function escPress(e:KeyboardEvent) {
+	if (e.key != "Escape") {
+		return;
+	}
+	exit();
+}
+
+onMounted(() => {
+	document.addEventListener("keydown", escPress);
+});
+onUnmounted(() => {
+	document.removeEventListener("keydown", escPress);
+});
 
 defineExpose({ displayBrowser, copyCharacter });
 </script>

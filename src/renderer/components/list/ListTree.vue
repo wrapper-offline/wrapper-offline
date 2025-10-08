@@ -317,7 +317,7 @@ import type {
 import FolderIcon from "../icons/FolderIcon.vue";
 import GenericEntryOptions from "./options/GenericEntryOptions.vue";
 import GenericListRow from "./GenericListRow.vue";
-import { inject, provide, ref, toValue, useTemplateRef, watch } from "vue";
+import { inject, onMounted, onUnmounted, provide, ref, toValue, useTemplateRef, watch } from "vue";
 import locale from "../../locale/en_US";
 import { useRoute, useRouter } from "vue-router";
 import { search, view } from "../../controllers/listRefs";
@@ -533,12 +533,26 @@ function entry_shiftClick(id:string) {
 	const indicies = [
 		listRows.value.findIndex(e => e.id == anchoredId),
 		listRows.value.findIndex(e => e.id == id)
-	].sort();
+	].sort((a, b) => a - b);
 	for (let i = indicies[0]; i <= indicies[1]; i++) {
 		const id = listRows.value[i].id;
 		if (id == anchoredId) continue;
 		selection.value.entries.push(id);
 	}
+	syncSelectAllBox();
+}
+
+/**
+ * called on keydown, checks for ctrl a
+ * selects all
+ * @param e keyboard event
+ */
+function ctrlADown(e:KeyboardEvent) {
+	if (!e.ctrlKey || e.key != "a") {
+		return;
+	}
+	selection.value.entries = listRows.value.map(e => e.id);
+	selection.value.anchor = 0;
 	syncSelectAllBox();
 }
 
@@ -551,6 +565,13 @@ watch(search, (newSearch:string) => {
 	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
 });
 
+onMounted(() => {
+	document.addEventListener("keydown", ctrlADown);
+});
+onUnmounted(() => {
+	document.removeEventListener("keydown", ctrlADown);
+});
+
 provide(genericColumnIdKey<ListEntry>(), columnIds);
 
 defineExpose({ resetSelection });
@@ -558,11 +579,11 @@ defineExpose({ resetSelection });
 </script>
 
 <template>
-	<div @click.self="resetSelection" :class="{
+	<div :class="{
 		list_tree_container: true,
 		multiselect: selection.entries.length > 1,
 		select_mode: selection.entries.length > 0
-	}">
+	}" @click.self="resetSelection">
 		<div class="select_mode_options">
 			<div class="side_padding">
 				<input

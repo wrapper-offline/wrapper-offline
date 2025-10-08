@@ -20,12 +20,12 @@ import {
 	toAttrString
 } from "../../controllers/AppInit";
 import Button from "../controls/Button.vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import Popup from "../Popup.vue";
-import { onMounted, ref } from "vue";
 
 const emit = defineEmits<{
-	exitClicked: [],
 	saveVideo: [],
+	userClose: [],
 }>();
 const { show = true } = defineProps<{
 	show?: boolean
@@ -50,15 +50,6 @@ let params:Params = {
 const showObject = ref(false);
 const swfUrl = swfUrlBase + "/player.swf";
 
-onMounted(() => {
-	//@ts-ignore
-	window.retrievePreviewPlayerData = function () {
-		const movieXml = globalXml.slice();
-		globalXml = "";
-		return movieXml;
-	}
-});
-
 /**
  * initializes the player object
  * @param movieXml movie xml
@@ -73,12 +64,40 @@ function displayPlayer(movieXml:string, startFrame:number) {
 
 function exitButton_click() {
 	showObject.value = false;
-	emit("exitClicked");
+	emit("userClose");
 }
+
 function saveButton_click() {
 	exitButton_click();
 	emit("saveVideo");
 }
+
+/**
+ * called on keypress, checks for escape
+ * emits close event
+ * @param e keyboard event
+ */
+function escPress(e:KeyboardEvent) {
+	if (e.key != "Escape") {
+		return;
+	}
+	emit("userClose");
+}
+
+onMounted(() => {
+	document.addEventListener("keydown", escPress);
+	//@ts-ignore
+	window.retrievePreviewPlayerData = function () {
+		const movieXml = globalXml.slice();
+		globalXml = "";
+		return movieXml;
+	}
+});
+onUnmounted(() => {
+	document.removeEventListener("keydown", escPress);
+	//@ts-ignore
+	delete window.retrievePreviewPlayerData;
+});
 
 defineExpose({ displayPlayer });
 

@@ -4,7 +4,7 @@
 	width: 100%;
 	height: 100%;
 }
-#studio_object {
+#player_object {
 	display: block;
 	margin: auto;
 	width: 100%;
@@ -17,7 +17,7 @@ previewer is open
 #full_page_container.popup_mode {
 	background: radial-gradient(#333, #111);
 }
-#full_page_container.popup_mode #studio_object {
+#full_page_container.popup_mode #player_object {
 	height: 1px;
 }
 </style>
@@ -31,18 +31,9 @@ import {
 	swfUrlBase,
 	toAttrString
 } from "../controllers/AppInit";
-import { onMounted, ref, useTemplateRef } from "vue";
+import { ref } from "vue";
 import SettingsController from "../controllers/SettingsController";
 import { useRoute } from "vue-router";
-
-const studio = useTemplateRef<HTMLObjectElement>("studio-object");
-
-onMounted(() => {
-	
-});
-
-const showObject = ref(false);
-let swfUrl:string;
 
 let params:Params = {
 	flashvars: {
@@ -67,6 +58,8 @@ let params:Params = {
 	allowScriptAccess: "always",
 	allowFullScreen: "true",
 };
+const showObject = ref(false);
+let swfUrl:string;
 
 /**
  * called when a theme has been selected by the user
@@ -86,7 +79,7 @@ displayPlayer(movieId);
 
 <template>
 	<div id="full_page_container">
-		<object v-if="showObject" id="studio_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
+		<object v-if="showObject" id="player_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
 			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 		</object>
 	</div>

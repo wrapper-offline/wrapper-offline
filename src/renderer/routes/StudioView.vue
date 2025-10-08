@@ -23,6 +23,7 @@ previewer is open
 	background: var(--popup-gradient-bg);
 }
 #full_page_container.popup_mode #studio_object {
+	margin: 0;
 	height: 1px;
 }
 </style>
@@ -39,16 +40,12 @@ import {
 import AssetImporter from "../components/studio/importer/AssetImporter.vue";
 import type { AssetStatus } from "../components/studio/importer/ImporterFile.vue";
 import CCModal from "../components/studio/CCModal.vue";
-import { onMounted, ref, toValue, useTemplateRef } from "vue";
+import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from "vue";
 import MoviePreviewModal from "../components/studio/MoviePreviewModal.vue";
 import SettingsController from "../controllers/SettingsController";
+import StudioObject from "../interfaces/StudioObject";
 import ThemeSelector from "../components/ThemeSelector.vue";
 import { useRoute, useRouter } from "vue-router";
-
-
-/*
-==== BEGIN STUDIO CALLBACKS ====
-*/
 
 type CCModalType = InstanceType<typeof CCModal>;
 type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
@@ -56,10 +53,36 @@ type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
 const ccModal = useTemplateRef<CCModalType>("ccModal");
 const previewModal = useTemplateRef<MoviePreviewModalType>("previewModal");
 const router = useRouter();
-const studio = useTemplateRef<HTMLObjectElement>("studio-object");
+const studio = useTemplateRef<StudioObject>("studio-object");
 const showCCModal = ref(false);
 const showImporter = ref(false);
 const showPreviewer = ref(false);
+/** show studio object */
+const showObject = ref(false);
+/** show theme selector */
+const showSelector = ref(false);
+let swfUrl:string;
+
+let params:Params = {
+	flashvars: {
+		appCode: "go",
+		collab: "0",
+		ctc: "go",
+		goteam_draft_only: "1",
+		isLogin: "Y",
+		isWide: SettingsController.get("isWide") ? "1" : "0",
+		lid: "0",
+		page: "",
+		retut: "1",
+		siteId: "go",
+		tlang: "en_US",
+		ut: "60",
+		apiserver: apiServer + "/",
+		storePath: staticServer + staticPaths.storeUrl + "/<store>",
+		clientThemePath: staticServer + staticPaths.clientUrl + "/<client_theme>"
+	},
+	allowScriptAccess: "always"
+};
 
 /* cc callbacks */
 
@@ -67,7 +90,6 @@ function exitCCModal() {
 	showCCModal.value = false;
 }
 function charSaved(id:string) {
-	//@ts-ignore
 	studio.value.loadCharacterById(id);
 }
 
@@ -75,6 +97,7 @@ function charSaved(id:string) {
 
 function exitImporter() {
 	showImporter.value = false;
+	studio.value.importerStatus("clear");
 }
 
 /**
@@ -84,13 +107,14 @@ function exitImporter() {
 function onImportStatusUpdate(status:AssetStatus) {
 	switch (status) {
 		case "uploading": {
-			// @ts-ignore
 			studio.value.importerStatus("processing");
 			break;
 		}
-		case "error":
+		case "error": {
+			studio.value.importerStatus("clear");
+			break;
+		}
 		case "finished": {
-			// @ts-ignore
 			studio.value.importerStatus("done");
 		}
 	}
@@ -104,7 +128,6 @@ function onImporterUploadSuccess(
 	assetId: string,
 	lvmObject: Record<string, string>
 ) {
-	// @ts-ignore
 	studio.value.importerUploadComplete(assetType, assetId, lvmObject);
 }
 
@@ -112,7 +135,6 @@ function onImporterUploadSuccess(
  * called when a user clicks the 'add to scene' button on an uploaded asset
  */
 function onImportAddToScene(assetType:string, assetId:string) {
-	// @ts-ignore
 	studio.value.importerAddAsset(assetType, assetId);
 }
 
@@ -122,8 +144,19 @@ function exitPreviewer() {
 	showPreviewer.value = false;
 }
 function showSavePopup() {
-	//@ts-ignore
 	studio.value.onExternalPreviewPlayerPublish();
+}
+
+/**
+ * called when a theme has been selected by the user
+ * @param themeId theme id
+ */
+function themeSelected(themeId:string) {
+	swfUrl = swfUrlBase + "/go_full.swf";
+	params.flashvars.tray = themeId;
+	params.movie = swfUrl;
+	showSelector.value = false;
+	showObject.value = true;
 }
 
 onMounted(() => {
@@ -174,48 +207,22 @@ onMounted(() => {
 		}
 	};
 });
-
-/*
-==== END STUDIO CALLBACKS ====
-*/
-
-
-const showObject = ref(false);
-const showSelector = ref(false);
-let swfUrl:string;
-
-let params:Params = {
-	flashvars: {
-		appCode: "go",
-		collab: "0",
-		ctc: "go",
-		goteam_draft_only: "1",
-		isLogin: "Y",
-		isWide: SettingsController.get("isWide") ? "1" : "0",
-		lid: "0",
-		page: "",
-		retut: "1",
-		siteId: "go",
-		tlang: "en_US",
-		ut: "60",
-		apiserver: apiServer + "/",
-		storePath: staticServer + staticPaths.storeUrl + "/<store>",
-		clientThemePath: staticServer + staticPaths.clientUrl + "/<client_theme>"
-	},
-	allowScriptAccess: "always"
-};
-
-/**
- * called when a theme has been selected by the user
- * @param themeId theme id
- */
-function themeSelected(themeId:string) {
-	swfUrl = swfUrlBase + "/go_full.swf";
-	params.flashvars.tray = themeId;
-	params.movie = swfUrl;
-	showSelector.value = false;
-	showObject.value = true;
-}
+onUnmounted(() => {
+	// @ts-ignore
+	delete window.studioLoaded;
+	//@ts-ignore
+	delete window.interactiveTutorial;
+	//@ts-ignore
+	delete window.quitStudio;
+	//@ts-ignore
+	delete window.initPreviewPlayer;
+	//@ts-ignore
+	delete window.createCharacter;
+	//@ts-ignore
+	delete window.copyCharacter;
+	//@ts-ignore
+	delete window.showImporter;
+});
 
 /* get flashvars */
 const route = useRoute();
@@ -247,7 +254,7 @@ if (movieId) {
 				<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 			</object>
 		</main>
-		<CCModal :show="showCCModal == true" ref="ccModal" @exit="exitCCModal" @char-saved="charSaved"/>
-		<MoviePreviewModal :show="showPreviewer == true" ref="previewModal" @exit-clicked="exitPreviewer" @save-video="showSavePopup"/>
+		<CCModal :show="showCCModal == true" ref="ccModal" @char-saved="charSaved" @user-close="exitCCModal"/>
+		<MoviePreviewModal :show="showPreviewer == true" ref="previewModal" @save-video="showSavePopup" @user-close="exitPreviewer"/>
 	</div>
 </template>

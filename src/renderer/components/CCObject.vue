@@ -7,7 +7,7 @@ import {
 	swfUrlBase,
 	toAttrString
 } from "../controllers/AppInit";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const emit = defineEmits<{
 	/** emitted when the object switches to the cc */
@@ -63,6 +63,18 @@ onMounted(() => {
 		}, 55);
 	};
 });
+onUnmounted(() => {
+	//@ts-ignore
+	delete window.typeSelected;
+	//@ts-ignore
+	delete window.copyClicked;
+	//@ts-ignore
+	delete window.characterSaved;
+});
+
+function fileDropped(e:DragEvent) {
+	console.log(e)
+}
 
 /**
  * shows the cc browser
@@ -121,7 +133,14 @@ defineExpose({ displayBrowser, createCharacter, copyCharacter, reset });
 </script>
 
 <template>
-	<object v-if="showObject" id="cc_object" :src="swfUrl" type="application/x-shockwave-flash" width="980" height="600">
+	<object v-if="showObject"
+		id="cc_object"
+		:src="swfUrl"
+		type="application/x-shockwave-flash"
+		width="980"
+		height="600">
+		<!-- @dragover.prevent.stop=""
+		@drop.prevent.stop="fileDropped"> -->
 		<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 	</object>
 </template>
