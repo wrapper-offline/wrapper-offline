@@ -1,7 +1,7 @@
 <style lang="css">
 .popup_container {
 	background: #0e0e109d;
-	animation: 0.15s popup_container_fade forwards ease-out;
+	animation: 0.1s popup_container_fade forwards ease-out;
 	z-index: 9;
 	display: flex;
 	position: absolute;
@@ -14,7 +14,7 @@
 .popup {
 	border-radius: 3px;
 	box-shadow: 0 2px 5px #0004;
-	animation: 0.125s popup_flyDown forwards var(--slide-anim);
+	animation: 0.145s popup_flyDown forwards cubic-bezier(0, 1.1, 0.4, 0.96);
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -107,7 +107,7 @@ popup animations
 **/
 @keyframes popup_container_fade {
 	0% {
-		opacity: 0.3;
+		opacity: 0.5;
 	}
 	100% {
 		opacity: 1;
@@ -115,7 +115,7 @@ popup animations
 }
 @keyframes popup_flyDown {
 	0% {
-		transform: scale(0.8) translateY(-200px);
+		transform: scale(0.85) translateY(-150px);
 	}
 	100% {
 		transform: none;

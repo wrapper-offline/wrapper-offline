@@ -40,7 +40,11 @@ html.dark .tab_selector .tab_col {
 import AppSetting from "./AppSetting.vue";
 import Button from "../controls/Button.vue";
 import Popup from "../Popup.vue";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
+
+const emit = defineEmits<{
+	userClose: []
+}>();
 
 const tabs = [
 	{
@@ -58,9 +62,32 @@ const tabs = [
 ];
 const selectedTab = ref(tabs[0].id);
 
+/**
+ * called on tab click
+ * @param id tab id
+ */
 function switchTab(id:string) {
 	selectedTab.value = id;
 }
+
+/**
+ * called on keypress, checks for escape
+ * emits close event
+ * @param e keyboard event
+ */
+function escPress(e:KeyboardEvent) {
+	if (e.key != "Escape") {
+		return;
+	}
+	emit("userClose");
+}
+
+onMounted(() => {
+	document.addEventListener("keydown", escPress);
+});
+onUnmounted(() => {
+	document.removeEventListener("keydown", escPress);
+});
 </script>
 
 <template>
@@ -127,7 +154,7 @@ function switchTab(id:string) {
 			</div>
 			
 			<template #foot>
-				<Button primary @click="$emit('closeClick')">Close</Button>
+				<Button primary @click="$emit('userClose')">Close</Button>
 			</template>
 		</Popup>
 	</div>

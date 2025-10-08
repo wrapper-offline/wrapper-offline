@@ -29,6 +29,14 @@ body.col_resize {
 	height: 100%;
 }
 
+a {
+	color: #338cec;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: initial;
+}
+
 html.dark {
 	--popup-gradient-bg: radial-gradient(#1e1d25, #0e0d11);
 }

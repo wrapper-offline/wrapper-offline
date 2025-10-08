@@ -1,6 +1,6 @@
 <style lang="css" scoped>
 .app_sidebar {
-	background: #313145;
+	background: hsl(240deg 17% 23%);
 	z-index: 8;
 	user-select: none;
 	display: flex;
@@ -12,22 +12,22 @@
 logo container
 **/
 .app_sidebar #logo_container {
-	background: #1c1c27;
+	background: hsl(240deg 17% 13%);
 	border-bottom: 1px solid #3d3d57;
 	padding: 4px 8px;
 	transform: translateX(0);
 	height: 50px;
 }
-.app_sidebar #logo_container .toggle_btn {
+.app_sidebar #logo_container .logo_btn {
 	border-radius: 3px;
 	transition: 0.2s var(--button-anim);
 	cursor: pointer;
 	width: 100%;
 	height: 100%;
 }
-.app_sidebar #logo_container .toggle_btn:hover {
+.app_sidebar #logo_container .logo_btn:hover {
 	transition: none;
-	background: #2f2a3c;
+	background: hsl(240deg 16% 18%);
 }
 .app_sidebar #logo_container #logo_icon {
 	transition: 0.205s var(--slide-anim);
@@ -123,19 +123,11 @@ links
 }
 /* states */
 .app_sidebar .link:hover {
-	background: hsl(240 17% 28% / 1);
+	background: hsl(240 17% 29% / 1);
 	transition: none;
 }
 .app_sidebar .link:hover::after {
-	background: linear-gradient(90deg, #0000 0, hsl(240 17% 28% / 1) 10px);
-}
-.app_sidebar .link.sel {
-	background: #ffdbe8;
-	border-color: #e686a9;
-	color: #d60955;
-}
-.app_sidebar .link.sel i {
-	animation: 0.2s iconBounce cubic-bezier(0, 0.8, 0.45, 1.35);
+	background: linear-gradient(90deg, #0000 0, hsl(240 17% 29% / 1) 10px);
 }
 
 
@@ -241,15 +233,21 @@ html.dark .app_sidebar #logo_container {
 	background: hsl(250 10% 9% / 1);
 	border-color: hsl(250 10% 22% / 1);
 }
-html.dark .app_sidebar #logo_container .toggle_btn:hover {
+html.dark .app_sidebar #logo_container .logo_btn:hover {
 	background: #1b1924;
 }
-/* groups */
+/* sections */
 html.dark .app_sidebar>ul:first-of-type {
-	border-color: #343242;
+	border-color: hsl(250deg 14% 23%);
 }
 html.dark .app_sidebar>ul:last-of-type {
-	border-color: #343242;
+	border-color: hsl(250deg 14% 23%);
+}
+/* grouped links */
+html.dark  .app_sidebar .group>ul>.divider {
+	background: hsl(250deg 14% 23%);
+	margin: 7px 0 5px;
+	width: 1px;
 }
 /* links */
 html.dark .app_sidebar .link>a {
@@ -269,11 +267,6 @@ html.dark .app_sidebar .link:hover {
 }
 html.dark .app_sidebar .link:hover::after {
 	background: linear-gradient(90deg, #0000 0, hsl(250 10% 18% / 1) 10px);
-}
-html.dark .app_sidebar .link.sel {
-	background: #3c2234;
-	border-color: #732a46;
-	color: #fff;
 }
 /* create button */
 html.dark .app_sidebar .link.create {
@@ -318,6 +311,12 @@ collapsed
 .app_sidebar.collapsed .group>ul>.link {
 	width: 100%;
 }
+.app_sidebar.collapsed .link>a {
+	padding: 5px 12.5px;
+}
+.app_sidebar.collapsed .link>button {
+	padding: 8px 12.5px;
+}
 .app_sidebar.collapsed .link::after {
 	content: none;
 }
@@ -356,22 +355,6 @@ cc + small window
 	position: relative;
 	transform: translateX(v-bind("-slideMode.margin + 'px'"))
 }
-
-/**
-animations
-**/
-@keyframes iconBounce {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(0.4);
-	}
-	100% {
-		transform: scale(1);
-	}
-}
-
 </style>
 
 <script setup lang="ts">
@@ -384,13 +367,12 @@ import { ref, toValue } from "vue";
 import SettingsModal from "./settings/SettingsModal.vue";
 import { wrapperVer } from "../controllers/AppInit";
 
+const displayAppInfo = ref(false);
+const displaySettings = ref(false);
 const inResize = ref(false);
 const collapsed = ref(false);
 const logoCollapsed = ref(false);
 const width = ref(250);
-
-const displaySettings = ref(false);
-const displayAppInfo = ref(false);
 
 /**
  * sets the sidebar width
@@ -433,18 +415,6 @@ onBeforeRouteLeave((to, from) => {
 	}
 });
 
-function openInfo() {
-
-}
-
-function onLinkClick(e:MouseEvent) {
-	// console.log(e.currentTarget)
-}
-
-function pin() {
-
-}
-
 /**
  * called when the user clicks on the size dragger,
  * listens for mousemove and mouseup events
@@ -464,6 +434,16 @@ function draggerDown(e:MouseEvent) {
 		inResize.value = false;
 		document.body.classList.remove("col_resize");
 	});
+}
+
+/**
+ * called when the logo button is clicked, opens app info
+ */
+function openAppInfo() {
+	displayAppInfo.value = true;
+}
+function closeAppInfo() {
+	displayAppInfo.value = false;
 }
 
 /**
@@ -490,7 +470,7 @@ defineExpose({ slideMode, width });
 		width: width + 'px'
 	}">
 		<div id="logo_container" :style="{width:width + 'px'}">
-			<div class="toggle_btn" @click="openInfo" title="About Wrapper: Offline">
+			<div class="logo_btn" @click="openAppInfo" title="About Wrapper: Offline">
 				<img id="logo_icon" src="/img/logo_icon.svg" alt="Candy"/>
 				<img id="logo_wordmark" src="/img/logo_wordmark.svg" alt="Wrapper: Offline"/>
 			</div>
@@ -512,25 +492,25 @@ defineExpose({ slideMode, width });
 			</Dropdown>
 			<div class="spacer"></div>
 			<li class="link">
-				<RouterLink to="/characters" @click="onLinkClick">
+				<RouterLink to="/characters">
 					<i class="ico person"></i>
 					<div class="link_text">Characters</div>
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/movies" @click="onLinkClick">
+				<RouterLink to="/movies">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/starters" @click="onLinkClick">
+				<RouterLink to="/starters">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
 				</RouterLink>
 			</li>
 			<li class="link">
-				<RouterLink to="/assets" @click="onLinkClick">
+				<RouterLink to="/assets">
 					<i class="ico cloud"></i>
 					<div class="link_text">Your Library</div>
 				</RouterLink>
@@ -538,12 +518,6 @@ defineExpose({ slideMode, width });
 		</ul>
 		<ul class="user_custom">
 			<h3>Recent</h3>
-			<!-- <li class="link pin_btn" data-toggle @click="pin">
-				<button>
-					<i class="ico arr_r"></i>
-					<div class="link_text">Pin current page</div>
-				</button>
-			</li> -->
 		</ul>
 		<ul>
 			<li class="group">
@@ -569,13 +543,14 @@ defineExpose({ slideMode, width });
 					<div class="link_text">Settings</div>
 				</button>
 			</li>
-			<span id="wrapper_ver">2.1.0</span>
+			<span id="wrapper_ver">{{ wrapperVer }}</span>
 		</ul>
 		<div
 			v-if="!slideMode.enabled"
 			class="dragger"
 			:style="{left: width - 3 + 'px'}"
 			@mousedown="draggerDown"></div>
-		<SettingsModal v-if="displaySettings" @close-click="closeSettings"/>
+		<SettingsModal v-if="displaySettings" @user-close="closeSettings"/>
+		<AppInfoModal v-if="displayAppInfo" @user-close="closeAppInfo"/>
 	</div>
 </template>
