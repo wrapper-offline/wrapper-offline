@@ -79,7 +79,7 @@ displayPlayer(movieId);
 
 <template>
 	<div id="full_page_container">
-		<object v-if="showObject" id="player_object" :src="swfUrl" type="application/x-shockwave-flash" ref="studio-object">
+		<object v-if="showObject" id="player_object" :src="swfUrl" type="application/x-shockwave-flash" ref="player-object">
 			<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
 		</object>
 	</div>

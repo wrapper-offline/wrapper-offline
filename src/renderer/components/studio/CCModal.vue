@@ -94,7 +94,7 @@ defineExpose({ displayBrowser, copyCharacter });
 				<Button primary @click="exit">Exit</Button>
 			</template>
 	
-			<CCObject ref="cc-object" @char-saved="charSaved"/>
+			<CCObject ref="cc-object" :strict-theme-upload="true" @char-saved="charSaved"/>
 		</Popup>
 	</div>
 </template>

@@ -18,6 +18,7 @@ import CCObject from "../components/CCObject.vue";
 import Navbar, { NavbarEntry } from "../components/Navbar.vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { onMounted, Ref, ref, useTemplateRef } from "vue";
+import TempStorage from "../controllers/TempStorage";
 import ThemeSelector from "../components/ThemeSelector.vue";
 import { useThemeList } from "../controllers/themelist";
 
@@ -27,14 +28,13 @@ const baseNavbarEntry = {
 	path: "/characters",
 	title: "Characters"
 };
-
 const navbarEntries:Ref<NavbarEntry[]> = ref([]);
+let themeId = "";
 const route = useRoute();
 const router = useRouter();
+const ccObject = useTemplateRef<CCObjectType>("cc-object");
 const showObject = ref(false);
 const showSelector = ref(false);
-let themeId = "";
-const ccObject = useTemplateRef<CCObjectType>("cc-object");
 
 /**
  * initializes cc object
@@ -44,6 +44,11 @@ function initObject(id:string) {
 	themeId = id;
 	showSelector.value = false;
 	showObject.value = true;
+	const xml = TempStorage.retrieve("charXmlData") as string | void;
+	if (typeof xml != "undefined") {
+		ccObject.value.uploadCharacter(themeId, xml);
+		return;
+	}
 	ccObject.value.displayBrowser(themeId);
 }
 
@@ -58,7 +63,7 @@ function ccEntered() {
  * called when a character is saved, returns to browser
  */
 function charSaved() {
-	popNavbar();
+	populateNavbar();
 	ccObject.value.displayBrowser(themeId);
 }
 
@@ -67,7 +72,7 @@ function charSaved() {
  */
 function themeIdCheck() {
 	if (themeId.length > 0) {
-		popNavbar();
+		populateNavbar();
 		initObject(themeId);
 	} else {
 		showSelector.value = true;
@@ -78,7 +83,7 @@ function themeIdCheck() {
 /**
  * populates the navbar with the base link and theme chars link
  */
-async function popNavbar() {
+async function populateNavbar() {
 	const themeList = await useThemeList();
 	const theme = themeList.find(t => t.cc_theme_id == themeId);
 	navbarEntries.value = [

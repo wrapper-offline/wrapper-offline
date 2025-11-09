@@ -7,6 +7,6 @@ const props = defineProps<{
 </script>
 
 <template>
-	<div class="list_entry_options">
+	<div class="list_row_options">
 	</div>
 </template>

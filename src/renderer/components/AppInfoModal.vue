@@ -67,8 +67,8 @@ onUnmounted(() => {
 					<h1>Wrapper: Offline</h1>
 					<h3>Version {{ wrapperVer }}</h3>
 
-					<p>Most of Wrapper: Offline is distributed under the MIT license<br/>
-						barring a few exceptions, such as FFmpeg and the video editor.</p>
+					<p>All original code written for Wrapper: Offline is<br/>
+						distributed under the MIT license.</p>
 					
 					<div class="links">
 						<a href="javascript:window.appWindow.openDiscord();">Discord</a>

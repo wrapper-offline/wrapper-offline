@@ -10,7 +10,7 @@ import ListTree from "../components/list/ListTree.vue";
 import Navbar from "../components/Navbar.vue";
 import type { NavbarEntry } from "../components/Navbar.vue";
 import type { Movie } from "../interfaces/Movie";
-import MovieEntryOptions from "../components/list/options/MovieEntryOptions.vue";
+import MovieRowOptions from "../components/list/options/MovieRowOptions.vue";
 import MovieListRow from "../components/list/MovieListRow.vue";
 import {
 	onMounted,
@@ -20,8 +20,8 @@ import {
 	useTemplateRef,
 	watch
 } from "vue";
+import { pendingRefresh, zoomLevel } from "../controllers/listRefs";
 import { useRoute } from "vue-router";
-import { zoomLevel } from "../controllers/listRefs";
 import { zoomLevelKey } from "../keys/listTreeKeys";
 import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
 
@@ -246,6 +246,7 @@ async function loadMovieList() {
 	}, 80);
 }
 
+watch(() => pendingRefresh.value, routeUpdated);
 watch(() => route.path, routeUpdated);
 onMounted(async () => {
 	routeUpdated();
@@ -275,8 +276,8 @@ provide(zoomLevelKey, zoomLevel);
 				}"
 				ref="list-tree"
 				:data="movieList"
-				:entry-component="MovieListRow"
-				:entry-options-component="MovieEntryOptions"
+				:row-component="MovieListRow"
+				:row-options-component="MovieRowOptions"
 				:columns="columns"
 				:selected-sort="selectedSort"
 				@column-resize="columnResized"

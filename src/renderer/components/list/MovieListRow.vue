@@ -11,7 +11,8 @@ import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import { inject } from "vue";
 import LocalSettings from "../../controllers/LocalSettings";
 import type { Movie } from "../../interfaces/Movie";
-import MovieEntryOptions from "./options/MovieEntryOptions.vue";
+import MovieRowOptions from "./options/MovieRowOptions.vue";
+import openPlayerWindow from "../../utils/openPlayerWindow";
 import { useRouter } from "vue-router";
 
 const emit = defineEmits<{
@@ -56,7 +57,7 @@ function entryElem_dblClick() {
 			break;
 		}
 		case "play": {
-			openPlayWindow();
+			openPlayerWindow(props.entry.id);
 			break;
 		}
 		case "none":
@@ -72,19 +73,6 @@ function entryElem_dblClick() {
  */
 function entryElem_shiftClick() {
 	emit("entryShiftClick");
-}
-
-/**
- * opens a video player window
- */
-function openPlayWindow() {
-	const width = screen.width > 1280 ? 1280 : 560;
-	const height = screen.height > 720 ? 720 : 315;
-	window.open(
-		`?redirect=/movies/play/${props.entry.id}`,
-		"MsgWindow",
-		`width=${width},height=${height},left=${screen.width / 2 - 640},top=${screen.height / 2 - 360}`
-	);
 }
 
 /**
@@ -128,7 +116,7 @@ function movieInfo(field:FieldIdOf<T>): string {
 			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
 		</td>
 		<td class="actions hidden" @click.stop>
-			<MovieEntryOptions :entry="entry" @play-click="openPlayWindow"/>
+			<MovieRowOptions :entry="entry" @play-click="openPlayerWindow(entry.id)"/>
 		</td>
 	</tr>
 </template>

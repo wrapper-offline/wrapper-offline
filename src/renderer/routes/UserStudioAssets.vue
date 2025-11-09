@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { apiServer } from "../controllers/AppInit";
 import type { Asset } from "../interfaces/Asset";
-import AssetEntryOptions from "../components/list/options/AssetEntryOptions.vue";
+import AssetRowOptions from "../components/list/options/AssetRowOptions.vue";
 import AssetListRow from "../components/list/AssetListRow.vue";
 import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
 import { flattenAssetType } from "../utils/flattenAssetType";
@@ -188,8 +188,8 @@ provide(zoomLevelKey, zoomLevel);
 				}"
 				ref="base-tree"
 				:data="{ folders:[], entries:assetList }"
-				:entry-component="AssetListRow"
-				:entry-options-component="AssetEntryOptions"
+				:row-component="AssetListRow"
+				:row-options-component="AssetRowOptions"
 				:columns="columns"
 				:selected-sort="selectedSort"
 				:restrictions="{

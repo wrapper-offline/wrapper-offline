@@ -2,10 +2,12 @@ class LocalSettings {
 	private static _instance:LocalSettings;
 	private settings:{
 		DARK_MODE: boolean,
-		ON_MOVIE_DCLICK: "edit" | "play" | "none"
+		ON_MOVIE_DCLICK: "edit" | "play" | "none",
+		ON_MOVIE_UPLOAD: "edit" | "play" | "none"
 	} = {
 		DARK_MODE: false,
-		ON_MOVIE_DCLICK: "play"
+		ON_MOVIE_DCLICK: "play",
+		ON_MOVIE_UPLOAD: "edit"
 	};
 
 	constructor() {
@@ -47,6 +49,14 @@ class LocalSettings {
 	set onMovieDclick(newValue) {
 		this.settings["ON_MOVIE_DCLICK"] = newValue;
 		this.saveSetting("ON_MOVIE_DCLICK");
+	}
+
+	get onMovieUpload() {
+		return this.settings["ON_MOVIE_UPLOAD"];
+	}
+	set onMovieUpload(newValue) {
+		this.settings["ON_MOVIE_UPLOAD"] = newValue;
+		this.saveSetting("ON_MOVIE_UPLOAD");
 	}
 }
 export default LocalSettings.instance;

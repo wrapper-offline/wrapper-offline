@@ -1,8 +1,8 @@
-.list_entry_options .option {
+.list_row_options .option {
 	color: hsl(0 0% 100% / 1);
 	opacity: 0.8;
 	margin-right: 8px;
 }
-.list_entry_options .option:hover {
+.list_row_options .option:hover {
 	opacity: 1;
 }

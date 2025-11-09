@@ -223,6 +223,10 @@ pinned links
 	text-align: center;
 }
 
+.app_sidebar input {
+	display: none;
+}
+
 /***
 dark mode recoloring
 ***/
@@ -358,20 +362,34 @@ cc + small window
 </style>
 
 <script setup lang="ts">
+import { apiServer } from "../controllers/AppInit";
 import AppInfoModal from "./AppInfoModal.vue";
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
-import { onBeforeRouteLeave } from "vue-router";
-import { ref, toValue } from "vue";
+import extractCharThemeId from "../utils/extractCharThemeId";
+import LocalSettings from "../controllers/LocalSettings";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { pendingRefresh } from "../controllers/listRefs";
+import { ref, toValue, useTemplateRef } from "vue";
 import SettingsModal from "./settings/SettingsModal.vue";
+import TempStorage from "../controllers/TempStorage";
 import { wrapperVer } from "../controllers/AppInit";
+import openPlayerWindow from "../utils/openPlayerWindow";
 
+const router = useRouter();
+const charInput = useTemplateRef("char-input");
+const movieInput = useTemplateRef("movie-input");
+const collapsed = ref(false);
 const displayAppInfo = ref(false);
 const displaySettings = ref(false);
 const inResize = ref(false);
-const collapsed = ref(false);
 const logoCollapsed = ref(false);
+const movieUploadType = ref("starter")
+const slideMode = ref({
+	margin: 0,
+	enabled: false,
+});
 const width = ref(250);
 
 /**
@@ -395,25 +413,94 @@ function setWidth(newWidth:number) {
 /*
 set a minimum page width for cc paths
 */
-const slideMode = ref({
-	margin: 0,
-	enabled: false,
-});
 function watchWidth() {
-	slideMode.value.margin = Math.min(0, -toValue(width) + Math.max(56, document.body.clientWidth - 1000));
-	// slideMode.value.enabled = toValue(slideMode).margin != 0;
+	slideMode.value.margin = Math.min(
+		0,
+		-toValue(width) + Math.max(
+			56,
+			document.body.clientWidth - 1000
+		)
+	);
 }
-onBeforeRouteLeave((to, from) => {
-	if (to.path.startsWith("/character") && !from.path.startsWith("/character")) {
-		window.addEventListener("resize", watchWidth);
-		watchWidth();
-		slideMode.value.enabled = true;
-	} else if (from.path.startsWith("/character") && !to.path.startsWith("/character")) {
-		window.removeEventListener("resize", watchWidth);
-		slideMode.value.margin = 0;
-		slideMode.value.enabled = false;
+
+/**
+ * called when a character xml has been selected
+ * @param e input event
+ */
+async function charInput_input(e:InputEvent) {
+	const target = e.currentTarget as HTMLInputElement;
+	const xmlData = await target.files[0].text();
+	TempStorage.store("charXmlData", xmlData);
+	const themeId = extractCharThemeId(xmlData);
+	router.push("/characters/" + themeId);
+}
+
+/**
+ * called when a movie zip has been selected
+ * @param e input event
+ */
+async function movieInput_input(e:InputEvent) {
+	const target = e.currentTarget as HTMLInputElement;
+	const zipFile = target.files[0];
+	const isStarter = movieUploadType.value == "starter";
+	const body = new FormData();
+	body.append("import", zipFile);
+	if (isStarter) {
+		body.append("is_starter", "");
 	}
-});
+	const res = await fetch(apiServer + "/api/movie/upload", {
+		method: "POST",
+		body
+	});
+	const json = await res.json();
+	switch (LocalSettings.onMovieUpload) {
+		case "edit":
+			router.push("/movies/edit/" + json.id);
+			break;
+		case "play":
+			openPlayerWindow(json.id);
+			break;
+		case "none":
+		default:
+			pendingRefresh.set(true);
+	}
+}
+
+/**
+ * called when movie upload button is clicked
+ */
+function movieUpload_click() {
+	movieUploadType.value = "movie";
+	movieInput.value.click();
+}
+
+/**
+ * called when starter upload button is clicked
+ */
+function starterUpload_click() {
+	movieUploadType.value = "starter";
+	movieInput.value.click();
+}
+
+/**
+ * called when the logo button is clicked, opens app info
+ */
+function openAppInfo() {
+	displayAppInfo.value = true;
+}
+function closeAppInfo() {
+	displayAppInfo.value = false;
+}
+
+/**
+ * called when the settings button is clicked, opens settings menu
+ */
+function openSettings() {
+	displaySettings.value = true;
+}
+function closeSettings() {
+	displaySettings.value = false;
+}
 
 /**
  * called when the user clicks on the size dragger,
@@ -436,25 +523,17 @@ function draggerDown(e:MouseEvent) {
 	});
 }
 
-/**
- * called when the logo button is clicked, opens app info
- */
-function openAppInfo() {
-	displayAppInfo.value = true;
-}
-function closeAppInfo() {
-	displayAppInfo.value = false;
-}
-
-/**
- * called when the settings button is clicked, opens settings menu
- */
-function openSettings() {
-	displaySettings.value = true;
-}
-function closeSettings() {
-	displaySettings.value = false;
-}
+onBeforeRouteLeave((to, from) => {
+	if (to.path.startsWith("/character") && !from.path.startsWith("/character")) {
+		window.addEventListener("resize", watchWidth);
+		watchWidth();
+		slideMode.value.enabled = true;
+	} else if (from.path.startsWith("/character") && !to.path.startsWith("/character")) {
+		window.removeEventListener("resize", watchWidth);
+		slideMode.value.margin = 0;
+		slideMode.value.enabled = false;
+	}
+});
 
 defineExpose({ slideMode, width });
 </script>
@@ -486,9 +565,10 @@ defineExpose({ slideMode, width });
 					</li>
 				</template>
 				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
-				<DropdownSeparator></DropdownSeparator>
-				<DropdownItem>Upload a video</DropdownItem>
-				<DropdownItem>Upload a character</DropdownItem>
+				<DropdownSeparator/>
+				<DropdownItem @click="charInput.click()">Upload a character</DropdownItem>
+				<DropdownItem @click="movieUpload_click()">Upload a video</DropdownItem>
+				<DropdownItem @click="starterUpload_click()">Upload a starter</DropdownItem>
 			</Dropdown>
 			<div class="spacer"></div>
 			<li class="link">
@@ -552,5 +632,7 @@ defineExpose({ slideMode, width });
 			@mousedown="draggerDown"></div>
 		<SettingsModal v-if="displaySettings" @user-close="closeSettings"/>
 		<AppInfoModal v-if="displayAppInfo" @user-close="closeAppInfo"/>
+		<input type="file" ref="char-input" accept=".xml" @input="charInput_input"/>
+		<input type="file" ref="movie-input" accept=".zip" @input="movieInput_input"/>
 	</div>
 </template>

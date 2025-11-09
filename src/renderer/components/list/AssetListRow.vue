@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends Asset">
 import type { Asset } from "../../interfaces/Asset";
-import AssetEntryOptions from "./options/AssetEntryOptions.vue";
+import AssetEntryOptions from "./options/AssetRowOptions.vue";
 import AssetImage from "../AssetImage.vue";
 import AssetInfoModal from "../AssetInfoModal.vue";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";

@@ -1,4 +1,4 @@
-<style src="./list_entry_options.css"></style>
+<style src="./list_row_options.css"></style>
 
 <script setup lang="ts" generic="T extends Movie">
 import type { Movie } from "../../../interfaces/Movie";
@@ -18,7 +18,7 @@ function playButton_click() {
 </script>
 
 <template>
-	<div class="list_entry_options">
+	<div class="list_row_options">
 		<a
 			v-show="isSingular"
 			class="option"

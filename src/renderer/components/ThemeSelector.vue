@@ -57,6 +57,7 @@ theme
 	border-color: hsl(338deg 55% 77%);
 	color: #fff;
 	text-shadow: 0 0 10px #000;
+	transition: none;
 	cursor: pointer;
 }
 .theme_sel_popup .theme:hover .icon {
@@ -72,7 +73,7 @@ html.dark .theme_sel_popup .row {
 }
 html.dark .theme_sel_popup .theme {
 	background-color: hsl(250deg 11% 17%);
-	border-color: hsl(250deg 11% 23%);
+	border-color: hsl(250deg 11% 24%);
 }
 html.dark .theme_sel_popup .theme .banner {
 	opacity: 0.03;
@@ -138,6 +139,10 @@ import Button from "./controls/Button.vue";
 import { onMounted, ref } from "vue";
 import Popup from "./Popup.vue";
 import { Theme, useSortedList } from "../controllers/themelist";
+
+defineEmits<{
+	themeClicked: [Theme]
+}>();
 
 const props = defineProps<{
 	ccFilter?: boolean,

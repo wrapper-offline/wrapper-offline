@@ -111,6 +111,14 @@ onUnmounted(() => {
 						<template #title>When double clicking a video...</template>
 					</AppSetting>
 
+					<AppSetting id="onMovieUpload" :options="{
+						play: 'Open video player',
+						edit: 'Open video editor',
+						none: 'Do nothing',
+					}" local>
+						<template #title>After uploading a video...</template>
+					</AppSetting>
+
 					<AppSetting id="hideNavbar" binary>
 						<template #title>Auto-hide navbar</template>
 						<template #description><i>You must restart the program for this change to take effect.</i></template>

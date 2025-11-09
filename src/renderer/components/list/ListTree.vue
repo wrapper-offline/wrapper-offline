@@ -306,7 +306,8 @@ html.dark div.movie:hover {
 </style>
 
 <script setup lang="ts" generic="ListEntry extends GenericListEntry,
-	ListRow extends (typeof GenericListRow<ListEntry>)">
+	ListRow extends (typeof GenericListRow<ListEntry>),
+	RowOptions extends (typeof GenericRowOptions<ListEntry>)">
 import { genericColumnIdKey, zoomLevelKey } from "../../keys/listTreeKeys";
 import type {
 	FieldIdOf,
@@ -315,8 +316,8 @@ import type {
 	SelectedListSort
 } from "../../interfaces/ListTypes";
 import FolderIcon from "../icons/FolderIcon.vue";
-import GenericEntryOptions from "./options/GenericEntryOptions.vue";
 import GenericListRow from "./GenericListRow.vue";
+import GenericRowOptions from "./options/GenericRowOptions.vue";
 import { inject, onMounted, onUnmounted, provide, ref, toValue, useTemplateRef, watch } from "vue";
 import locale from "../../locale/en_US";
 import { useRoute, useRouter } from "vue-router";
@@ -351,9 +352,9 @@ const props = defineProps<{
 		mode?: "list" | "grid",
 	},
 	/** row component to use when displaying entries */
-	entryComponent: ListRow,
-	/** component to use for entry options */
-	entryOptionsComponent: typeof GenericEntryOptions,
+	rowComponent: ListRow,
+	/** component to use for row options */
+	rowOptionsComponent: RowOptions,
 }>();
 const modeRestriction = props?.restrictions?.mode ?? false;
 const route = useRoute();
@@ -594,7 +595,7 @@ defineExpose({ resetSelection });
 					@input="selectAll_click"/>
 			</div>
 			{{ selection.entries.length }} selected
-			<entryOptionsComponent :entry="selection.entries"/>
+			<rowOptionsComponent :entry="selection.entries"/>
 		</div>
 		<table class="list_tree">
 			<thead class="list_head">
@@ -641,7 +642,7 @@ defineExpose({ resetSelection });
 				</template>
 				<!-- list entries -->
 				<template v-for="entry in data.entries">
-					<entryComponent
+					<rowComponent
 						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
 						ref="list-row"
 						:checked="selection.entries.includes(entry.id)"
