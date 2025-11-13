@@ -1,5 +1,4 @@
 <style lang="css">
-@import "https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap";
 @import "/node_modules/modern-normalize/modern-normalize.css";
 @import "/css/icons.css";
 
@@ -44,6 +43,28 @@ html.dark {
 html.dark, html.dark>body {
 	background: #000;
 	color: hsl(0deg 0% 82%);
+}
+
+@font-face {
+	font-family: "Lato";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(/fonts/latonormal400.woff2) format("woff2");
+}
+@font-face {
+	font-family: "Lato";
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url(/fonts/latonormal700.woff2) format("woff2");
+}
+@font-face {
+	font-family: "Lato";
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src: url(/fonts/latoitalic400.woff2) format("woff2");
 }
 </style>
 
