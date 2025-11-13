@@ -3,9 +3,9 @@
 .list_tree_container {
 	background: repeating-linear-gradient(
 		#0000 0,
-		#0000 v-bind("zoomLevel"),
-		hsl(257deg 14% 96.5%) v-bind("zoomLevel"),
-		hsl(257deg 14% 96.5%) calc(v-bind("zoomLevel") * 2)
+		#0000 v-bind("zoomLevel.css()"),
+		hsl(257deg 14% 96.5%) v-bind("zoomLevel.css()"),
+		hsl(257deg 14% 96.5%) calc(v-bind("zoomLevel.css()") * 2)
 	) 0 36px;
 	overflow-x: auto;
 	min-height: 100%;
@@ -145,7 +145,7 @@ movie row
 **/
 table.list_tree tbody tr {
 	align-items: center;
-	height: v-bind("zoomLevel");
+	height: v-bind("zoomLevel.css()");
 }
 table.list_tree tbody tr td {
 	line-height: 20px;
@@ -165,8 +165,8 @@ table.list_tree tbody tr td.title {
 table.list_tree tbody tr td.title img {
 	display: block;
 	margin-right: 7px;
-	width: calc(v-bind("zoomLevel") - 20px);
-	height: calc(v-bind("zoomLevel") - 20px);
+	width: calc(v-bind("zoomLevel.css()") - 20px);
+	height: calc(v-bind("zoomLevel.css()") - 20px);
 }
 /* title text */
 table.list_tree tbody tr td.title span {
@@ -195,11 +195,11 @@ table.list_tree tbody tr.checked td.hidden {
 
 tr.folder td.title .folder_icon {
 	margin-right: 7px;
-	min-width: calc(calc(calc(v-bind("zoomLevel") - 20px) / 9) * 16);
-	height: calc(v-bind("zoomLevel") - 20px);
+	min-width: calc(calc(calc(v-bind("zoomLevel.css()") - 20px) / 9) * 16);
+	height: calc(v-bind("zoomLevel.css()") - 20px);
 }
 div.folder .thumbnail_container img {
-	height: calc(calc(calc(calc(calc(4 * v-bind("zoomLevel")) - 14px) / 16) * 9) - 1px);
+	height: calc(calc(calc(calc(calc(4 * v-bind("zoomLevel.css()")) - 14px) / 16) * 9) - 1px);
 }
 
 
@@ -215,7 +215,7 @@ div.movie {
 	flex-direction: column;
 	margin: 0 5px 10px;
 	padding: 6px 7px;
-	width: calc(4 * v-bind("zoomLevel"));
+	width: calc(4 * v-bind("zoomLevel.css()"));
 }
 div.movie .thumbnail_container img {
 	pointer-events: none;
@@ -238,7 +238,7 @@ div.movie .title {
 	white-space: nowrap;
 	display: block;
 	margin-bottom: 2px;
-	width: calc(calc(4 * v-bind("zoomLevel")) - 14px);
+	width: calc(calc(4 * v-bind("zoomLevel.css()")) - 14px);
 }
 div.movie .modified {
 	font-size: 13px;
@@ -267,9 +267,9 @@ dark mode reskinning
 html.dark .list_tree_container {
 	background: repeating-linear-gradient(
 		#0000 0,
-		#0000 v-bind("zoomLevel"),
-		hsl(250 8% 17.5% / 1) v-bind("zoomLevel"),
-		hsl(250 8% 17.5% / 1) calc(v-bind("zoomLevel") * 2)
+		#0000 v-bind("zoomLevel.css()"),
+		hsl(250 8% 17.5% / 1) v-bind("zoomLevel.css()"),
+		hsl(250 8% 17.5% / 1) calc(v-bind("zoomLevel.css()") * 2)
 	) 0 36px;
 }
 html.dark .select_mode_options {
@@ -308,7 +308,7 @@ html.dark div.movie:hover {
 <script setup lang="ts" generic="ListEntry extends GenericListEntry,
 	ListRow extends (typeof GenericListRow<ListEntry>),
 	RowOptions extends (typeof GenericRowOptions<ListEntry>)">
-import { genericColumnIdKey, zoomLevelKey } from "../../keys/listTreeKeys";
+import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import type {
 	FieldIdOf,
 	GenericListEntry,
@@ -318,10 +318,10 @@ import type {
 import FolderIcon from "../icons/FolderIcon.vue";
 import GenericListRow from "./GenericListRow.vue";
 import GenericRowOptions from "./options/GenericRowOptions.vue";
-import { inject, onMounted, onUnmounted, provide, ref, toValue, useTemplateRef, watch } from "vue";
 import locale from "../../locale/en_US";
+import { onMounted, onUnmounted, provide, ref, toValue, useTemplateRef, watch } from "vue";
+import useListStore from "../../composables/useListStore";
 import { useRoute, useRouter } from "vue-router";
-import { search, view } from "../../controllers/listRefs";
 
 interface Folder {
 	id: string,
@@ -359,6 +359,7 @@ const props = defineProps<{
 const modeRestriction = props?.restrictions?.mode ?? false;
 const route = useRoute();
 const router = useRouter();
+const { search, viewMode, zoomLevel } = useListStore();
 
 const columnIds = props.columns.map((v) => v.id);
 const selectAllBox = useTemplateRef("select-all-box")
@@ -379,9 +380,7 @@ const filteredEntryIds:{
 };
 const listRows = useTemplateRef("list-row");
 /** current view mode */
-const mode = modeRestriction ? modeRestriction : view;
-/** size of list rows */
-const zoomLevel = inject(zoomLevelKey, ref("15px"));
+const mode = modeRestriction ? modeRestriction : viewMode.value;
 
 /**
  * filters entries or folders by name
@@ -557,7 +556,9 @@ function ctrlADown(e:KeyboardEvent) {
 	syncSelectAllBox();
 }
 
-watch(search, (newSearch:string) => {
+provide(genericColumnIdKey<ListEntry>(), columnIds);
+
+watch(() => search.value, (newSearch:string) => {
 	// clear selection
 	resetSelection();
 	filteredEntryIds.entries = [];
@@ -565,15 +566,12 @@ watch(search, (newSearch:string) => {
 	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries));
 	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
 });
-
 onMounted(() => {
 	document.addEventListener("keydown", ctrlADown);
 });
 onUnmounted(() => {
 	document.removeEventListener("keydown", ctrlADown);
 });
-
-provide(genericColumnIdKey<ListEntry>(), columnIds);
 
 defineExpose({ resetSelection });
 
@@ -624,7 +622,7 @@ defineExpose({ resetSelection });
 			<tbody>
 				<template v-for="folder in data.folders">
 					<tr
-						v-if="search.length > 0 ? filteredEntryIds.folders.includes(folder.id) : true"
+						v-if="search.value.length > 0 ? filteredEntryIds.folders.includes(folder.id) : true"
 						class="entry folder"
 						@click="folder_click(folder.id)">
 						<td></td>
@@ -643,7 +641,7 @@ defineExpose({ resetSelection });
 				<!-- list entries -->
 				<template v-for="entry in data.entries">
 					<rowComponent
-						v-if="search.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
+						v-if="search.value.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
 						ref="list-row"
 						:checked="selection.entries.includes(entry.id)"
 						:entry="entry"

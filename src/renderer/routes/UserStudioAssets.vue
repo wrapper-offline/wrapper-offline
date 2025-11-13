@@ -5,7 +5,7 @@
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
+import { apiServer } from "../utils/AppInit";
 import type { Asset } from "../interfaces/Asset";
 import AssetRowOptions from "../components/list/options/AssetRowOptions.vue";
 import AssetListRow from "../components/list/AssetListRow.vue";
@@ -16,14 +16,11 @@ import Navbar from "../components/Navbar.vue";
 import type { NavbarEntry } from "../components/Navbar.vue";
 import {
 	onMounted,
-	provide,
 	ref,
 	toValue,
 	watch
 } from "vue";
 import { useRoute } from "vue-router";
-import { zoomLevel } from "../controllers/listRefs";
-import { zoomLevelKey } from "../keys/listTreeKeys";
 
 const route = useRoute();
 
@@ -167,7 +164,6 @@ onMounted(async () => {
 });
 
 initList();
-provide(zoomLevelKey, zoomLevel);
 
 </script>
 

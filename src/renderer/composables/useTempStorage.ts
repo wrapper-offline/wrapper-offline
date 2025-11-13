@@ -32,4 +32,7 @@ class TempStorage {
 		return value;
 	}
 }
-export default TempStorage.instance;
+
+export default function useTempStorage() {
+	return TempStorage.instance;
+};

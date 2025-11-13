@@ -111,7 +111,7 @@ enter animation
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../../../controllers/AppInit";
+import { apiServer } from "../../../utils/AppInit";
 import locale from "../../../locale/en_US";
 import { PendingFile } from "./AssetImporter.vue";
 import { Ref, ref, toValue, useTemplateRef, watch } from "vue";

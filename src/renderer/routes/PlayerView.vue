@@ -30,11 +30,12 @@ import {
 	staticServer,
 	swfUrlBase,
 	toAttrString
-} from "../controllers/AppInit";
+} from "../utils/AppInit";
 import { ref } from "vue";
-import SettingsController from "../controllers/SettingsController";
+import useAppSettings from "../composables/useAppSettings";
 import { useRoute } from "vue-router";
 
+const appSettings = useAppSettings();
 let params:Params = {
 	flashvars: {
 		appCode: "go",
@@ -43,7 +44,7 @@ let params:Params = {
 		ctc: "go",
 		goteam_draft_only: "1",
 		isLogin: "Y",
-		isWide: SettingsController.get("isWide") ? "1" : "0",
+		isWide: appSettings.get("isWide") ? "1" : "0",
 		lid: "0",
 		nextUrl: "/",
 		page: "",

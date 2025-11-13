@@ -18,23 +18,25 @@ import CCObject from "../components/CCObject.vue";
 import Navbar, { NavbarEntry } from "../components/Navbar.vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { onMounted, Ref, ref, useTemplateRef } from "vue";
-import TempStorage from "../controllers/TempStorage";
 import ThemeSelector from "../components/ThemeSelector.vue";
-import { useThemeList } from "../controllers/themelist";
+import useTempStorage from "../composables/useTempStorage";
+import { useThemeList } from "../composables/useThemeList";
 
 type CCObjectType = InstanceType<typeof CCObject>;
+
+const ccObject = useTemplateRef<CCObjectType>("cc-object");
+const navbarEntries:Ref<NavbarEntry[]> = ref([]);
+const route = useRoute();
+const router = useRouter();
+const tempStorage = useTempStorage();
 
 const baseNavbarEntry = {
 	path: "/characters",
 	title: "Characters"
 };
-const navbarEntries:Ref<NavbarEntry[]> = ref([]);
-let themeId = "";
-const route = useRoute();
-const router = useRouter();
-const ccObject = useTemplateRef<CCObjectType>("cc-object");
 const showObject = ref(false);
 const showSelector = ref(false);
+let themeId = "";
 
 /**
  * initializes cc object
@@ -44,7 +46,7 @@ function initObject(id:string) {
 	themeId = id;
 	showSelector.value = false;
 	showObject.value = true;
-	const xml = TempStorage.retrieve("charXmlData") as string | void;
+	const xml = tempStorage.retrieve("charXmlData") as string | void;
 	if (typeof xml != "undefined") {
 		ccObject.value.uploadCharacter(themeId, xml);
 		return;

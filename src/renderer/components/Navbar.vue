@@ -126,7 +126,7 @@ html.dark header .search_box:focus {
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import { useRouter } from "vue-router";
-import { searchInput, setView, setZoomLevel, view, zoomLevel } from "../controllers/listRefs";
+import useListStore from "../composables/useListStore";
 
 export interface NavbarEntry {
 	path: string,
@@ -155,6 +155,7 @@ defineProps<{
 }>();
 
 const router = useRouter();
+const { search, viewMode, zoomLevel } = useListStore();
 
 function backButtonClick() {
 	router.back();
@@ -165,7 +166,7 @@ function forwardButtonClick() {
 
 function onSearchInput(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
-	searchInput(target.value);
+	search.set(target.value);
 }
 
 /**
@@ -180,7 +181,7 @@ function newFolderClick() {
  * @param newView view to switch to
  */
 function changeView(newView:"grid"|"list") {
-	setView(newView);
+	viewMode.set(newView);
 }
 
 /**
@@ -189,7 +190,7 @@ function changeView(newView:"grid"|"list") {
 function zoomSliderMoved(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
 	const newVal = target.valueAsNumber;
-	setZoomLevel(newVal);
+	zoomLevel.set(newVal);
 }
 </script>
 
@@ -233,17 +234,17 @@ function zoomSliderMoved(e:InputEvent) {
 					</div>
 				</template>
 				<DropdownItem>
-					<input type="range" min="42" max="70" :value="zoomLevel.slice(0, -2)" @input="zoomSliderMoved"/>
+					<input type="range" min="42" max="70" :value="zoomLevel.get()" @input="zoomSliderMoved"/>
 				</DropdownItem>
 			</Dropdown>
 			<!-- view options -->
-			<div v-if="supported?.viewMode && view == 'list'"
+			<div v-if="supported?.viewMode && viewMode.value == 'list'"
 				class="nav_btn"
 				title="Grid view"
 				@click="() => changeView('grid')">
 				<i class="ico grid"></i>
 			</div>
-			<div v-if="supported?.viewMode && view == 'grid'"
+			<div v-if="supported?.viewMode && viewMode.value == 'grid'"
 				class="nav_btn"
 				title="List view"
 				@click="() => changeView('list')">

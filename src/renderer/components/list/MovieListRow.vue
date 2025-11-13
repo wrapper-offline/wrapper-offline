@@ -4,15 +4,15 @@ tr.movie td.title img {
 }
 </style>
 
-<script setup lang="ts" generic="T extends Movie">
-import { apiServer } from "../../controllers/AppInit";
+<script setup lang="ts" generic="MovieEntry extends Movie">
+import { apiServer } from "../../utils/AppInit";
 import type { FieldIdOf } from "../../interfaces/ListTypes";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
 import { inject } from "vue";
-import LocalSettings from "../../controllers/LocalSettings";
 import type { Movie } from "../../interfaces/Movie";
 import MovieRowOptions from "./options/MovieRowOptions.vue";
 import openPlayerWindow from "../../utils/openPlayerWindow";
+import useLocalSettings from "../../composables/useLocalSettings";
 import { useRouter } from "vue-router";
 
 const emit = defineEmits<{
@@ -24,11 +24,12 @@ const emit = defineEmits<{
 }>();
 const props = defineProps<{
 	checked: boolean,
-	entry: T
+	entry: MovieEntry
 }>();
 defineExpose({ id:props.entry.id });
 
-const columns = inject(genericColumnIdKey<T>(), []);
+const columns = inject(genericColumnIdKey<MovieEntry>(), []);
+const localSettings = useLocalSettings();
 const router = useRouter();
 
 /**
@@ -51,7 +52,7 @@ function entryElem_ctrlClick() {
  * does user action and emits event
  */
 function entryElem_dblClick() {
-	switch (LocalSettings.onMovieDclick) {
+	switch (localSettings.onMovieDclick) {
 		case "edit": {
 			router.push(`/movies/edit/${props.entry.id}`);
 			break;
@@ -79,7 +80,7 @@ function entryElem_shiftClick() {
  * returns a fixed date string for a movie
  * @param entry movie object
  */
-function movieInfo(field:FieldIdOf<T>): string {
+function movieInfo(field:FieldIdOf<MovieEntry>): string {
 	switch (field) {
 		case "date": {
 			const split = props.entry.date.split("T");
@@ -99,21 +100,18 @@ function movieInfo(field:FieldIdOf<T>): string {
 		@click.ctrl.exact="entryElem_ctrlClick"
 		@click.shift.exact="entryElem_shiftClick"
 		@click.exact="entryElem_click">
-		<!-- :class="{
-			movie: true,
-			sel: (selection['movie'] || []).includes(movie.id)
-		}"
+		<!-- 
 		draggable="true"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
 		<td class="hidden">
 			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
 		</td>
-		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
+		<td v-for="columnId in columns" :class="{ title:columnId == 'title' }">
 			<img
 				v-if="columnId == 'title'"
 				:src="`${apiServer}/file/movie/thumb/${movieInfo('id')}`"
 				alt="thumbnail"/>
-			<span :title="movieInfo(columnId)">{{ movieInfo(columnId) }}</span>
+			<span :title="movieInfo(columnId)" v-html="movieInfo(columnId)"></span>
 		</td>
 		<td class="actions hidden" @click.stop>
 			<MovieRowOptions :entry="entry" @play-click="openPlayerWindow(entry.id)"/>

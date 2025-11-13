@@ -49,7 +49,7 @@
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
+import { apiServer } from "../utils/AppInit";
 import { Asset } from "../interfaces/Asset";
 import AssetImage from "./AssetImage.vue";
 import Button from "./controls/Button.vue";

@@ -26,14 +26,16 @@ html.dark .page_contents {
 </style>
 
 <script setup lang="ts">
-import LocalSettings from "./controllers/LocalSettings";
 import Sidebar from "./components/Sidebar.vue";
+import useLocalSettings from "./composables/useLocalSettings";
 import { useTemplateRef } from "vue";
 
 type SidebarType = InstanceType<typeof Sidebar>;
+
+const localSettings = useLocalSettings();
 const sidebar = useTemplateRef<SidebarType>("sidebar");
 
-if (LocalSettings.darkMode == true) {
+if (localSettings.darkMode == true) {
 	document.documentElement.classList.add("dark");
 }
 </script>

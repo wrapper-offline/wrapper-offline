@@ -1,46 +1,45 @@
 <style lang="css">
 table.list_tree tbody tr.movie td.title img {
-	width: calc(calc(calc(v-bind("zoomLevel") - 20px) / 9) * 16);
+	width: calc(calc(calc(v-bind("zoomLevel + 'px'") - 20px) / 9) * 16);
 }
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
+import { apiServer } from "../utils/AppInit";
+import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
 import ListTree from "../components/list/ListTree.vue";
-import Navbar from "../components/Navbar.vue";
-import type { NavbarEntry } from "../components/Navbar.vue";
 import type { Movie } from "../interfaces/Movie";
 import MovieRowOptions from "../components/list/options/MovieRowOptions.vue";
 import MovieListRow from "../components/list/MovieListRow.vue";
+import Navbar from "../components/Navbar.vue";
+import type { NavbarEntry } from "../components/Navbar.vue";
 import {
 	onMounted,
-	provide,
 	ref,
 	toValue,
 	useTemplateRef,
 	watch
 } from "vue";
-import { pendingRefresh, zoomLevel } from "../controllers/listRefs";
+import useListStore from "../composables/useListStore";
 import { useRoute } from "vue-router";
-import { zoomLevelKey } from "../keys/listTreeKeys";
-import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
 
+const listTree = useTemplateRef("list-tree");
+const { pendingRefresh, zoomLevel } = useListStore();
 const route = useRoute();
-/** movie or starters page being used */
-let listPage:"movie"|"starter";
+
 /** id of the folder whose contents are currently being listed */
 const currentFolder = ref<string>();
-
-/** list of links to display in the navbar's address */
-const navbarEntries = ref<NavbarEntry[]>([]);
-const listTree = useTemplateRef("list-tree");
+/** is the movie list currently being loaded */
+const isLoading = ref(false);
+/** movie or starters page being used */
+let listPage:"movie"|"starter";
 /** list of movies and folders (if applicable) */
 const movieList = ref<{
 	folders: [],
 	entries: Movie[]
 }>();
-/** is the movie list currently being loaded */
-const isLoading = ref(false);
+/** list of links to display in the navbar's address */
+const navbarEntries = ref<NavbarEntry[]>([]);
 
 let columnWidths = JSON.parse(localStorage.getItem("movie_list-columnWidths")) ??
 	{ "title":250, "id":100, "duration":100, "date":180 };
@@ -253,7 +252,6 @@ onMounted(async () => {
 });
 
 initList();
-provide(zoomLevelKey, zoomLevel);
 
 </script>
 

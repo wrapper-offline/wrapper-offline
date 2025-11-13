@@ -1,17 +1,13 @@
-import { apiServer } from "./AppInit";
+import { apiServer } from "../utils/AppInit";
 
-class SettingsController {
-	private static _instance:SettingsController;
+class AppSettings {
+	private static _instance:AppSettings;
 	private settings:{};
 	private settingsLoaded:boolean = false;
 
-	constructor() {
-
-	}
-
 	static get instance() {
 		if (!this._instance) {
-			this._instance = new SettingsController();
+			this._instance = new AppSettings();
 		}
 		return this._instance;
 	}
@@ -43,4 +39,7 @@ class SettingsController {
 		return this.settings[id];
 	}
 }
-export default SettingsController.instance;
+
+export default function useAppSettings() {
+	return AppSettings.instance;
+};

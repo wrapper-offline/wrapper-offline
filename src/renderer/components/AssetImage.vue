@@ -33,7 +33,7 @@ img {
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
+import { apiServer } from "../utils/AppInit";
 import { Asset } from "../interfaces/Asset";
 import { ref, useTemplateRef } from "vue";
 

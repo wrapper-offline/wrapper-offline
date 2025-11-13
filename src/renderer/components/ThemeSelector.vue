@@ -138,7 +138,7 @@ html.dark .theme_sel_popup .theme:hover .banner {
 import Button from "./controls/Button.vue";
 import { onMounted, ref } from "vue";
 import Popup from "./Popup.vue";
-import { Theme, useSortedList } from "../controllers/themelist";
+import { Theme, useSortedList } from "../composables/useThemeList";
 
 defineEmits<{
 	themeClicked: [Theme]

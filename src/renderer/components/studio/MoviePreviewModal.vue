@@ -18,7 +18,7 @@ import {
 	staticServer,
 	swfUrlBase,
 	toAttrString
-} from "../../controllers/AppInit";
+} from "../../utils/AppInit";
 import Button from "../controls/Button.vue";
 import { onMounted, onUnmounted, ref } from "vue";
 import Popup from "../Popup.vue";

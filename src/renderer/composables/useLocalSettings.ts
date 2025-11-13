@@ -59,4 +59,7 @@ class LocalSettings {
 		this.saveSetting("ON_MOVIE_UPLOAD");
 	}
 }
-export default LocalSettings.instance;
+
+export default function useLocalSettings() {
+	return LocalSettings.instance;
+};

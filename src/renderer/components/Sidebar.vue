@@ -362,24 +362,28 @@ cc + small window
 </style>
 
 <script setup lang="ts">
-import { apiServer } from "../controllers/AppInit";
+import { apiServer } from "../utils/AppInit";
 import AppInfoModal from "./AppInfoModal.vue";
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import extractCharThemeId from "../utils/extractCharThemeId";
-import LocalSettings from "../controllers/LocalSettings";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { pendingRefresh } from "../controllers/listRefs";
+import openPlayerWindow from "../utils/openPlayerWindow";
 import { ref, toValue, useTemplateRef } from "vue";
 import SettingsModal from "./settings/SettingsModal.vue";
-import TempStorage from "../controllers/TempStorage";
-import { wrapperVer } from "../controllers/AppInit";
-import openPlayerWindow from "../utils/openPlayerWindow";
+import useListStore from "../composables/useListStore";
+import useLocalSettings from "../composables/useLocalSettings";
+import useTempStorage from "../composables/useTempStorage";
+import { wrapperVer } from "../utils/AppInit";
 
-const router = useRouter();
 const charInput = useTemplateRef("char-input");
 const movieInput = useTemplateRef("movie-input");
+const localSettings = useLocalSettings();
+const { pendingRefresh } = useListStore();
+const router = useRouter();
+const tempStorage = useTempStorage();
+
 const collapsed = ref(false);
 const displayAppInfo = ref(false);
 const displaySettings = ref(false);
@@ -430,7 +434,7 @@ function watchWidth() {
 async function charInput_input(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
 	const xmlData = await target.files[0].text();
-	TempStorage.store("charXmlData", xmlData);
+	tempStorage.store("charXmlData", xmlData);
 	const themeId = extractCharThemeId(xmlData);
 	router.push("/characters/" + themeId);
 }
@@ -453,7 +457,7 @@ async function movieInput_input(e:InputEvent) {
 		body
 	});
 	const json = await res.json();
-	switch (LocalSettings.onMovieUpload) {
+	switch (localSettings.onMovieUpload) {
 		case "edit":
 			router.push("/movies/edit/" + json.id);
 			break;

@@ -36,24 +36,26 @@ import {
 	staticServer,
 	swfUrlBase,
 	toAttrString
-} from "../controllers/AppInit";
+} from "../utils/AppInit";
 import AssetImporter from "../components/studio/importer/AssetImporter.vue";
 import type { AssetStatus } from "../components/studio/importer/ImporterFile.vue";
 import CCModal from "../components/studio/CCModal.vue";
 import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from "vue";
 import MoviePreviewModal from "../components/studio/MoviePreviewModal.vue";
-import SettingsController from "../controllers/SettingsController";
 import StudioObject from "../interfaces/StudioObject";
 import ThemeSelector from "../components/ThemeSelector.vue";
+import useAppSettings from "../composables/useAppSettings";
 import { useRoute, useRouter } from "vue-router";
 
 type CCModalType = InstanceType<typeof CCModal>;
 type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
 
+const appSettings = useAppSettings();
 const ccModal = useTemplateRef<CCModalType>("ccModal");
 const previewModal = useTemplateRef<MoviePreviewModalType>("previewModal");
 const router = useRouter();
 const studio = useTemplateRef<StudioObject>("studio-object");
+
 const showCCModal = ref(false);
 const showImporter = ref(false);
 const showPreviewer = ref(false);
@@ -70,7 +72,7 @@ let params:Params = {
 		ctc: "go",
 		goteam_draft_only: "1",
 		isLogin: "Y",
-		isWide: SettingsController.get("isWide") ? "1" : "0",
+		isWide: appSettings.get("isWide") ? "1" : "0",
 		lid: "0",
 		page: "",
 		retut: "1",

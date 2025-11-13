@@ -36,8 +36,8 @@ html.dark .app_setting p {
 
 <script setup lang="ts">
 import { ref, toValue } from "vue";
-import LocalSettings from "../../controllers/LocalSettings";
-import SettingsController from "../../controllers/SettingsController";
+import useAppSettings from "../../composables/useAppSettings";
+import useLocalSettings from "../../composables/useLocalSettings";
 
 const props = defineProps<{
 	id: string,
@@ -45,11 +45,15 @@ const props = defineProps<{
 	local?: boolean,
 	options?: Record<string, string>,
 }>();
+
+const appSettings = useAppSettings();
+const localSettings = useLocalSettings();
 const value = ref<boolean | string>();
+
 if (props.local) {
-	value.value = LocalSettings[props.id];
+	value.value = localSettings[props.id];
 } else {
-	value.value = SettingsController.get(props.id);
+	value.value = appSettings.get(props.id);
 }
 
 /**
@@ -84,9 +88,9 @@ function set(strValue:string) {
 				document.documentElement.classList.remove("dark");
 			}
 		}
-		LocalSettings[props.id] = value;
+		localSettings[props.id] = value;
 	} else {
-		SettingsController.set(props.id, value);
+		appSettings.set(props.id, value);
 	}
 }
 </script>

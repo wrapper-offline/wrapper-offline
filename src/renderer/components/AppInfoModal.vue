@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import Button from "./controls/Button.vue";
 import Popup from "./Popup.vue";
-import { wrapperVer } from "../controllers/AppInit";
+import { wrapperVer } from "../utils/AppInit";
 import { onMounted, onUnmounted } from "vue";
 
 const emit = defineEmits<{

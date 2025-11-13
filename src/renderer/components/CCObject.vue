@@ -6,7 +6,7 @@ import {
 	staticServer,
 	swfUrlBase,
 	toAttrString
-} from "../controllers/AppInit";
+} from "../utils/AppInit";
 import extractCharThemeId from "../utils/extractCharThemeId";
 import { onMounted, onUnmounted, ref } from "vue";
 
