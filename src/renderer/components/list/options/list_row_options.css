@@ -1,7 +1,7 @@
 .list_row_options .option {
 	color: hsl(0 0% 100% / 1);
 	opacity: 0.8;
-	margin-right: 8px;
+	margin-left: 8px;
 }
 .list_row_options .option:hover {
 	opacity: 1;

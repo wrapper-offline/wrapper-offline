@@ -16,7 +16,7 @@ import useLocalSettings from "../../composables/useLocalSettings";
 import { useRouter } from "vue-router";
 
 const emit = defineEmits<{
-	entryDelete: [string],
+	entryDelete: [],
 	entryClick: [],
 	entryCtrlClick: [],
 	entryDblClick: [],
@@ -77,6 +77,13 @@ function entryElem_shiftClick() {
 }
 
 /**
+ * called when the entry has been deleted
+ */
+function deleteBtn_click() {
+	emit("entryDelete");
+}
+
+/**
  * returns a fixed date string for a movie
  * @param entry movie object
  */
@@ -114,7 +121,7 @@ function movieInfo(field:FieldIdOf<MovieEntry>): string {
 			<span :title="movieInfo(columnId)" v-html="movieInfo(columnId)"></span>
 		</td>
 		<td class="actions hidden" @click.stop>
-			<MovieRowOptions :entry="entry" @play-click="openPlayerWindow(entry.id)"/>
+			<MovieRowOptions :entry="entry" @entry-delete="deleteBtn_click"/>
 		</td>
 	</tr>
 </template>

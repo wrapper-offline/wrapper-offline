@@ -38,6 +38,9 @@ select mode
 	margin-right: 6px;
 	padding: 1px 6px;
 }
+.list_tree_container.select_mode table.list_tree {
+	margin-top: 33px;
+}
 .list_tree_container.select_mode thead.list_head {
 	border: none;
 	visibility: hidden;
@@ -51,7 +54,9 @@ select mode
 	padding: 5px 0;
 	transition: transform 0.1s var(--slide-anim);
 	transform: none;
-	height: 33px;
+	position: absolute;
+	width: 100%;
+	height: 35px;
 }
 .list_tree_container.select_mode .select_mode_options::after {
 	content: "";
@@ -469,11 +474,13 @@ function folder_click(folderId:string) {
 
 /**
  * called when a movie is deleted, removes it from list
- * @param id movie id
+ * @param ids movie ids
  */
-function entry_delete(id:string) {
-	const index = props.data.entries.findIndex((v) => v.id == id);
-	props.data.entries.splice(index, 1);
+function entry_delete(ids:string[]) {
+	for (const id of ids) {
+		const index = props.data.entries.findIndex((v) => v.id == id);
+		props.data.entries.splice(index, 1);
+	}
 }
 
 /**
@@ -593,7 +600,7 @@ defineExpose({ resetSelection });
 					@input="selectAll_click"/>
 			</div>
 			{{ selection.entries.length }} selected
-			<rowOptionsComponent :entry="selection.entries"/>
+			<rowOptionsComponent :entry="selection.entries" @entry-delete="entry_delete"/>
 		</div>
 		<table class="list_tree">
 			<thead class="list_head">
@@ -645,7 +652,7 @@ defineExpose({ resetSelection });
 						ref="list-row"
 						:checked="selection.entries.includes(entry.id)"
 						:entry="entry"
-						@entry-delete="entry_delete"
+						@entry-delete="entry_delete([ entry.id ])"
 						@entry-click="entry_click(entry.id)"
 						@entry-ctrl-click="entry_ctrlClick(entry.id)"
 						@entry-dbl-click="entry_dblClick()"

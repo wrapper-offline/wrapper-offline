@@ -3,6 +3,7 @@ import httpz from "@octanuary/httpz";
 import Database from "../../storage/database.js";
 import MovieModel, { Movie } from "../models/movie.js";
 import nodezip from "node-zip";
+import fileUtil from "../utils/fileUtil.js";
 
 const group = new httpz.Group();
 
@@ -198,19 +199,29 @@ group.route("GET", "/api/movie/delete_folder", (req, res) => {
 /*
 delete
 */
-group.route("GET", /\/api\/movie\/delete\/([^/]+)$/, async (req, res) => {
-	const id = req.matches[1];
-	console.log(`${req.parsedUrl.pathname}: Deleting movie #${id}...`);
-	MovieModel.delete(id).then(() => {
-		console.log(`${req.parsedUrl.pathname}: Successfully deleted movie #${id}.`);
-		res.end();
-	}).catch((err) => {
-		if (err == "404") {
-			return res.status(404).json({ msg: "Movie doesn't exist." });
+group.route("POST", "/api/movie/delete", async (req, res) => {
+	const idField = req.body.id as string;
+	if (typeof idField == "undefined") {
+		return res.status(400).json({ msg:"Missing required parameters" });
+	}
+	const ids = idField.split(",");
+
+	for (const id of ids) {
+		try {
+			await MovieModel.delete(id);
+			res.log("Deleted movie #" + id);
+		} catch (err) {
+			if (err == "404") {
+				res.log(`Failed to delete movie #${id} -- Movie does not exist`);
+				res.log(`Skipping movie #${id}...`)
+			}
+			res.log(`Failed to delete movie #${id} -- ${err}`);
+			const remaining = ids.slice(id.indexOf(id));
+			res.log("Stopping movie deletion! Remaining: " + JSON.stringify(remaining));
+			return res.status(500).json({ msg:"Internal server error" });
 		}
-		console.error(req.parsedUrl.pathname, "failed. Error:", err);
-		res.status(500).json({ msg: "Internal server error." });
-	});
+	}
+	res.end()
 });
 
 /*
@@ -249,28 +260,40 @@ pack
 group.route(
 	"*",
 	/^\/file\/movie\/file\/([^/]+)|\/goapi\/getMovie\/$/,
-	(req, res) => {
+	async (req, res) => {
 		const isPost = req.method == "POST";
-		const id = req.body.movieId = isPost ?
+		const idField = isPost ?
 			req.query.movieId :
 			req.matches[1];
-		if (typeof id == "undefined") {
-			return res.status(400).end("ID not specified.");
+		if (typeof idField == "undefined") {
+			return res.status(400).end("ID not specified");
 		}
+		const ids = idField.split(",");
 
-		MovieModel.packMovie(id).then((zipped) => {
-			if (isPost) {
-				zipped = Buffer.concat([Buffer.alloc(1, 0), zipped]);
+		let zip = nodezip.create();
+		let zipBuf:Buffer;
+		for (const id of ids) {
+			try {
+				const zipped = await MovieModel.packMovie(id);
+				if (ids.length == 1) {
+					zipBuf = zipped;
+					break;
+				}
+				fileUtil.addToZip(zip, id + ".zip", zipped);
+			} catch (err) {
+				if (err == "404") {
+					return res.status(404).end("movie no existing !!");
+				}
+				res.log("Error packing movie #" + JSON.stringify(ids) + "\n" + err);
+				res.status(500).end("Internal server error");
 			}
-			res.setHeader("Content-Type", "application/zip");
-			res.end(zipped);
-		}).catch((err) => {
-			if (err == "404") {
-				return res.status(404).end("Movie doesn't exist.");
-			}
-			console.error("Controllers.movie#pack error:", err);
-			res.status(500).end("Internal server error.");
-		});
+		}
+		zipBuf = zipBuf || await zip.zip();
+		if (isPost) {
+			zipBuf = Buffer.concat([Buffer.alloc(1, 0), zipBuf]);
+		}
+		res.setHeader("Content-Type", "application/zip");
+		res.end(zipBuf);
 	}
 );
 
