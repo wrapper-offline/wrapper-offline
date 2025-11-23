@@ -16,6 +16,9 @@ i.ico.arr_r::before {
 i.ico.arr_reset::before {
 	content: '\E366';
 }
+i.ico.arr_swap::before {
+	content: '\E230';
+}
 i.ico.briefcase::before {
 	content: '\E358';
 }

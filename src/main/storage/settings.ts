@@ -10,6 +10,7 @@ class Settings {
 		IS_WIDE: "1",
 		SAVE_LOG_FILES: false,
 		HIDE_NAVBAR: true,
+		DEFAULT_WATERMARK: "none",
 	};
 	private static _instance:Settings;
 
@@ -78,6 +79,7 @@ class Settings {
 			isWide: this.isWide,
 			saveLogFiles: this.saveLogFiles,
 			hideNavbar: this.hideNavbar,
+			defaultWatermark: this.defaultWatermark
 		};
 	}
 
@@ -134,6 +136,17 @@ class Settings {
 	}
 	set hideNavbar(newValue:boolean) {
 		this.json["HIDE_NAVBAR"] = newValue;
+		this.save(this.json);
+	}
+
+	/**
+	 * watermark id to use when saving movies
+	 */
+	get defaultWatermark() {
+		return this.json["DEFAULT_WATERMARK"];
+	}
+	set defaultWatermark(newValue) {
+		this.json["DEFAULT_WATERMARK"] = newValue;
 		this.save(this.json);
 	}
 }

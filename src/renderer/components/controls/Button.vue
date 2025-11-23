@@ -13,6 +13,11 @@
 	padding: 4px 10px;
 	margin: 9px 5px;
 }
+.btn.ico {
+	border-radius: 100%;
+	font-weight: normal;
+	padding: 2px 6px 1px 7px;
+}
 .btn a {
 	color: #fff;
 	text-decoration: none;
@@ -35,12 +40,13 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-	primary?: boolean
+	primary?: boolean,
+	icon?: boolean
 }>();
 </script>
 
 <template>
-	<div class="btn" :class="{ primary: props.primary }">
+	<div class="btn" :class="{ primary: props.primary, ico:props.icon }">
 		<slot></slot>
 	</div>
 </template>

@@ -37,10 +37,11 @@ html.dark .tab_selector .tab_col {
 </style>
 
 <script setup lang="ts">
-import AppSetting from "./AppSetting.vue";
+import SettingToggle from "./SettingToggle.vue";
 import Button from "../controls/Button.vue";
 import Popup from "../Popup.vue";
 import { onMounted, onUnmounted, ref } from "vue";
+import WatermarkManager from "./WatermarkManager.vue";
 
 const emit = defineEmits<{
 	userClose: []
@@ -103,61 +104,61 @@ onUnmounted(() => {
 					</Button>
 				</div>
 				<div v-if="selectedTab == 'behavior'" class="tab">
-					<AppSetting id="onMovieDclick" :options="{
+					<SettingToggle id="onMovieDclick" :options="{
 						play: 'Open video player',
 						edit: 'Open video editor',
 						none: 'Do nothing',
 					}" local>
 						<template #title>When double clicking a video...</template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="onMovieUpload" :options="{
+					<SettingToggle id="onMovieUpload" :options="{
 						play: 'Open video player',
 						edit: 'Open video editor',
 						none: 'Do nothing',
 					}" local>
 						<template #title>After uploading a video...</template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="hideNavbar" binary>
+					<SettingToggle id="hideNavbar" binary>
 						<template #title>Auto-hide navbar</template>
 						<template #description><i>You must restart the program for this change to take effect.</i></template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="saveLogFiles" binary>
+					<SettingToggle id="saveLogFiles" binary>
 						<template #title>Save log files</template>
 						<template #description>Saves everything in the console to the _LOGS folder. This may take up a lot of space if left on.<br/>
 							<i>Applies on next restart.</i></template>
-					</AppSetting>
+					</SettingToggle>
 				</div>
 				<div v-if="selectedTab == 'appearance'" class="tab">
-					<AppSetting id="darkMode" binary local>
+					<SettingToggle id="darkMode" binary local>
 						<template #title>Dark mode</template>
 						<template #description><i>Does not apply in the video editor or the character creator.</i></template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="isWide" :options="{
+					<SettingToggle id="isWide" :options="{
 						false: '14:9',
 						true: '16:9'
 					}">
 						<template #title>Aspect ratio</template>
 						<template #description>This controls the aspect ratio videos are displayed in.</template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="showWaveforms" binary>
+					<SettingToggle id="showWaveforms" binary>
 						<template #title>Show waveforms</template>
 						<template #description>By default, waveforms for audio are generated in the video editor.<br/>
 							While useful, the editor freezes while it generates, which could be too annoying or slow for some.<br/>
 							Turning this off will simply add a repeating pre-made pattern in place of true waveforms.</template>
-					</AppSetting>
+					</SettingToggle>
 
-					<AppSetting id="truncatedThemeList" binary>
+					<SettingToggle id="truncatedThemeList" binary>
 						<template #title>Truncated themelist</template>
 						<template #description>Shows a limited selection of themes.</template>
-					</AppSetting>
+					</SettingToggle>
 				</div>
 				<div v-if="selectedTab == 'watermarks'" class="tab">
-					watermark manager here
+					<WatermarkManager/>
 				</div>
 			</div>
 			

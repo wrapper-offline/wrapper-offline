@@ -8,9 +8,11 @@
 		"webp"
 	],
 	"watermark": [
-		"swf",
-		"png",
+		"gif",
 		"jpg",
+		"png",
+		"swf",
+		"tif",
 		"webp"
 	],
 	"prop": [

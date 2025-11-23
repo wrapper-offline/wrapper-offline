@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 export default class WaveformModel {
-	static folder = Directories.asset;
+	static folder = Directories.cache;
 
 	/**
 	 * Looks for a match in the `Directories.saved` folder.

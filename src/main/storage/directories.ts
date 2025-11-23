@@ -8,9 +8,10 @@ class DirUtil {
 		const requiredPaths = [
 			this.userData,
 			this.asset,
+			this.cache,
+			this.export,
 			this.log,
 			this.saved,
-			this.export
 		];
 		for (const p of requiredPaths) {
 			if (!existsSync(p)) {
@@ -40,6 +41,10 @@ class DirUtil {
 
 	get asset() {
 		return join(this.userData, process.env.ASSET_FOLDER);
+	}
+
+	get cache() {
+		return join(this.userData, process.env.CACHE_FOLDER);
 	}
 
 	get export() {

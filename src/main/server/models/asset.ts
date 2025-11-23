@@ -20,12 +20,6 @@ type Background = {
 	title: string,
 	id: string,
 };
-type Watermark = {
-	type: "watermark",
-	subtype: "0",
-	title: string,
-	id: string,
-};
 type Prop = {
 	type: "prop",
 	subtype: "0",

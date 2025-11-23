@@ -1,4 +1,4 @@
-<style lang="css" scoped>
+<style lang="css">
 .app_setting {
 	border-bottom: 1px solid #bbb;
 	user-select: none;

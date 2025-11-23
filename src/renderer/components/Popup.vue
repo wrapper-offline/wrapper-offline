@@ -84,7 +84,7 @@
 }
 
 .popup .popup_foot {
-	background: #e2e1ea;
+	background: #dbd9e4;
 	/* border-top: 1px solid #c7c5d3; */
 	display: flex;
 	justify-content: flex-end;

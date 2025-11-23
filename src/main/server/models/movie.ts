@@ -3,6 +3,7 @@ import database, { DBJsonArrayKey, generateId } from "../../storage/database";
 import fs from "fs";
 import { join } from "path";
 import Parse from "../utils/movieParser.js";
+import Settings from "../../storage/settings";
 
 export type Movie = {
 	duration: string,
@@ -187,6 +188,9 @@ export default class MovieModel {
 					title: meta.title,
 					sceneCount: meta.sceneCount,
 				};
+				if (Settings.defaultWatermark != "none") {
+					info.watermark = Settings.defaultWatermark;
+				}
 				if (
 					// new starter
 					(newMovie && saveAsStarter) ||
@@ -207,6 +211,15 @@ export default class MovieModel {
 				res(id);
 			});
 		});
+	}
+
+	/**
+	 * assigns a watermark to a movie
+	 * @param mId movie id
+	 * @param wId watermark id
+	 */
+	static setWatermark(mId:string, wId?:string) {
+		return database.update("movies", mId, { watermark: wId });
 	}
 
 	/**

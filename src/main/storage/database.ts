@@ -4,6 +4,7 @@ import directories from "./directories";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import type { Movie } from "../../main/server/models/movie";
+import type { Watermark } from "../../main/server/models/watermark";
 
 export type Folder = {
 	id: string,
@@ -18,6 +19,7 @@ type DatabaseJson = {
 	assets: Asset[],
 	movies: Movie[],
 	movie_folders: Folder[],
+	watermarks: Watermark[],
 };
 
 type ArrayKey<T> = {
@@ -33,6 +35,7 @@ export class Database {
 		assets: [],
 		movies: [],
 		movie_folders: [],
+		watermarks: [],
 	};
 	private static _instance:Database;
 
@@ -57,9 +60,17 @@ export class Database {
 			this.json.version = "2.0.0";
 		}
 		if (this.json.version == "2.0.0") {
+			const oldVer = this.json.version;
 			this.json.version = "2.1.0";
 			this.json.movie_folders = [];
+			const watermarks = this.select("assets", {
+				type: "watermark"
+			});
+			this.json.watermarks = watermarks.map(w => ({
+				id: w.id
+			}));
 			this.save(this.json);
+			console.log(`Database upgraded from ${oldVer} to v2.1.0!`);
 		}
 		// just keep adding onto this as you change stuff
 	}
@@ -146,7 +157,7 @@ export class Database {
 	 */
 	insert<K extends DBJsonArrayKey>(into:K, data:DBJsonArrayProp<K>) {
 		this.refresh();
-		this.json[into].unshift(data as (Folder & Asset) & Movie);
+		this.json[into].unshift(data as Folder & Asset & Movie & Watermark);
 		this.save(this.json);
 	}
 
