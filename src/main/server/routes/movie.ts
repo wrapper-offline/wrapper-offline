@@ -305,8 +305,7 @@ group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], (req, res) =>
 		return res.status(400).end("Expected body_zip field");
 	}
 	const trigAutosave = req.body.is_triggered_by_autosave;
-	// make sure we're autosaving an existing movie
-	if (trigAutosave && !req.body.movieId) {
+	if (trigAutosave && !req.body.thumbnail_large) {
 		return res.end("0"); // lie
 	}
 	// check if there's a thumbnail in case this is a manual save

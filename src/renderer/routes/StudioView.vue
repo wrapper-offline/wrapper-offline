@@ -162,7 +162,7 @@ function themeSelected(themeId:string) {
 }
 
 onMounted(() => {
-	const tutorialReload = (new URLSearchParams(window.location.search)).get("tutorial");
+	let showTutorial = false;
 	// @ts-ignore
 	window.studioLoaded = function (arg) {
 		console.log(arg)
@@ -170,7 +170,7 @@ onMounted(() => {
 	//@ts-ignore
 	window.interactiveTutorial = {
 		neverDisplay: function() {
-			return tutorialReload ? false : true;
+			return !showTutorial;
 		}
 	};
 	//@ts-ignore
@@ -180,6 +180,14 @@ onMounted(() => {
 			router.push("/");
 		}
 	};
+	//@ts-ignore
+	window.restartTutorial = function () {
+		showTutorial = true;
+		showObject.value = false;
+		setTimeout(() => {
+			showObject.value = true;
+		}, 55);
+	}
 	//@ts-ignore
 	window.initPreviewPlayer = function (movieXml:string, startFrame:number) {
 		showPreviewer.value = true;
@@ -216,6 +224,8 @@ onUnmounted(() => {
 	delete window.interactiveTutorial;
 	//@ts-ignore
 	delete window.quitStudio;
+	//@ts-ignore
+	delete window.restartTutorial;
 	//@ts-ignore
 	delete window.initPreviewPlayer;
 	//@ts-ignore

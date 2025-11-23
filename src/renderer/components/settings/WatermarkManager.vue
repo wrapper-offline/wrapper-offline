@@ -26,7 +26,7 @@
 	font-size: 14px;
 	font-weight: bold;
 	margin: 0;
-	padding: 19px 0 0 5px;
+	padding: 20px 0 0 5px;
 }
 
 .wm_manager .watermark .thumbnail  {
@@ -248,10 +248,10 @@ onMounted(loadWatermarks);
 				checked: defaultWm == wm.id
 			}" @click="wm_click(wm.id)">
 				<div class="actions">
-					<Button icon primary @click.stop="wmReplace_click(wm.id)">
+					<Button icon primary @click.stop="wmReplace_click(wm.id)" title="Replace">
 						<i class="ico arr_swap"></i>
 					</Button>
-					<Button icon @click.stop="wmDelete_click(wm.id)">
+					<Button icon @click.stop="wmDelete_click(wm.id)" title="Delete">
 						<i class="ico trash"></i>
 					</Button>
 				</div>

@@ -12,6 +12,7 @@ import fileTypes from "../data/allowed_file_types.json";
 import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
+import MovieModel, { Starter } from "../models/movie";
 import mp3Duration from "mp3-duration";
 import path from "path";
 import { promisify } from "util";
@@ -27,19 +28,24 @@ delete
 */
 group.route("POST", "/api_v2/asset/delete/", (req, res) => {
 	const id = req.body.data.id || req.body.data.starter_id;
-	if (!id) {
-		return res.status(400).json({status:"error"});
+	if (typeof id == "undefined") {
+		return res.status(400).json({ status:"error" });
 	}
 
 	try {
-		AssetModel.delete(id);
-		res.json({status: "ok"});
+		const asset = AssetModel.getInfo(id) as Asset | Starter;
+		if (asset.type == "movie") {
+			MovieModel.delete(id);
+		} else {
+			AssetModel.delete(id);
+		}
+		res.json({ status:"ok" });
 	} catch (e) {
 		if (e == "404") {
-			return res.status(404).json({status: "error"});
+			return res.status(404).json({ status:"error" });
 		}
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status: "error"});
+		res.status(500).json({ status:"error" });
 	}
 });
 

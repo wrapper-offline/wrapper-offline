@@ -159,6 +159,7 @@ function filesAdded(e:InputEvent) {
 	for (let i = 0; i < fileUpload.files.length; i++) {
 		addFile(fileUpload.files[i]);
 	}
+	fileUpload.value = "";
 }
 
 /**
