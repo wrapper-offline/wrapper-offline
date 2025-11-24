@@ -4,6 +4,7 @@ header {
 	border-bottom: 1px solid hsl(240 12% 76% / 1);
 	border-radius: 10px 0 0;
 	display: flex;
+	flex-shrink: 0;
 	justify-content: space-between;
 	padding: 6.5px 8px;
 	height: 50px;

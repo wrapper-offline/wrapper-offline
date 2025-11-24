@@ -2,7 +2,7 @@
 <list version="1.0">
 	<fvm_meta theme_code="" is_biz="0"/>
 	<theme id="custom" name="Comedy World" cc_theme_id="family" col="1"/>
-	<theme id="politics2" name="White Houserz" col="1"/>
+	<theme id="politics2" name="US Election 2012" col="1"/>
 	<theme id="anime" name="Anime" cc_theme_id="anime" col="1"/>
 	<theme id="ninjaanime" name="Ninja Anime" cc_theme_id="ninjaanime" col="1"/>
 
