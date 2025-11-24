@@ -143,7 +143,7 @@ create button
 }
 .app_sidebar .link.create::after {
 	content: "";
-	background: linear-gradient(90deg, #0000 0, #fc4f7d 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(344deg 97% 65%) 10px);
 	width: 14px;
 	height: 100%;
 }

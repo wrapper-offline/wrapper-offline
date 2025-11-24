@@ -135,16 +135,6 @@ table.list_tree tbody {
 	height: 100%;
 }
 
-
-/***
-grid view
-***/
-
-.movie_grid {
-	margin-top: 10px;
-	padding-left: 25px;
-}
-
 /**
 movie row
 **/
@@ -197,79 +187,143 @@ table.list_tree tbody tr.checked td.hidden {
 	opacity: 0;
 }
 
-
-tr.folder td.title .folder_icon {
+/* tr.folder td.title .folder_icon {
 	margin-right: 7px;
 	min-width: calc(calc(calc(v-bind("zoomLevel.css()") - 20px) / 9) * 16);
 	height: calc(v-bind("zoomLevel.css()") - 20px);
 }
 div.folder .thumbnail_container img {
 	height: calc(calc(calc(calc(calc(4 * v-bind("zoomLevel.css()")) - 14px) / 16) * 9) - 1px);
-}
+} */
 
-
-
-/**
-movie tile
-**/
-div.movie {
-	border: 1px solid #c8c5dc;
-	border-radius: 3px;
-	transition: 0.2s var(--button-anim);
-	display: inline-flex;
-	flex-direction: column;
-	margin: 0 5px 10px;
-	padding: 6px 7px;
-	width: calc(4 * v-bind("zoomLevel.css()"));
-}
-div.movie .thumbnail_container img {
-	pointer-events: none;
-	width: 100%;
-}
-div.movie .thumbnail_container .duration {
-	background: #0007;
-	color: #fff;
-	border-radius: 2px;
-	position: absolute;
-	margin-top: -36px;
-	margin-left: 5px;
-	padding: 0 4px;
-}
-div.movie .title {
-	font-weight: bold;
-	line-height: 17px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	display: block;
-	margin-bottom: 2px;
-	width: calc(calc(4 * v-bind("zoomLevel.css()")) - 14px);
-}
-div.movie .modified {
-	font-size: 13px;
-}
-div.movie .actions {
-	margin-top: 3px;
-	text-align: center;
-}
-div.movie:hover {
-	background: #ffebf9;
-	border-color: #e2a5bd;
-	box-shadow: 0 2px 4px #00000010;
-	transition: none;
-}
-
+/* loading */
 .list_tree_container.load_state tbody {
 	transition: none;
 	transform: translateX(-40px);
 	opacity: 0;
 }
 
+
+/***
+grid view
+***/
+.list_tree_container.grid {
+	background: #0000;
+}
+.list_tree_container.grid table.list_tree {
+	display: block;
+}
+.list_tree_container.grid table.list_tree thead.list_head {
+	display: block;
+}
+.list_tree_container.grid table.list_tree tbody {
+	display: block;
+	padding-top: 20px;
+	padding-left: 25px;
+}
+/* entry */
+.list_tree_container.grid table.list_tree tbody tr {
+	background-color: hsl(252deg 16% 97%);
+	border: 1px solid hsl(252deg 16% 82%);
+	border-radius: 4px;
+	transition: width 0.2s var(--button-anim);
+	align-items: start;
+	display: inline-flex;
+	flex-direction: column;
+	margin: 0 5px 15px;
+	padding: 6px 7px;
+	width: calc(4 * v-bind("zoomLevel.css()"));
+	height: auto;
+}
+.list_tree_container.grid table.list_tree tbody tr td {
+	padding: 0;
+}
+/* checkbox */
+.list_tree_container.grid table.list_tree tbody tr td:first-of-type {
+	margin: -20px 0 0;
+	position: relative;
+	top: 20px;
+	left: 3px;
+}
+/* name column */
+.list_tree_container.grid table.list_tree tbody tr td.title {
+	display: block;
+}
+.list_tree_container.grid table.list_tree tbody tr td.title img {
+	transition: filter 0.2s var(--button-anim);
+	margin: 0;
+	width: 100%;
+	height: auto;
+}
+.list_tree_container.grid table.list_tree tbody tr td.title span {
+	font-weight: bold;
+	line-height: 17px;
+	margin: 6px 0 4px;
+	width: calc(calc(4 * v-bind("zoomLevel.css()")) - 14px);
+}
+/* iv, duration */
+.list_tree_container.grid table.list_tree tbody tr td:nth-child(3),
+.list_tree_container.grid table.list_tree tbody tr td:nth-child(4) {
+	background: #000a;
+	color: #fff;
+	font-family: monospace;
+	font-size: 12px;
+	padding: 0 4px;
+}
+.list_tree_container.grid table.list_tree tbody tr td:nth-child(3) {
+	display: none;
+	margin: -20px 0 0 auto;
+	position: relative;
+	top: -30px;
+	right: 2px;
+}
+.list_tree_container.grid table.list_tree tbody tr td:nth-child(4) {
+	margin: -20px 0 0;
+	position: relative;
+	top: -30px;
+	left: 4px;
+}
+/* actions */
+.list_tree_container.grid table.list_tree tbody tr td.actions {
+	background: #000c;
+	border-radius: 16px;
+	margin: -26px auto 0;
+	padding: 7px 11px 5px 1px;
+	position: relative;
+	top: calc(
+		-37px - 
+		((
+			(9 / 16) * ((4 * v-bind("zoomLevel.css()")) - 8px)
+		) / 2)
+	);
+}
+
+.list_tree_container.grid table.list_tree tbody tr:hover {
+	background-color: hsl(338deg 55% 85%);
+	border-color: hsl(338deg 55% 77%);
+}
+.list_tree_container.grid table.list_tree tbody tr:hover td.title img {
+	filter: brightness(0.5)
+}
+.list_tree_container.grid table.list_tree tbody tr:hover td:nth-child(3) {
+	display: block;
+}
+
+.list_tree_container.grid table.list_tree tbody tr.checked {
+	background-color: hsl(344 80% 50% / 0.55);
+	border-color: hsl(344deg 97% 65%);
+}
+
+.list_tree_container.grid.select_mode table.list_tree {
+	margin-top: 34px;
+}
+
+
 /**
 dark mode reskinning
 **/
 /* list mode */
-html.dark .list_tree_container {
+html.dark .list_tree_container:not(.grid) {
 	background: repeating-linear-gradient(
 		#0000 0,
 		#0000 v-bind("zoomLevel.css()"),
@@ -301,12 +355,28 @@ html.dark table.list_tree tbody tr.checked {
 	background: hsl(342 47% 40% / 0.45);
 }
 /* grid mode */
-html.dark div.movie {
-	border-color: #2b2a37;
+html.dark .list_tree_container.grid table.list_tree tbody tr {
+	background-color: hsl(250deg 10% 18%);
+	border-color: hsl(250deg 11% 26%);
 }
-html.dark div.movie:hover {
-	background: #422b3d;
-	border-color: #5f3b57;
+/* iv, duration */
+html.dark .list_tree_container.grid table.list_tree tbody tr td:nth-child(3),
+html.dark .list_tree_container.grid table.list_tree tbody tr td:nth-child(4) {
+	background: #000a;
+	color: #fff;
+	font-family: monospace;
+	font-size: 12px;
+	padding: 0 4px;
+}
+
+html.dark .list_tree_container.grid table.list_tree tbody tr:hover {
+	background-color: hsl(330 26% 26% / 1);
+	border-color: hsl(330 26% 41% / 1);
+}
+
+html.dark .list_tree_container.grid table.list_tree tbody tr.checked {
+	background: hsl(342 47% 40% / 0.45);
+	border-color: hsl(342deg 55% 48%);
 }
 </style>
 
@@ -385,7 +455,7 @@ const filteredEntryIds:{
 };
 const listRows = useTemplateRef("list-row");
 /** current view mode */
-const mode = modeRestriction ? modeRestriction : viewMode.value;
+const mode = () => modeRestriction ? modeRestriction : viewMode.value;
 
 /**
  * filters entries or folders by name
@@ -558,6 +628,8 @@ function ctrlADown(e:KeyboardEvent) {
 	if (!e.ctrlKey || e.key != "a") {
 		return;
 	}
+	e.preventDefault();
+	e.stopPropagation();
 	selection.value.entries = listRows.value.map(e => e.id);
 	selection.value.anchor = 0;
 	syncSelectAllBox();
@@ -587,6 +659,7 @@ defineExpose({ resetSelection });
 <template>
 	<div :class="{
 		list_tree_container: true,
+		grid: mode() == 'grid',
 		multiselect: selection.entries.length > 1,
 		select_mode: selection.entries.length > 0
 	}" @click.self="resetSelection">
@@ -614,11 +687,11 @@ defineExpose({ resetSelection });
 							sort_option: true
 						}"
 						:style="{
-							width: mode == 'list' ? field.width.value + 'px' : '150px'
+							width: mode() == 'list' ? field.width.value + 'px' : '150px'
 						}"
 						@click.self="sortOption_click(field.id.toString())">
 						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
-						<div v-if="mode == 'list'"
+						<div v-if="mode() == 'list'"
 							class="dragger"
 							:style="{marginLeft: field.width.value - 11 + 'px'}"
 							@mousedown.stop.prevent="(e) => dragger_down(field.id, e)"></div>

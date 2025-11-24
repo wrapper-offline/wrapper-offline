@@ -30,6 +30,7 @@ theme
 	transition: 0.12s cubic-bezier(0.7, 0.5, 0.3, 1);
 	display: inline-flex;
 	align-items: center;
+	user-select: none;
 	font-size: 19px;
 	font-weight: bold;
 	margin: 4px;

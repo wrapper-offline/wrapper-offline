@@ -12,6 +12,8 @@
 	background-color: hsl(252deg 16% 97%);
 	border: 1px solid hsl(252deg 16% 82%);
 	border-radius: 4px;
+	user-select: none;
+	-webkit-user-drag: none;
 	display: inline-block;
 	margin: 0 14px 16px 0;
 	width: 124px;
@@ -30,8 +32,6 @@
 }
 
 .wm_manager .watermark .thumbnail  {
-	user-select: none;
-	-webkit-user-drag: none;
 	object-fit: contain;
 	width: 100%;
 	height: 100%;
@@ -59,13 +59,13 @@
 .wm_manager .upload_button.checked,
 .wm_manager .watermark.checked {
 	background-color: hsl(338deg 55% 85%);
-	border-color: #fc4f7d;
-	box-shadow: inset 0 0 0 1px #fc4f7d;
+	border-color: hsl(344deg 97% 65%);
+	box-shadow: inset 0 0 0 1px hsl(344deg 97% 65%);
 }
 .wm_manager .watermark.checked::after {
 	content: "\E207";
     font-family: "GlyphiconsRegular";
-    background: #fc4f7d;
+    background: hsl(344deg 97% 65%);
 	color: #fff;
     border-radius: 100%;
     float: right;
