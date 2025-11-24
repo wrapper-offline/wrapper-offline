@@ -25,7 +25,6 @@ import { useThemeList } from "../composables/useThemeList";
 type CCObjectType = InstanceType<typeof CCObject>;
 
 const ccObject = useTemplateRef<CCObjectType>("cc-object");
-const navbarEntries:Ref<NavbarEntry[]> = ref([]);
 const route = useRoute();
 const router = useRouter();
 const tempStorage = useTempStorage();
@@ -34,6 +33,8 @@ const baseNavbarEntry = {
 	path: "/characters",
 	title: "Characters"
 };
+const navbarEntries:Ref<NavbarEntry[]> = ref([]);
+const showDlButton = ref(false);
 const showObject = ref(false);
 const showSelector = ref(false);
 let themeId = "";
@@ -56,9 +57,22 @@ function initObject(id:string) {
 
 function ccEntered() {
 	navbarEntries.value.push({
-		path: "this will never be used",
+		path: "hope you like it",
 		title: "Creating a character"
 	});
+	showDlButton.value = true;
+}
+
+/**
+ * called when download button in navbar is clicked
+ */
+function charDownload() {
+	const xml = ccObject.value.getXml();
+	const elem = document.createElement("a");
+	elem.href = "data:text/xml," + xml;
+	elem.download = "character.xml";
+	elem.click();
+	elem.remove();
 }
 
 /**
@@ -95,6 +109,7 @@ async function populateNavbar() {
 			title: `${theme.name} Characters`
 		}
 	];
+	showDlButton.value = false;
 }
 
 /**
@@ -124,7 +139,11 @@ onMounted(() => {
 
 <template>
 	<div>
-		<Navbar :entries="navbarEntries" state="cc"/>
+		<Navbar
+			:entries="navbarEntries"
+			:supported="{ download:showDlButton }"
+			state="cc"
+			@download-click="charDownload"/>
 		<div class="page_contents">
 			<theme-selector
 				heading-for="Characters"

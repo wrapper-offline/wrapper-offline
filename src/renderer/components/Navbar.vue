@@ -134,6 +134,7 @@ export interface NavbarEntry {
 };
 
 const emit = defineEmits<{
+	downloadClick: [],
 	newFolderClick: []
 }>();
 defineProps<{
@@ -143,6 +144,8 @@ defineProps<{
 	entries: NavbarEntry[],
 	/** specify supported features to show */
 	supported?: {
+		/**	displays a download button */
+		download?: boolean,
 		/** displays a new folder icon */
 		newFolder?: boolean,
 		/** display a search box */
@@ -167,6 +170,13 @@ function forwardButtonClick() {
 function onSearchInput(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
 	search.set(target.value);
+}
+
+/**
+ * called when the download button is clicked, emits event for it
+ */
+function downloadButton_click() {
+	emit("downloadClick");
 }
 
 /**
@@ -213,6 +223,13 @@ function zoomSliderMoved(e:InputEvent) {
 			</div>
 		</div>
 		<div class="head_right">
+			<!-- download button -->
+			<div v-if="supported?.download"
+				class="nav_btn"
+				title="Download"
+				@click="downloadButton_click">
+				<i class="ico download"></i>
+			</div>
 			<!-- new folder button -->
 			<div v-if="supported?.newFolder"
 				class="nav_btn"

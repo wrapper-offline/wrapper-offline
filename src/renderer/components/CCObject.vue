@@ -8,7 +8,7 @@ import {
 	toAttrString
 } from "../utils/AppInit";
 import extractCharThemeId from "../utils/extractCharThemeId";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, useTemplateRef } from "vue";
 
 const emit = defineEmits<{
 	/** emitted when the object switches to the cc */
@@ -19,6 +19,7 @@ const props = defineProps<{
 	strictThemeUpload?: boolean
 }>();
 
+const ccObject = useTemplateRef("cc-object");
 const showObject = ref(false);
 let swfUrl:string;
 let params:Params = {
@@ -97,6 +98,14 @@ function fileDropped(e:DragEvent) {
 }
 
 /**
+ * returns current character xml
+ */
+function getXml(): string {
+	//@ts-ignore
+	return swfUrl.endsWith("cc.swf") ? ccObject.value.getXml() : "";
+}
+
+/**
  * shows the character creator
  */
 function displayCreator() {
@@ -167,6 +176,7 @@ defineExpose({
 	displayBrowser,
 	createCharacter,
 	copyCharacter,
+	getXml,
 	uploadCharacter,
 	reset
 });
@@ -179,6 +189,7 @@ defineExpose({
 		type="application/x-shockwave-flash"
 		width="980"
 		height="600"
+		ref="cc-object"
 		@dragover.prevent.stop=""
 		@drop.prevent.stop="fileDropped">
 		<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
