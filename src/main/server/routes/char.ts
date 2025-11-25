@@ -125,7 +125,7 @@ group.route("POST", "/goapi/saveCCThumbs/", (req, res) => {
 	}
 	const thumb = Buffer.from(req.body.thumbdata, "base64");
 
-	if (CharModel.exists(`${id}.xml`)) {
+	if (CharModel.exists(id)) {
 		CharModel.saveThumb(id, thumb);
 		res.end("0" + id);
 	} else {

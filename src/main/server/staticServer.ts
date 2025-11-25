@@ -16,8 +16,8 @@ const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST;
 const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT;
 
 const ccCharObject2Xml = (char:CCCharObject, themeId:string) => 
-	`<char id="${char.id}" name="${char.name}" cc_theme_id="${themeId}" thumbnail_url="${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}/thumbnails/${char.id}.png" copyable="Y">
-		<tags>family,_free,_cat:${char.category}</tags>
+	`<char id="${char.id}" name="${char.name || "Untitled"}" cc_theme_id="${themeId}" thumbnail_url="${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}/thumbnails/${char.id}.png" copyable="Y">
+		<tags>${themeId},_free,_cat:${char.category || "Stock characters"}</tags>
 	</char>`;
 
 const themeZipPattern = /^\/store\/[\da-zA-Z]+\/([\S]+)\/\1.zip$/;

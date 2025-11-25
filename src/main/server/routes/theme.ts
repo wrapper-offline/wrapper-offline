@@ -64,7 +64,6 @@ group.route("POST", "/goapi/getTheme/", async (req, res) => {
 	}
 
 	const host = `${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}`;
-	console.log(host)
 	const path = `${STORE_URL}/${id}/${id}.zip`;
 	http.get(host + path, (staticRes) => {
 		staticRes.pipe(res)
