@@ -8,6 +8,9 @@ const searchDirs = ["@img/colour", "@noble/hashes", "formidable", "sharp"];
 
 searchDirs.forEach((dir) => {
 	const path = join(__dirname, "../node_modules", dir);
+	if (!fs.existsSync(path)) {
+		return;
+	}
 	fs.readdirSync(
 		path,
 		{

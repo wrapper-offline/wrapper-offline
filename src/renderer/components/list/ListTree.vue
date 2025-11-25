@@ -230,7 +230,7 @@ grid view
 	align-items: start;
 	display: inline-flex;
 	flex-direction: column;
-	margin: 0 5px 15px;
+	margin: 0 10px 20px;
 	padding: 6px 7px;
 	width: calc(4 * v-bind("zoomLevel.css()"));
 	height: auto;
@@ -244,6 +244,7 @@ grid view
 	position: relative;
 	top: 20px;
 	left: 3px;
+	z-index: 1;
 }
 /* name column */
 .list_tree_container.grid table.list_tree tbody tr td.title {
@@ -356,7 +357,7 @@ html.dark table.list_tree tbody tr.checked {
 }
 /* grid mode */
 html.dark .list_tree_container.grid table.list_tree tbody tr {
-	background-color: hsl(250deg 10% 18%);
+	background-color: hsl(246deg 8% 18%);
 	border-color: hsl(250deg 11% 26%);
 }
 /* iv, duration */
@@ -673,7 +674,10 @@ defineExpose({ resetSelection });
 					@input="selectAll_click"/>
 			</div>
 			{{ selection.entries.length }} selected
-			<rowOptionsComponent :entry="selection.entries" @entry-delete="entry_delete"/>
+			<component
+				:is="rowOptionsComponent"
+				:entry="selection.entries"
+				@entry-delete="entry_delete"/>
 		</div>
 		<table class="list_tree">
 			<thead class="list_head">
@@ -720,7 +724,8 @@ defineExpose({ resetSelection });
 				</template>
 				<!-- list entries -->
 				<template v-for="entry in data.entries">
-					<rowComponent
+					<component
+						:is="rowComponent"
 						v-if="search.value.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
 						ref="list-row"
 						:checked="selection.entries.includes(entry.id)"

@@ -232,12 +232,12 @@ function zoomSliderMoved(e:InputEvent) {
 				<i class="ico download"></i>
 			</div>
 			<!-- new folder button -->
-			<div v-if="supported?.newFolder"
+			<!-- <div v-if="supported?.newFolder"
 				class="nav_btn"
 				title="New folder"
 				@click="newFolderClick">
 				<i class="ico newfolder"></i>
-			</div>
+			</div> -->
 			<!-- search box -->
 			<input v-if="supported?.search"
 				class="search_box"

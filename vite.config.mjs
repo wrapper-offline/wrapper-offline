@@ -1,6 +1,5 @@
 import config from "./config.json" with {type:"json"};
 import { defineConfig } from "vite";
-import svgPlugin from "vite-svg-loader";
 import vuePlugin from "@vitejs/plugin-vue";
 
 process.env.VITE_API_SERVER_HOST = config.API_SERVER_HOST;
@@ -18,6 +17,7 @@ export default defineConfig({
 		target: "es2020"
 	},
 	build: {
+		assetsDir: "r_assets",
 		target: "es2020",
 		outDir: "./dist/renderer",
 		rollupOptions: {
@@ -28,10 +28,8 @@ export default defineConfig({
 	keepProcessEnv: true,
 	plugins: [
 		vuePlugin(),
-		svgPlugin(),
 	],
 	server: {
 		port: 5173,
-		
 	},
 });

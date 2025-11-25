@@ -1,10 +1,8 @@
+import { app } from "electron";
 import httpz from "@octanuary/httpz";
+import { join } from "path";
 import asset from "./asset";
 import char from "./char";
-//// commented out because i'm waiting on the studio decomp
-//// before doing any major things, like y'know, an exporter.
-// const exporter = require("./exporter");
-// const flash = require("./flash");
 import handler from "serve-handler";
 import movie from "./movie";
 import settings from "./settings";
@@ -13,11 +11,10 @@ import tts from "./tts";
 import watermark from "./watermark";
 import waveform from "./waveform";
 
+const IS_DEV = app.commandLine.getSwitchValue("dev").length > 0;
 const group = new httpz.Group();
 group.add(asset);
 group.add(char);
-// group.add(exporter);
-// group.add(flash);
 group.add(movie);
 group.add(theme);
 group.add(settings);
@@ -61,16 +58,18 @@ group.route("OPTIONS", "*", (req, res) => {
 	}).end();
 });
 
-group.route("*", "*", async (req, res) => {
-	if (res.writableEnded) {
-		return;
-	}
-	await handler(req, res, {
-		public: "dist/renderer", 
-		headers: {
-			"Cache-Control": "no-store"
+if (!IS_DEV) {
+	group.route("*", "*", async (req, res) => {
+		if (res.writableEnded) {
+			return;
 		}
+		await handler(req, res, {
+			public: join(__dirname, "renderer"),
+			headers: {
+				"Cache-Control": "no-store"
+			}
+		});
 	});
-});
+}
 
 export default group;
