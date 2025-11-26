@@ -61,7 +61,11 @@ export default class MovieModel {
 		} 
 		const filepath = join(this.folder, id);
 		const xml = fs.readFileSync(filepath + ".xml");
-		const thumbnail = fs.readFileSync(filepath + ".png");
+		const thumbPath = filepath + ".png";
+		let thumbnail:Buffer;
+		if (fs.existsSync(thumbPath)) {
+			thumbnail = fs.readFileSync(thumbPath);
+		}
 		const zipped = await Parse.pack(xml, thumbnail);
 		return zipped;
 	}
@@ -120,10 +124,13 @@ export default class MovieModel {
 		const buffer = fs.readFileSync(filepath);
 
 		// title
-		const title = buffer.subarray(
+		let title = buffer.subarray(
 			buffer.indexOf("<title>") + 16,
 			buffer.indexOf("]]></title>")
 		).toString().trim();
+		if (title.length == 0) {
+			title = "Untitled";
+		}
 
 		// get the duration string
 		const durBeg = buffer.indexOf('duration="') + 10;
@@ -160,13 +167,13 @@ export default class MovieModel {
 	 * @param saveAsStarter
 	 * @returns movie id
 	 */
-	static async save(
+	static save(
 		xml:Buffer,
 		thumbnail:Buffer | void,
 		id:string,
 		saveAsStarter:boolean
 	): Promise<string> {
-		return new Promise((res, rej) => {
+		return new Promise(async (res, rej) => {
 			const newMovie = !id;
 			if (!newMovie && !this.exists(id)) {
 				return rej("404");
@@ -178,38 +185,37 @@ export default class MovieModel {
 			}
 			fs.writeFileSync(join(this.folder, id + ".xml"), xml);
 
-			this.extractMeta(id).then((meta) => {
-				// cat meoww x3
-				let dbCat:"assets"|"movies";
-				const info:Movie|Starter = {
+			const meta = await this.extractMeta(id);
+			// cat meoww x3
+			let dbCat:"assets"|"movies";
+			const info:Movie|Starter = {
+				id: id,
+				duration: meta.durationString,
+				date: meta.date.toISOString(),
+				title: meta.title,
+				sceneCount: meta.sceneCount,
+			};
+			if (Settings.defaultWatermark != "none") {
+				info.watermark = Settings.defaultWatermark;
+			}
+			if (
+				// new starter
+				(newMovie && saveAsStarter) ||
+				database.select("assets", {
 					id: id,
-					duration: meta.durationString,
-					date: meta.date.toISOString(),
-					title: meta.title,
-					sceneCount: meta.sceneCount,
-				};
-				if (Settings.defaultWatermark != "none") {
-					info.watermark = Settings.defaultWatermark;
-				}
-				if (
-					// new starter
-					(newMovie && saveAsStarter) ||
-					database.select("assets", {
-						id: id,
-						type: "movie"
-					}).length > 0
-				) {
-					(info as Starter).type = "movie";
-					dbCat = "assets";
-				} else {
-					dbCat = "movies";
-				}
-				if (!database.update(dbCat, id, info)) {
-					console.log("Models.movie#save: Inserting movie into database...");
-					database.insert(dbCat, info);
-				}
-				res(id);
-			});
+					type: "movie"
+				}).length > 0
+			) {
+				(info as Starter).type = "movie";
+				dbCat = "assets";
+			} else {
+				dbCat = "movies";
+			}
+			if (!database.update(dbCat, id, info)) {
+				console.log("Models.movie#save: Inserting movie into database...");
+				database.insert(dbCat, info);
+			}
+			res(id);
 		});
 	}
 
