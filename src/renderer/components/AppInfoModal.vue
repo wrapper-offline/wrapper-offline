@@ -76,6 +76,8 @@ onUnmounted(() => {
 						<a href="javascript:window.appWindow.openFAQ();">FAQ</a>
 						&bull;
 						<a href="javascript:window.appWindow.openGitHub();">GitHub</a>
+						<br/>
+						<a href="javascript:window.appWindow.openDataFolder();">Open data folder</a>
 					</div>
 				</div>
 			</div>

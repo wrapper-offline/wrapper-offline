@@ -7,6 +7,7 @@ const env = Object.assign(process.env, require("../../env.json"), require("../..
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
 import { createWriteStream } from "fs";
+import Directories from "./storage/directories";
 import { join } from "path";
 import settings from "./storage/settings";
 import { startAll } from "./server/index";
@@ -19,12 +20,12 @@ startAll();
 log files
 */
 if (settings.saveLogFiles) {
-	const filePath = join(env.LOG_FOLDER, new Date().valueOf() + ".txt");
+	const filePath = join(Directories.log, new Date().valueOf() + ".txt");
 	const writeStream = createWriteStream(filePath);
-	// console.log = console.error = console.warn = function (c) {
-	// 	writeStream.write(c + "\n");
-	// 	process.stdout.write(c + "\n");
-	// };
+	console.log = console.error = console.warn = function (c) {
+		writeStream.write(c + "\n");
+		process.stdout.write(c + "\n");
+	};
 	process.on("exit", () => {
 		console.log("Exiting...");
 		writeStream.close();
@@ -78,6 +79,7 @@ const createWindow = () => {
 	ipcMain.on("open-discord", openDiscord);
 	ipcMain.on("open-faq", openFaq);
 	ipcMain.on("open-github", openGitHub);
+	ipcMain.on("open-data-folder", openDataFolder);
 
 	let host:string, port:string;
 	if (IS_DEV) {
@@ -100,6 +102,9 @@ async function openFaq() {
 }
 async function openGitHub() {
 	await shell.openExternal("https://github.com/wrapper-offline/wrapper-offline");
+}
+async function openDataFolder() {
+	await shell.openPath(Directories.userData);
 }
 
 app.whenReady().then(() => {
@@ -138,21 +143,29 @@ function setMenuBar(mainWindow:BrowserWindow) {
 				{ role: "forceReload" },
 				{ type: "separator" },
 				{ role: "minimize" },
-				// ...(process.platform == "darwin" ? [
-				// 	{ role: "front" },
-				// 	{ type: "separator" },
-				// 	{ role: "window" }
-				// ] : [
-				// 	{ role: "close" }
-				// ]),
+				...(process.platform == "darwin" ? 
+					[
+						{ role: "front" },
+						{ type: "separator" },
+						{ role: "window" }
+					] as ({ role: "front" } |
+						{ type: "separator" } |
+						{ role: "window" })[] : 
+					[
+						{ role: "close" } as { role: "close" }
+					]),
 			]
 		},
 		{
 			role: "help",
 			submenu: [
 				{
-					label: "Discord Server",
+					label: "Discord",
 					click: openDiscord
+				},
+				{
+					label: "FAQ",
+					click: openFaq
 				},
 				{
 					label: "GitHub",

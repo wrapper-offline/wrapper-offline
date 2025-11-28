@@ -29,7 +29,7 @@ To build a full copy of Offline:
 ```
 npm run package
 ```
-*You will need to copy the `resources` folder manually.*
+*You will need to copy the `resources` folder manually. It needs to go in the resources folder of the build.*
 
 ## License
 Most of this project is free/libre software[1] under the MIT license. You have the freedom to run, change, and share this as much as you want.

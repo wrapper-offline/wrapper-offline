@@ -1,8 +1,13 @@
 .list_row_options .option {
-	color: hsl(0 0% 100% / 1);
+	color: hsl(218deg 14% 36%);
 	opacity: 0.8;
 	margin-left: 8px;
 }
 .list_row_options .option:hover {
 	opacity: 1;
+}
+
+.checked .list_row_options .option,
+html.dark .list_row_options .option {
+	color: hsl(0 0% 100% / 1);
 }
