@@ -268,6 +268,7 @@ initList();
 			}"/>
 
 		<div class="page_contents">
+			<br/><br/><br/>new movie, recents<br/><br/><br/><br/>
 			<ListTree
 				:class="{
 					load_state: isLoading

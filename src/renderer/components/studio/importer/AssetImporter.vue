@@ -1,6 +1,6 @@
 <style>
 #importer {
-	background: #eeedf2;
+	background: hsl(252deg 16% 94%);
 	/* border-right: 1px solid #c8c6dd; */
 	box-shadow: 0 0 2px #0001;
 	animation: importer-slide 0.05s var(--slide-anim);

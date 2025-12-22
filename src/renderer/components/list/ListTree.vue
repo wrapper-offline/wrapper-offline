@@ -27,7 +27,7 @@ table.list_tree {
 select mode
 **/
 .select_mode_options {
-	background-color: #eeedf2;
+	background-color: hsl(252deg 16% 94%);
 	opacity: 0;
 	transition: none;
 	transform: translateX(-15px);
@@ -74,7 +74,7 @@ list head
 **/
 
 thead.list_head {
-	background-color: #eeedf2;
+	background-color: hsl(252deg 16% 94%);
 	border-bottom: 1px solid hsl(240 12% 76% / 1);
 	top: 0;
 }

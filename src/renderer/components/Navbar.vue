@@ -137,6 +137,7 @@ export interface NavbarEntry {
 const emit = defineEmits<{
 	downloadClick: [],
 	newFolderClick: []
+	saveClick: [],
 }>();
 defineProps<{
 	/** display a number at the end of a final link */
@@ -149,6 +150,8 @@ defineProps<{
 		download?: boolean,
 		/** displays a new folder icon */
 		newFolder?: boolean,
+		/** display a save button */
+		save?: boolean,
 		/** display a search box */
 		search?: boolean,
 		/** display view mode toggle (list or grid) */
@@ -171,6 +174,13 @@ function forwardButtonClick() {
 function onSearchInput(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
 	search.set(target.value);
+}
+
+/**
+ * called when the save button is clicked, emits event for it
+ */
+function saveButton_click() {
+	emit("saveClick");
 }
 
 /**
@@ -224,6 +234,13 @@ function zoomSliderMoved(e:InputEvent) {
 			</div>
 		</div>
 		<div class="head_right">
+			<!-- save button -->
+			<div v-if="supported?.save"
+				class="nav_btn"
+				title="Save"
+				@click="saveButton_click">
+				<i class="ico save"></i>
+			</div>
 			<!-- download button -->
 			<div v-if="supported?.download"
 				class="nav_btn"

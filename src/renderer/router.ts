@@ -8,6 +8,7 @@ import StudioView from "./routes/StudioView.vue";
 import UserCharacters from "./routes/UserCharacters.vue";
 import UserMovies from "./routes/UserMovies.vue";
 import UserStudioAssets from "./routes/UserStudioAssets.vue";
+import LegacyUserCharacters from "./routes/LegacyUserCharacters.vue";
 
 const routes:RouteRecordRaw[] = [
 	{
@@ -20,7 +21,11 @@ const routes:RouteRecordRaw[] = [
 		path: "/assets",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:UserStudioAssets },
+			{
+				name: "asset_list",
+				path: "",
+				component:UserStudioAssets
+			},
 		],
 		meta: {
 			title: "Your Library"
@@ -31,13 +36,27 @@ const routes:RouteRecordRaw[] = [
 		component: DefaultLayout,
 		children: [
 			{
-				name: "cc_page",
+				name: "char_list",
 				path: "",
 				component: UserCharacters
 			},
 		],
 		meta: {
 			title: "Characters"
+		},
+	},
+	{
+		path: "/characters_old/:themeId?",
+		component: DefaultLayout,
+		children: [
+			{
+				name: "old_cc_page",
+				path: "",
+				component: LegacyUserCharacters
+			},
+		],
+		meta: {
+			title: "Characters (old)"
 		},
 	},
 	{

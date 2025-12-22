@@ -137,7 +137,9 @@ function getAssetList(): Promise<Asset[]> {
  */
 async function routeUpdated() {
 	isLoading.value = true;
-	await loadAssetList();
+	setTimeout(() => {
+		loadAssetList();
+	}, 20);
 }
 
 /**
