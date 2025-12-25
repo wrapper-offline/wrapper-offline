@@ -65,15 +65,15 @@ function idsAsArray() {
 			v-show="isSingular"
 			class="option"
 			href="javascript:;"
-			@click.stop.prevent="playBtn_click"
-			title="Play">
+			v-tooltip="'Play'"
+			@click.stop.prevent="playBtn_click">
 			<i class="ico play"></i>
 		</a>
 		<RouterLink
 			v-show="isSingular"
 			class="option"
 			:to="`/movies/edit/${(entry as T).id}`"
-			title="Edit"
+			v-tooltip="'Edit'"
 			@click.stop>
 			<i class="ico brush"></i>
 		</RouterLink>
@@ -81,11 +81,11 @@ function idsAsArray() {
 			class="option"
 			:href="`${apiServer}/file/movie/file/${idsAsArray().join(',')}`"
 			download="download.zip"
-			title="Download project files"
+			v-tooltip="'Download project files'"
 			@click.stop>
 			<i class="ico download"></i>
 		</a>
-		<a class="option" href="javascript:;" @click.stop.prevent="deleteBtn_click" title="Delete">
+		<a class="option" href="javascript:;" v-tooltip="'Delete'" @click.stop.prevent="deleteBtn_click">
 			<i class="ico trash"></i>
 		</a>
 	</div>

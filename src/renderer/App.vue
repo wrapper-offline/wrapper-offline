@@ -36,6 +36,29 @@ a:hover {
 	text-decoration: initial;
 }
 
+.tooltip {
+	background: hsl(240deg 17% 23% / .8);
+	position: fixed;
+	color: #fff;
+	border-radius: 4px;
+	pointer-events: none;
+	padding: 2px 8px;
+	font-size: 14px;
+	animation: 0.15s var(--slide-anim) fadein;
+	z-index: 99999;
+}
+
+@keyframes fadein {
+	0% {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	100% {
+		opacity: 1;
+		transform: auto;
+	}
+}
+
 html.dark {
 	--popup-gradient-bg: radial-gradient(#1e1d25, #0e0d11);
 }

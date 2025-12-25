@@ -29,6 +29,7 @@ select mode
 .select_mode_options {
 	background-color: hsl(252deg 16% 94%);
 	opacity: 0;
+	pointer-events: none;
 	transition: none;
 	transform: translateX(-15px);
 	display: flex;
@@ -51,6 +52,7 @@ select mode
 }
 .list_tree_container.select_mode .select_mode_options {
 	opacity: 1;
+	pointer-events: all;
 	padding: 5px 0;
 	transition: transform 0.1s var(--slide-anim);
 	transform: none;
@@ -398,6 +400,7 @@ import locale from "../../locale/en_US";
 import { onMounted, onUnmounted, provide, ref, toValue, useTemplateRef, watch } from "vue";
 import useListStore from "../../composables/useListStore";
 import { useRoute, useRouter } from "vue-router";
+import { useScreenWidth } from "../../composables/useScreenWidth";
 
 interface Folder {
 	id: string,
@@ -435,6 +438,7 @@ const props = defineProps<{
 const modeRestriction = props?.restrictions?.mode ?? false;
 const route = useRoute();
 const router = useRouter();
+const screenWidth = useScreenWidth();
 const { search, viewMode, zoomLevel } = useListStore();
 
 const columnIds = props.columns.map((v) => v.id);
@@ -508,7 +512,12 @@ function dragger_down(id:FieldIdOf<ListEntry>, e:MouseEvent) {
 	const startX = e.clientX;
 	const startWidth = toValue(option.width);
 	const moveCb = (moveE2:MouseEvent) => {
-		let newWidth = Math.max(startWidth - startX + moveE2.clientX, 95);
+		let dx = moveE2.clientX - startX;
+		if (screenWidth.value > 1200) {
+			dx = ~~(dx / (screenWidth.value / 1000));
+		}
+		let newWidth = startWidth + dx;
+		newWidth = Math.max(startWidth + dx, 95);
 		newWidth = Math.min(newWidth, 400);
 		option.width.value = newWidth;
 	};
@@ -691,13 +700,19 @@ defineExpose({ resetSelection });
 							sort_option: true
 						}"
 						:style="{
-							width: mode() == 'list' ? field.width.value + 'px' : '150px'
+							width: mode() == 'list' ? 
+								(screenWidth > 1200 ? 
+									field.width.value * screenWidth / 1000 : 
+									field.width.value) + 'px' : 
+								'150px'
 						}"
 						@click.self="sortOption_click(field.id.toString())">
 						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
 						<div v-if="mode() == 'list'"
 							class="dragger"
-							:style="{marginLeft: field.width.value - 11 + 'px'}"
+							:style="{marginLeft: (screenWidth > 1200 ? 
+									field.width.value * screenWidth / 1000 : 
+									field.width.value) - 11 + 'px'}"
 							@mousedown.stop.prevent="(e) => dragger_down(field.id, e)"></div>
 					</th>
 					<th class="space"></th>

@@ -218,8 +218,8 @@ function zoomSliderMoved(e:InputEvent) {
 <template>
 	<header>
 		<div class="head_left">
-			<div class="nav_btn" @click="backButtonClick"><i class="ico left"></i></div>
-			<div class="nav_btn" @click="forwardButtonClick"><i class="ico right"></i></div>
+			<div class="nav_btn" v-tooltip="'Back'" @click="backButtonClick"><i class="ico left"></i></div>
+			<div class="nav_btn" v-tooltip="'Forward'" @click="forwardButtonClick"><i class="ico right"></i></div>
 			<div class="link_container">
 				<RouterLink v-for="parent in entries.slice(0, -1)" :to="parent.path" class="link parent_link">
 					{{ parent.title }}
@@ -264,7 +264,7 @@ function zoomSliderMoved(e:InputEvent) {
 			<!-- zoom slider -->
 			<Dropdown v-if="supported?.zoom" align="right">
 				<template #toggle>
-					<div class="nav_btn" title="Adjust zoom level">
+					<div class="nav_btn" v-tooltip="'Zoom'">
 						<i class="ico magnify"></i>
 					</div>
 				</template>
@@ -275,13 +275,13 @@ function zoomSliderMoved(e:InputEvent) {
 			<!-- view options -->
 			<div v-if="supported?.viewMode && viewMode.value == 'list'"
 				class="nav_btn"
-				title="Grid view"
+				v-tooltip="'Display as grid'"
 				@click="() => changeView('grid')">
 				<i class="ico grid"></i>
 			</div>
 			<div v-if="supported?.viewMode && viewMode.value == 'grid'"
 				class="nav_btn"
-				title="List view"
+				v-tooltip="'Display as list'"
 				@click="() => changeView('list')">
 				<i class="ico blist"></i>
 			</div>
