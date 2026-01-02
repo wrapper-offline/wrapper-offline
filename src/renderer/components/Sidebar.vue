@@ -57,8 +57,16 @@ sidebar sections *OR* grouped link containers
 	border-bottom: 1px solid hsl(240 14% 32% / 1);
 }
 .app_sidebar>ul.page_specific {
+	padding-right: 0;
 	flex-grow: 1;
 	overflow-y: scroll;
+}
+.app_sidebar>ul.page_specific::-webkit-scrollbar {
+	width: 13px;
+}
+.app_sidebar>ul.page_specific::-webkit-scrollbar-thumb {
+	background: hsl(240deg 10% 73%);
+	border-color: hsl(240deg 17% 23%);
 }
 .app_sidebar>ul:last-of-type {
 	border-top: 1px solid hsl(240 14% 32% / 1);
@@ -134,13 +142,11 @@ links
 	background: linear-gradient(90deg, #0000 0, hsl(240 17% 29% / 1) 10px);
 }
 .app_sidebar .link.sel {
-	background: hsl(240 24% 90% / 1);
+	background: hsl(240deg 17% 35%);
+	font-weight: bold;
 }
 .app_sidebar .link.sel::after {
-	background: linear-gradient(90deg, #0000 0, hsl(240 24% 90% / 1) 10px);
-}
-.app_sidebar .link.sel>a {
-	color: hsl(240deg 17% 23%);
+	background: linear-gradient(90deg, #0000 0, hsl(240deg 17% 35%) 10px);
 }
 
 
@@ -223,6 +229,13 @@ html.dark .app_sidebar #logo_container .logo_btn:hover {
 html.dark .app_sidebar>ul:first-of-type {
 	border-color: hsl(250deg 14% 23%);
 }
+html.dark .app_sidebar>ul.page_specific::-webkit-scrollbar {
+	width: 13px;
+}
+html.dark .app_sidebar>ul.page_specific::-webkit-scrollbar-thumb {
+	background: hsl(250 10% 40% / 1);
+	border-color: hsl(250 10% 13% / 1);
+}
 html.dark .app_sidebar>ul:last-of-type {
 	border-color: hsl(250deg 14% 23%);
 }
@@ -233,11 +246,9 @@ html.dark  .app_sidebar .group>ul>.divider {
 	width: 1px;
 }
 /* links */
-html.dark .app_sidebar .link>a {
-	color: #ccc;
-}
+html.dark .app_sidebar .link>a,
 html.dark .app_sidebar .link>button {
-	color: #ccc;
+	color: #ddd;
 }
 html.dark .app_sidebar .link i {
 	color: #9f9eab;
@@ -250,6 +261,12 @@ html.dark .app_sidebar .link:hover {
 }
 html.dark .app_sidebar .link:hover::after {
 	background: linear-gradient(90deg, #0000 0, hsl(250 10% 18% / 1) 10px);
+}
+html.dark .app_sidebar .link.sel {
+	background: hsl(250 10% 23% / 1);
+}
+html.dark .app_sidebar .link.sel::after {
+	background: linear-gradient(90deg, #0000 0, hsl(250 10% 23% / 1) 10px);
 }
 /* create button */
 html.dark .app_sidebar .link.create {
@@ -556,6 +573,7 @@ defineExpose({ slideMode, width });
 						</button>
 					</li>
 				</template>
+				<RouterLink to="/movies/create" class="dropdown_item">Create a character</RouterLink>
 				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator/>
 				<DropdownItem @click="charInput.click()">Upload a character</DropdownItem>
@@ -596,6 +614,78 @@ defineExpose({ slideMode, width });
 		</ul>
 		<ul class="page_specific">
 			<h3>Starred</h3>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
 			<li class="link">
 				<RouterLink to="/">
 					<i class="ico folder"></i>

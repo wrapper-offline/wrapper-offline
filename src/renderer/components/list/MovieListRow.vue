@@ -6,9 +6,9 @@ tr.movie td.title img {
 
 <script setup lang="ts" generic="MovieEntry extends Movie">
 import { apiServer } from "../../utils/AppInit";
-import type { FieldIdOf } from "../../interfaces/ListTypes";
+import type { FieldId } from "../../interfaces/DataList";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject } from "vue";
+import { defineComponent, inject } from "vue";
 import type { Movie } from "../../interfaces/Movie";
 import MovieRowOptions from "./options/MovieRowOptions.vue";
 import openPlayerWindow from "../../utils/openPlayerWindow";
@@ -26,6 +26,9 @@ const props = defineProps<{
 	checked: boolean,
 	entry: MovieEntry
 }>();
+defineComponent({
+	optionsComponent: MovieRowOptions
+});
 defineExpose({ id:props.entry.id });
 
 const columns = inject(genericColumnIdKey<MovieEntry>(), []);
@@ -87,7 +90,7 @@ function deleteBtn_click() {
  * returns a fixed date string for a movie
  * @param entry movie object
  */
-function movieInfo(field:FieldIdOf<MovieEntry>): string {
+function movieInfo(field:FieldId<MovieEntry>): string {
 	switch (field) {
 		case "date": {
 			const split = props.entry.date.split("T");

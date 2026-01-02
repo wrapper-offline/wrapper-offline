@@ -20,29 +20,76 @@
 	justify-content: space-between;
 	height: 35px;
 }
+
+.dropdown.theme_filter .dropdown_item {
+	line-height: 28px;
+	padding: 4px 24px 4px 12px;
+}
+.dropdown.theme_filter .dropdown_item img {
+	display: block;
+	float: left;
+	margin-right: 5px;
+	height: 28px;
+}
+
+.data_list_container.grid.char_list table.data_list tbody {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 190px);
+	column-gap: 25px;
+	justify-content: center;
+	margin: auto;
+	padding-right: 25px;
+	max-width: calc(190px * 5);
+}
+
+@media (max-width: 700px) {
+	.data_list_container.grid.char_list table.data_list tbody {
+		grid-template-columns: repeat(auto-fit, 100px);
+		max-width: calc(100px * 5);
+	}
+}
+
+@media (min-width: 1270px) {
+	.data_list_container.grid.char_list table.data_list tbody {
+		grid-template-columns: repeat(auto-fit, 200px);
+		max-width: calc(200px * 7);
+	}
+}
 </style>
 
 <script setup lang="ts">
 import { Asset } from "../interfaces/Asset";
-import Navbar, { NavbarEntry } from "../components/Navbar.vue";
+import Navbar from "../components/Navbar.vue";
 import { onMounted, ref } from "vue";
-import { useThemeList } from "../composables/useThemeList";
 import { apiServer } from "../utils/AppInit";
-import { useSidebar } from "../composables/useSidebar";
-import Popup from "../components/Popup.vue";
-import ThemeSelector from "../components/ThemeSelector.vue";
-import ThemeFilter from "../components/sidebar/ThemeFilter.vue";
+import DataList from "../components/list/DataList.vue";
+import CharListRow from "../components/list/CharListRow.vue";
+import { DataListRow2, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
+import { useNavbar } from "../composables/useNavbar";
+import Dropdown from "../components/controls/Dropdown.vue";
+import DropdownItem from "../components/controls/DropdownItem.vue";
+import { Theme, useThemeList } from "../composables/useThemeList";
+import CharRenderer from "../components/CharRenderer.vue";
 
-const baseNavbarEntry = {
-	path: "/characters",
-	title: "Characters"
-};
-
-const navbarEntries = ref<NavbarEntry[]>([]);
+const columns:ListFieldColumn<Asset>[] = [
+	{
+		id: "title",
+		width: ref(0)
+	},
+	{
+		id: "index",
+		width: ref(0)
+	}
+];
+const selectedSort = ref<SelectedListSort<Asset>>({
+	id: "index",
+	descending: true
+});
 /** list of user assets */
 const assetList = ref<Asset[]>();
 /** is the asset list currently being loaded */
 const isLoading = ref(false);
+let themelist:Theme[] = [];
 
 /**
  * clears the asset list array
@@ -83,27 +130,54 @@ async function loadCharList() {
 	}, 80);
 }
 
+const navbar = useNavbar();
+navbar.setRouteState({
+	entries: [
+		{
+			title: "Characters"
+		}
+	]
+});
+initList();
 onMounted(async () => {
 	await loadCharList();
+	themelist = await useThemeList(true);
 });
 
-const sidebar = useSidebar();
-sidebar.setRouteState({
-	
-});
 </script>
 
 <template>
 	<div>
 		<Navbar
-			:entries="navbarEntries"
-			:supported="{ download:false, save:true }"
-			state="cc"/>
+			:supported="{ download:false, save:true }"/>
 
 		<div class="page_contents">
-			<div v-for="char in assetList">
-				<img :src="char.thumbnail as any"/>
-			</div>
+			<CharRenderer/>
+			<!-- TODO: ADD CATEGORY SUPPORT WIth folders -->
+			Filter by [Theme], [Custom/Stock characters], [Category (Default: All)]
+			<Dropdown class="theme_filter">
+				<template #toggle>
+					Theme
+				</template>
+				<DropdownItem>
+					None
+				</DropdownItem>
+				<DropdownItem v-for="theme in themelist">
+					<img class="icon" :src="`/img/themes/icons/${theme.id}.webp`" alt=""/>
+					{{ theme.name }}
+				</DropdownItem>
+			</Dropdown>
+			<DataList
+				class="char_list"
+				:data="{ folders:[], entries:assetList }"
+				:is-loading="isLoading"
+				:columns="columns"
+				:selected-sort="selectedSort"
+				:restrictions="{
+					mode: 'grid'
+				}"
+				:row-component="CharListRow as any as DataListRow2<Asset>"
+			/>
 		</div>
 	</div>
 </template>

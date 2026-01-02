@@ -1,6 +1,7 @@
 <style lang="css">
 .cc_popup_container {
 	background: #0000;
+	backdrop-filter: none;
 }
 .cc_popup_container .popup {
 	max-height: 100%;

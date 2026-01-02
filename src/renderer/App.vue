@@ -19,7 +19,7 @@ html, body {
 	height: 100%;
 }
 body.col_resize {
-	cursor: col-resize;
+	cursor: col-resize !important;
 }
 
 #app {
@@ -44,19 +44,28 @@ a:hover {
 	pointer-events: none;
 	padding: 2px 8px;
 	font-size: 14px;
-	animation: 0.15s var(--slide-anim) fadein;
+	animation: 0.15s var(--slide-anim) tooltip_fade;
 	z-index: 99999;
 }
 
-@keyframes fadein {
-	0% {
-		opacity: 0;
-		transform: translateY(-10px);
-	}
-	100% {
-		opacity: 1;
-		transform: auto;
-	}
+::-webkit-scrollbar {
+	background: #0000;
+}
+::-webkit-scrollbar-thumb {
+	background: #0004;
+	border: 4px solid hsl(252deg 16% 94%);
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #0006;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+	background: #fff6;
+	border-color: hsl(250 9% 16% / 1);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+	background: #fff9;
 }
 
 html.dark {
@@ -66,6 +75,17 @@ html.dark {
 html.dark, html.dark>body {
 	background: #000;
 	color: hsl(0deg 0% 82%);
+}
+
+@keyframes tooltip_fade {
+	0% {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	100% {
+		opacity: 1;
+		transform: auto;
+	}
 }
 
 @font-face {

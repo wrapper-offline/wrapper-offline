@@ -1,6 +1,7 @@
 <style lang="css">
 .popup_container {
 	background: #0e0e109d;
+	backdrop-filter: blur(2px);
 	animation: 0.1s popup_container_fade forwards ease-out;
 	z-index: 9;
 	display: flex;

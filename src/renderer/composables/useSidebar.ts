@@ -1,4 +1,4 @@
-import { onUnmounted, reactive, VueElement } from "vue";
+import { onUnmounted, reactive } from "vue";
 
 interface SidebarRouteState {
 	/** slide the sidebar out of views */
@@ -54,5 +54,7 @@ function setRouteState(newState:Partial<SidebarRouteState>) {
 	for (let i in newState) {
 		currentState[i] = newState[i]
 	}
-	stateChangeCb({...currentState}, oldState);
+	if (stateChangeCb) {
+		stateChangeCb({...currentState}, oldState);
+	}
 }

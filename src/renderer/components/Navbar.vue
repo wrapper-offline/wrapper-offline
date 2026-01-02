@@ -126,13 +126,9 @@ html.dark header .search_box:focus {
 <script setup lang="ts">
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import useListStore from "../composables/useListStore";
-
-export interface NavbarEntry {
-	path: string,
-	title: string,
-};
+import { useNavbar } from "../composables/useNavbar";
 
 const emit = defineEmits<{
 	downloadClick: [],
@@ -142,8 +138,6 @@ const emit = defineEmits<{
 defineProps<{
 	/** display a number at the end of a final link */
 	count?: number,
-	/** address entries */
-	entries: NavbarEntry[],
 	/** specify supported features to show */
 	supported?: {
 		/**	displays a download button */
@@ -163,6 +157,8 @@ defineProps<{
 
 const router = useRouter();
 const { search, viewMode, zoomLevel } = useListStore();
+const navbar = useNavbar();
+let entries = navbar.currentState.entries;
 
 function backButtonClick() {
 	router.back();
@@ -213,6 +209,10 @@ function zoomSliderMoved(e:InputEvent) {
 	const newVal = target.valueAsNumber;
 	zoomLevel.set(newVal);
 }
+
+onBeforeRouteLeave(() => {
+	navbar.resetState();
+});
 </script>
 
 <template>
@@ -221,10 +221,17 @@ function zoomSliderMoved(e:InputEvent) {
 			<div class="nav_btn" v-tooltip="'Back'" @click="backButtonClick"><i class="ico left"></i></div>
 			<div class="nav_btn" v-tooltip="'Forward'" @click="forwardButtonClick"><i class="ico right"></i></div>
 			<div class="link_container">
-				<RouterLink v-for="parent in entries.slice(0, -1)" :to="parent.path" class="link parent_link">
-					{{ parent.title }}
-					<div class="caret"><i class="ico right"></i></div>
-				</RouterLink>
+				<template v-for="parent in entries.slice(0, -1)">
+					<RouterLink v-if="parent.path" :to="parent.path" class="link parent_link">
+						{{ parent.title }}
+						<div class="caret"><i class="ico right"></i></div>
+					</RouterLink>
+					<div v-else class="link parent_link">
+						{{ parent.title }}
+						<div class="caret"><i class="ico right"></i></div>
+					</div>
+				</template>
+				
 				<span v-if="entries.length > 0" class="link final_link">
 					{{ entries[entries.length - 1].title }}
 					<template v-if="count">

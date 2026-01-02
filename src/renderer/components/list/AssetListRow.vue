@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="T extends Asset">
 import type { Asset } from "../../interfaces/Asset";
-import AssetEntryOptions from "./options/AssetRowOptions.vue";
+import AssetRowOptions from "./options/AssetRowOptions.vue";
 import AssetImage from "../AssetImage.vue";
 import AssetInfoModal from "../AssetInfoModal.vue";
 import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { inject, ref, toValue } from "vue";
-import type { FieldIdOf } from "../../interfaces/ListTypes";
+import { defineComponent, inject, ref, toValue } from "vue";
+import type { FieldId } from "../../interfaces/DataList";
 import { flattenAssetType } from "../../utils/flattenAssetType";
 import locale from "../../locale/en_US";
 
@@ -20,6 +20,9 @@ const props = defineProps<{
 	checked: boolean,
 	entry: T
 }>();
+defineComponent({
+	optionsComponent: AssetRowOptions
+});
 defineExpose({ id:props.entry.id });
 
 /** list of columns to be displayed */
@@ -82,7 +85,7 @@ function assetInfoUpdated({ title }:Partial<T>) {
  * returns normalized asset info to be displayed
  * @param field id of field to return
  */
-function assetInfo(field:FieldIdOf<T>): string {
+function assetInfo(field:FieldId<T>): string {
 	switch (field) {
 		case "type": {
 			const flatType = flattenAssetType(
@@ -124,7 +127,7 @@ function assetInfo(field:FieldIdOf<T>): string {
 			<span>{{ assetInfo(columnId) }}</span>
 		</td>
 		<td class="hidden">
-			<AssetEntryOptions :entry="entry"/>
+			<AssetRowOptions :entry="entry"/>
 		</td>
 		<Teleport to="body">
 			<AssetInfoModal
