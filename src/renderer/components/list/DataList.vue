@@ -217,113 +217,117 @@ grid view
 .data_list_container.grid {
 	background: #0000;
 }
+.data_list_container.grid .select_mode_options .side_padding  {
+	margin-left: max(0px, calc((100% - (38 * v-bind("zoomLevel.css()"))) / 2));
+}
 .data_list_container.grid table.data_list {
 	display: block;
 }
 .data_list_container.grid table.data_list thead.list_head {
+	padding: 0 max(0px, calc((100% - (38 * v-bind("zoomLevel.css()"))) / 2));
 	display: block;
 }
 .data_list_container.grid table.data_list tbody {
-	display: block;
-	padding-top: 20px;
-	padding-left: 25px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, calc(4 * v-bind("zoomLevel.css()")));
+	column-gap: 25px;
+	justify-content: space-evenly;
+	margin: 0 auto;
+	padding: 20px 25px 0;
+	/* only allow 8 columns on the smallest possible size */
+	max-width: calc(38 * v-bind("zoomLevel.css()"));
 }
 /* entry */
-.data_list_container.grid table.data_list tbody tr {
-	background-color: hsl(252deg 16% 97%);
-	border: 1px solid hsl(252deg 16% 82%);
-	border-radius: 4px;
+.data_list_container.grid table.data_list tbody div.dl_cell {
+	border: 1px solid hsl(240 12% 76% / 1);
+	border-radius: 6px;
 	transition: width 0.2s var(--button-anim);
 	align-items: start;
 	display: inline-flex;
 	flex-direction: column;
-	margin: 0 10px 20px;
-	padding: 6px 7px;
+	margin: 0 0 20px;
 	width: calc(4 * v-bind("zoomLevel.css()"));
-	height: auto;
 }
-.data_list_container.grid table.data_list tbody tr td {
-	padding: 0;
-}
-/* checkbox */
-.data_list_container.grid table.data_list tbody tr td:first-of-type {
-	margin: -20px 0 0;
-	position: relative;
-	top: 20px;
-	left: 3px;
-	z-index: 1;
-}
-/* name column */
-.data_list_container.grid table.data_list tbody tr td.title {
-	display: block;
-}
-.data_list_container.grid table.data_list tbody tr td.title img {
+.data_list_container.grid table.data_list tbody div.dl_cell img {
+	border-radius: 5.5px 5.5px 0 0;
 	transition: filter 0.2s var(--button-anim);
 	margin: 0;
 	width: 100%;
 	height: auto;
 }
-.data_list_container.grid table.data_list tbody tr td.title span {
-	font-weight: bold;
-	line-height: 17px;
-	margin: 6px 0 4px;
-	width: calc(calc(4 * v-bind("zoomLevel.css()")) - 14px);
-}
-/* iv, duration */
-.data_list_container.grid table.data_list tbody tr td:nth-child(3),
-.data_list_container.grid table.data_list tbody tr td:nth-child(4) {
+.data_list_container.grid table.data_list tbody div.dl_cell span.duration {
 	background: #000a;
 	color: #fff;
-	font-family: monospace;
+	border-radius: 3px;
+	letter-spacing: 0.5px;
 	font-size: 12px;
-	padding: 0 4px;
-}
-.data_list_container.grid table.data_list tbody tr td:nth-child(3) {
-	display: none;
-	margin: -20px 0 0 auto;
-	position: relative;
-	top: -30px;
-	right: 2px;
-}
-.data_list_container.grid table.data_list tbody tr td:nth-child(4) {
 	margin: -20px 0 0;
+	padding: 0 4px;
 	position: relative;
-	top: -30px;
+	top: -5px;
 	left: 4px;
 }
-/* actions */
-.data_list_container.grid table.data_list tbody tr td.actions {
+.data_list_container.grid table.data_list tbody div.dl_cell div.actions {
 	background: #000c;
 	border-radius: 16px;
-	margin: -26px auto 0;
-	padding: 7px 11px 5px 1px;
+	display: none;
+	margin: -33px auto 0;
+	padding: 4px 13px 2px 3px;
 	position: relative;
 	top: calc(
-		-37px - 
+		14px - 
 		((
 			(9 / 16) * ((4 * v-bind("zoomLevel.css()")) - 8px)
 		) / 2)
 	);
 }
+.data_list_container.grid table.data_list tbody div.dl_cell div.actions a {
+	color: #fff;
+}
+.data_list_container.grid table.data_list tbody div.dl_cell div.data {
+	border-top: 1px solid hsl(240 12% 76% / 1);
+	padding: 4px 8px 9px;
+	width: 100%;
+}
+.data_list_container.grid table.data_list tbody div.dl_cell div.data span {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.data_list_container.grid table.data_list tbody div.dl_cell div.data span:nth-child(1) {
+	font-weight: bold;
+}
+.data_list_container.grid table.data_list tbody div.dl_cell div.data span:nth-child(2) {
+	opacity: 0.8;
+	line-height: 18px;
+}
 
-.data_list_container.grid table.data_list tbody tr:hover {
+.data_list_container.grid table.data_list tbody div.dl_cell:hover {
 	background-color: hsl(338deg 55% 85%);
 	border-color: hsl(338deg 55% 77%);
 }
-.data_list_container.grid table.data_list tbody tr:hover td.title img {
+.data_list_container.grid table.data_list tbody div.dl_cell:hover img {
 	filter: brightness(0.5)
 }
-.data_list_container.grid table.data_list tbody tr:hover td:nth-child(3) {
+.data_list_container.grid table.data_list tbody div.dl_cell:hover div.actions {
 	display: block;
 }
+.data_list_container.grid table.data_list tbody div.dl_cell:hover div.data {
+	border-color: hsl(338deg 55% 77%);
+}
 
-.data_list_container.grid table.data_list tbody tr.checked {
+.data_list_container.grid table.data_list tbody div.dl_cell.checked {
 	background-color: hsl(344 80% 50% / 0.55);
 	border-color: hsl(344deg 97% 65%);
 }
+.data_list_container.grid table.data_list tbody div.dl_cell.checked div.data {
+	border-color: hsl(344deg 97% 65%);
+	color: #fff;
+}
 
 .data_list_container.grid.select_mode table.data_list {
-	margin-top: 34px;
+	margin-top: -1px;
 }
 
 
@@ -363,44 +367,40 @@ html.dark table.data_list tbody tr.checked {
 	background: hsl(342 47% 40% / 0.45);
 }
 /* grid mode */
-html.dark .data_list_container.grid table.data_list tbody tr {
-	background-color: hsl(246deg 8% 18%);
-	border-color: hsl(250deg 11% 26%);
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell,
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell div.data {
+	border-color: hsl(250 9% 24% / 1);
 }
-/* iv, duration */
-html.dark .data_list_container.grid table.data_list tbody tr td:nth-child(3),
-html.dark .data_list_container.grid table.data_list tbody tr td:nth-child(4) {
-	background: #000a;
-	color: #fff;
-	font-family: monospace;
-	font-size: 12px;
-	padding: 0 4px;
-}
-
-html.dark .data_list_container.grid table.data_list tbody tr:hover {
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell:hover {
 	background-color: hsl(330 26% 26% / 1);
 	border-color: hsl(330 26% 41% / 1);
 }
-
-html.dark .data_list_container.grid table.data_list tbody tr.checked {
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell:hover div.data {
+	border-color: hsl(330 26% 41% / 1);
+}
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell.checked {
 	background: hsl(342 47% 40% / 0.45);
+	border-color: hsl(342deg 55% 48%);
+}
+html.dark .data_list_container.grid table.data_list tbody div.dl_cell.checked div.data {
 	border-color: hsl(342deg 55% 48%);
 }
 </style>
 
-<script setup lang="ts" generic="Entry extends GenericListEntry,
+<script setup lang="ts" generic="Entry extends DataListEntry,
 	Row extends DataListRow2<Entry>">
-import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import type {
-	DataListRow2,
-	FieldId,
-	GenericListEntry,
-	ListFieldColumn,
-	SelectedListSort
+import { genericColumnIdKey, modeKey } from "../../keys/listTreeKeys";
+import {
+	type DataListRow2,
+	type FieldId,
+	type DataListEntry,
+	type ListFieldColumn,
+	type SelectedListSort,
+	ViewMode
 } from "../../interfaces/DataList";
 import FolderIcon from "../icons/FolderIcon.vue";
 import locale from "../../locale/en_US";
-import { onMounted, onUnmounted, provide, Ref, ref, toValue, useTemplateRef, watch } from "vue";
+import { onMounted, onUnmounted, provide, reactive, ref, toValue, useTemplateRef, watch } from "vue";
 import useListStore from "../../composables/useListStore";
 import { useRoute, useRouter } from "vue-router";
 import { useScreenWidth } from "../../composables/useScreenWidth";
@@ -433,17 +433,17 @@ const props = defineProps<{
 	selectedSort: SelectedListSort<Entry>,
 	restrictions?: {
 		/** restrict supported view modes */
-		mode?: "list" | "grid",
+		mode?: ViewMode,
 	},
 	/** row component to use when displaying entries */
 	rowComponent: Row,
 }>();
 
-const modeRestriction = props?.restrictions?.mode ?? false;
+const modeRestriction = props.restrictions?.mode === null ? false : props.restrictions?.mode;
 const route = useRoute();
 const router = useRouter();
 const screenWidth = useScreenWidth();
-const { search, viewMode, zoomLevel } = useListStore();
+const { search, viewMode: viewMode2, zoomLevel } = useListStore();
 
 const columnIds = props.columns.map((v) => v.id);
 const selectAllBox = useTemplateRef("select-all-box")
@@ -456,15 +456,15 @@ const selection = ref<{
 });
 /** list of ids to display filtered by the current search box input */
 const filteredEntryIds:{
-	folders: string[],
-	entries: string[],
-} = {
-	folders: [],
-	entries: [],
-};
+	folders: string[] | null,
+	entries: string[] | null,
+} = reactive({
+	folders: null,
+	entries: null,
+});
 const listRows = useTemplateRef("list-row");
 /** current view mode */
-const mode = () => modeRestriction ? modeRestriction : viewMode.value;
+const mode = () => modeRestriction ? modeRestriction : viewMode2.value;
 
 /**
  * filters entries or folders by name
@@ -494,6 +494,17 @@ function resetSelection() {
 	selection.value.anchor = 0;
 	selection.value.entries = [];
 	syncSelectAllBox();
+}
+
+/**
+ * updates filtered entries
+ */
+function updateFilter(newFiltered: {
+	folders: string[] | null,
+	entries: string[] | null,
+}) {
+	filteredEntryIds.folders = newFiltered.folders;
+	filteredEntryIds.entries = newFiltered.entries;
 }
 
 /**
@@ -650,9 +661,13 @@ function ctrlADown(e:KeyboardEvent) {
 }
 
 provide(genericColumnIdKey<Entry>(), columnIds);
+provide(modeKey, mode);
 
 watch(() => search.value, (newSearch:string) => {
-	// clear selection
+	if (newSearch.length == 0) {
+		filteredEntryIds.entries = null;
+		filteredEntryIds.folders = null;
+	}
 	resetSelection();
 	filteredEntryIds.entries = [];
 	filteredEntryIds.folders = [];
@@ -666,7 +681,7 @@ onUnmounted(() => {
 	document.removeEventListener("keydown", ctrlADown);
 });
 
-defineExpose({ resetSelection });
+defineExpose({ resetSelection, updateFilter });
 
 </script>
 
@@ -674,7 +689,7 @@ defineExpose({ resetSelection });
 	<div :class="{
 		data_list_container: true,
 		load_state: isLoading,
-		grid: mode() == 'grid',
+		grid: mode() == ViewMode.Grid,
 		multiselect: selection.entries.length > 1,
 		select_mode: selection.entries.length > 0
 	}" @click.self="resetSelection">
@@ -705,7 +720,7 @@ defineExpose({ resetSelection });
 							sort_option: true
 						}"
 						:style="{
-							width: mode() == 'list' ? 
+							width: mode() == ViewMode.List ? 
 								(screenWidth > 1200 ? 
 									field.width.value * screenWidth / 1000 : 
 									field.width.value) + 'px' : 
@@ -713,7 +728,7 @@ defineExpose({ resetSelection });
 						}"
 						@click.self="sortOption_click(field.id.toString())">
 						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
-						<div v-if="mode() == 'list'"
+						<div v-if="mode() == ViewMode.List"
 							class="dragger"
 							:style="{marginLeft: (screenWidth > 1200 ? 
 									field.width.value * screenWidth / 1000 : 
@@ -726,7 +741,7 @@ defineExpose({ resetSelection });
 			<tbody>
 				<template v-for="folder in data.folders">
 					<tr
-						v-if="search.value.length > 0 ? filteredEntryIds.folders.includes(folder.id) : true"
+						v-if="filteredEntryIds.folders === null ? true : filteredEntryIds.folders.includes(folder.id)"
 						class="entry folder"
 						@click="folder_click(folder.id)">
 						<td></td>
@@ -746,7 +761,8 @@ defineExpose({ resetSelection });
 				<template v-for="entry in data.entries">
 					<component
 						:is="rowComponent"
-						v-if="search.value.length > 0 ? filteredEntryIds.entries.includes(entry.id) : true"
+						:key="entry.id"
+						v-if="filteredEntryIds.entries === null ? true : filteredEntryIds.entries.includes(entry.id)"
 						ref="list-row"
 						:checked="selection.entries.includes(entry.id)"
 						:entry="entry"

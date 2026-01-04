@@ -15,8 +15,10 @@ interface CCCharObject {
 const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST;
 const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT;
 
+export const charThumb = (id:number) => `${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}/thumbnails/${id}.png`;
+
 const ccCharObject2Xml = (char:CCCharObject, themeId:string) => 
-	`<char id="${char.id}" name="${char.name || "Untitled"}" cc_theme_id="${themeId}" thumbnail_url="${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}/thumbnails/${char.id}.png" copyable="Y">
+	`<char id="${char.id}" name="${char.name || "Untitled"}" cc_theme_id="${themeId}" thumbnail_url="${charThumb(char.id)}" copyable="Y">
 		<tags>${themeId},_free,_cat:${char.category || "Stock characters"}</tags>
 	</char>`;
 
@@ -76,17 +78,19 @@ function fixThemeXml(themeId:string, themeXml:Buffer): Buffer {
  * returns an array of stock cc char objects
  * @param themeId theme id
  */
-function readStockCCChars(themeId:string): CCCharObject[] {
+export function readStockCCChars(): Record<string, CCCharObject[]>
+export function readStockCCChars(themeId:string): CCCharObject[]
+export function readStockCCChars(themeId?:string): Record<string, CCCharObject[]> | CCCharObject[] {
 	const filepath = path.join(Directories.static, "characters/index.json");
 	const contents = readFileSync(filepath, {
 		encoding: "utf-8"
 	});
 	// check if no stock chars for the theme exist before parsing
-	if (contents.indexOf(themeId) == -1) {
+	if (themeId && contents.indexOf(themeId) == -1) {
 		return [];
 	}
 	const stockChars = JSON.parse(contents);
-	return stockChars[themeId];
+	return themeId ? stockChars[themeId] : stockChars;
 }
 
 export default async function staticServer(

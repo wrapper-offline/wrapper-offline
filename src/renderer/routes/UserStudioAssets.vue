@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
 import type { Asset } from "../interfaces/Asset";
-import AssetRowOptions from "../components/list/options/AssetRowOptions.vue";
-import AssetListRow from "../components/list/AssetListRow.vue";
-import type { DataListRow2, FieldId, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
+import AssetRowOptions from "../components/list/options/AssetListOptions.vue";
+import AssetListRow from "../components/list/rows/AssetListRow.vue";
+import { ViewMode, type DataListRow2, type FieldId, type ListFieldColumn, type SelectedListSort } from "../interfaces/DataList";
 import { flattenAssetType } from "../utils/flattenAssetType";
 import DataList from "../components/list/DataList.vue";
 import Navbar from "../components/Navbar.vue";
@@ -184,7 +184,7 @@ initList();
 				:columns="columns"
 				:selected-sort="selectedSort"
 				:restrictions="{
-					mode: 'list'
+					mode: ViewMode.List
 				}"
 				:row-component="AssetListRow as any as DataListRow2<Asset>"
 				@column-resize="columnResized"

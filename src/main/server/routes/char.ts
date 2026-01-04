@@ -115,7 +115,6 @@ group.route("POST", "/goapi/saveCCCharacter/", (req, res) => {
 
 	const meta:Partial<Char> = {
 		type: "char",
-		subtype: "0",
 		title: req.body.title,
 		themeId: req.body.themeId
 	};
@@ -154,7 +153,6 @@ group.route("*", "/api/char/upload", (req, res) => {
 
 	const meta:Partial<Char> = {
 		type: "char",
-		subtype: "0",
 		title: origName || "Untitled",
 		themeId: CharModel.getThemeId(buffer)
 	};

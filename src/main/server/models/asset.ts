@@ -15,7 +15,6 @@ type Sound = {
 };
 type Background = {
 	type: "bg",
-	subtype: "0",
 	tags?: string,
 	title: string,
 	id: string,
@@ -56,7 +55,7 @@ export default class AssetModel {
 		}
 		Database.delete("assets", id);
 
-		const { type, subtype } = asset.data;
+		const type = asset.data.type;
 		// char ids don't have a file extension so we'll need to add it
 		if (type == "char") id += ".xml";
 		fs.unlinkSync(path.join(this.folder, id));
@@ -64,7 +63,7 @@ export default class AssetModel {
 		// delete video and char thumbnails
 		if (
 			type == "char" ||
-			subtype == "video"
+			(type == "prop" && asset.data.subtype == "video")
 		) {
 			const thumbId = id.slice(0, -3) + "png";
 			fs.unlinkSync(path.join(this.folder, thumbId));

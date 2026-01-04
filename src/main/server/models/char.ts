@@ -5,7 +5,6 @@ import path from "path";
 
 export type Char = {
 	type: "char",
-	subtype: "0",
 	title: string,
 	tags?: string,
 	themeId: string,

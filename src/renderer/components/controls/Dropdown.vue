@@ -12,8 +12,9 @@
 	border-radius: 4px;
 	z-index: 10;
 	position: absolute;
-	padding: 5px 0;
 	margin: -1px 0 0 5px;
+	padding: 5px 0;
+	width: max-content;
 }
 .dropdown.right .dropdown_content {
 	right: 0;

@@ -1,26 +1,18 @@
-<style src="./list_row_options.css"></style>
+<style src="./data_list_options.css"/>
 
-<script setup lang="ts" generic="T extends Movie">
+<script setup lang="ts">
 import { apiServer } from "../../../utils/AppInit";
-import type { Movie } from "../../../interfaces/Movie";
-import openPlayerWindow from "../../../utils/openPlayerWindow";
 import en_US from "../../../locale/en_US";
+import { Char } from "../../../interfaces/Asset";
 
 const emit = defineEmits<{
 	entryDelete: [string[]]
 }>();
 const props = defineProps<{
-	entry: T | string[]
+	entry: Char | string[]
 }>();
 
 const isSingular = !Array.isArray(props.entry);
-
-/**
- * called when play button is clicked
- */
-function playBtn_click() {
-	openPlayerWindow((props.entry as Movie).id);
-}
 
 /**
  * called when delete button is clicked
@@ -60,19 +52,11 @@ function idsAsArray() {
 </script>
 
 <template>
-	<div class="list_row_options">
-		<a
-			v-show="isSingular"
-			class="option"
-			href="javascript:;"
-			v-tooltip="'Play'"
-			@click.stop.prevent="playBtn_click">
-			<i class="ico play"></i>
-		</a>
+	<div class="data_list_options">
 		<RouterLink
 			v-show="isSingular"
 			class="option"
-			:to="`/movies/edit/${(entry as T).id}`"
+			:to="`/movies/edit/${(entry as Char).id}`"
 			v-tooltip="'Edit'"
 			@click.stop>
 			<i class="ico brush"></i>

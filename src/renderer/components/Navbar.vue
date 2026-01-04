@@ -129,6 +129,7 @@ import DropdownItem from "./controls/DropdownItem.vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import useListStore from "../composables/useListStore";
 import { useNavbar } from "../composables/useNavbar";
+import { ViewMode } from "../interfaces/DataList";
 
 const emit = defineEmits<{
 	downloadClick: [],
@@ -197,7 +198,7 @@ function newFolderClick() {
  * called when the user clicks the view buttons
  * @param newView view to switch to
  */
-function changeView(newView:"grid"|"list") {
+function changeView(newView:ViewMode) {
 	viewMode.set(newView);
 }
 
@@ -280,16 +281,16 @@ onBeforeRouteLeave(() => {
 				</DropdownItem>
 			</Dropdown>
 			<!-- view options -->
-			<div v-if="supported?.viewMode && viewMode.value == 'list'"
+			<div v-if="supported?.viewMode && viewMode.value == ViewMode.List"
 				class="nav_btn"
 				v-tooltip="'Display as grid'"
-				@click="() => changeView('grid')">
+				@click="() => changeView(ViewMode.Grid)">
 				<i class="ico grid"></i>
 			</div>
-			<div v-if="supported?.viewMode && viewMode.value == 'grid'"
+			<div v-if="supported?.viewMode && viewMode.value == ViewMode.Grid"
 				class="nav_btn"
 				v-tooltip="'Display as list'"
-				@click="() => changeView('list')">
+				@click="() => changeView(ViewMode.List)">
 				<i class="ico blist"></i>
 			</div>
 		</div>

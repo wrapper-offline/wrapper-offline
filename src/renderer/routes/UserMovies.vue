@@ -9,7 +9,7 @@ import { apiServer } from "../utils/AppInit";
 import type { DataListRow2, FieldId, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
 import DataList from "../components/list/DataList.vue";
 import type { Movie } from "../interfaces/Movie";
-import MovieListRow from "../components/list/MovieListRow.vue";
+import MovieListRow from "../components/list/rows/MovieListRow.vue";
 import Navbar from "../components/Navbar.vue";
 import {
 	onMounted,
@@ -96,9 +96,9 @@ function timestampToSeconds(time:string) {
  * @param movie1 movie 1
  * @param movie2 movie 2
  */
-function movieSortCb(movie1:Movie, movie2:Movie): number {
-	let mul = toValue(selectedSort).descending ? 1 : -1;
-	const sortOption = toValue(selectedSort).id;
+function movieSort(movie1:Movie, movie2:Movie): number {
+	let mul = selectedSort.value.descending ? 1 : -1;
+	const sortOption = selectedSort.value.id;
 	switch (sortOption) {
 		case "id":
 		case "title": {
@@ -132,7 +132,7 @@ function changeSort(newSort:FieldId<Movie>) {
 		};
 	}
 	localStorage.setItem("movie_list-selectedSort", JSON.stringify(toValue(selectedSort)));
-	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
+	movieList.value.entries = movieList.value.entries.sort(movieSort);
 }
 
 /**
@@ -237,7 +237,7 @@ async function loadMovieList() {
 		// ];
 		movieList.value = response.list_data;
 	}
-	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
+	movieList.value.entries = movieList.value.entries.sort(movieSort);
 	setTimeout(() => {
 		isLoading.value = false;
 	}, 80);

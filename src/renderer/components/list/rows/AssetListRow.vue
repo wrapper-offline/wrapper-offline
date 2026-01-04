@@ -1,13 +1,19 @@
+<script lang="ts">
+export default {
+	optionsComponent: AssetListOptions
+};
+</script>
+
 <script setup lang="ts" generic="T extends Asset">
-import type { Asset } from "../../interfaces/Asset";
-import AssetRowOptions from "./options/AssetRowOptions.vue";
-import AssetImage from "../AssetImage.vue";
-import AssetInfoModal from "../AssetInfoModal.vue";
-import { genericColumnIdKey } from "../../keys/listTreeKeys";
-import { defineComponent, inject, ref, toValue } from "vue";
-import type { FieldId } from "../../interfaces/DataList";
-import { flattenAssetType } from "../../utils/flattenAssetType";
-import locale from "../../locale/en_US";
+import type { Asset } from "../../../interfaces/Asset";
+import AssetListOptions from "../options/AssetListOptions.vue";
+import AssetImage from "../../AssetImage.vue";
+import AssetInfoModal from "../../AssetInfoModal.vue";
+import { genericColumnIdKey } from "../../../keys/listTreeKeys";
+import { inject, ref, toValue } from "vue";
+import type { FieldId } from "../../../interfaces/DataList";
+import { flattenAssetType } from "../../../utils/flattenAssetType";
+import locale from "../../../locale/en_US";
 
 const emit = defineEmits<{
 	entryDelete: [string],
@@ -20,9 +26,6 @@ const props = defineProps<{
 	checked: boolean,
 	entry: T
 }>();
-defineComponent({
-	optionsComponent: AssetRowOptions
-});
 defineExpose({ id:props.entry.id });
 
 /** list of columns to be displayed */
@@ -87,12 +90,9 @@ function assetInfoUpdated({ title }:Partial<T>) {
  */
 function assetInfo(field:FieldId<T>): string {
 	switch (field) {
+		case "index": {}
 		case "type": {
-			const flatType = flattenAssetType(
-				props.entry.type,
-				props.entry.subtype,
-				props.entry.ptype
-			);
+			const flatType = flattenAssetType(props.entry);
 			return locale.asset.flat_type_map[flatType];
 		}
 		default: return props.entry[field].toString();
@@ -127,7 +127,7 @@ function assetInfo(field:FieldId<T>): string {
 			<span>{{ assetInfo(columnId) }}</span>
 		</td>
 		<td class="hidden">
-			<AssetRowOptions :entry="entry"/>
+			<AssetListOptions :entry="entry"/>
 		</td>
 		<Teleport to="body">
 			<AssetInfoModal

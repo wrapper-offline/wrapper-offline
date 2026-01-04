@@ -1,6 +1,8 @@
 import { InjectionKey } from "vue";
-import { FieldId, GenericListEntry } from "../interfaces/DataList";
+import { FieldId, DataListEntry, ViewMode } from "../interfaces/DataList";
 
 const columnIdKey = Symbol();
 /** list of list entry column ids to display */
-export const genericColumnIdKey = <T extends GenericListEntry>() => columnIdKey as InjectionKey<FieldId<T>[]>;
+export const genericColumnIdKey = <T extends DataListEntry>() => columnIdKey as InjectionKey<FieldId<T>[]>;
+/** which view mode to use */
+export const modeKey = Symbol() as InjectionKey<() => ViewMode>;

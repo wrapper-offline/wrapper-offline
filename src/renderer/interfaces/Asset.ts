@@ -23,6 +23,7 @@ export interface Base {
 export interface Char extends Base {
 	type: "char",
 	themeId: string,
+	thumbnail: string,
 };
 
 export interface ImageProp extends Base {
