@@ -97,6 +97,8 @@ export default async function staticServer(
 	req: IncomingMessage,
 	res: ServerResponse
 ) {
+	res.setHeader("access-control-allow-headers", "*");
+	res.setHeader("access-control-allow-origin", "*");
 	const themeXmlMatch = req.url.match(themeXmlPattern);
 	if (themeXmlMatch) {
 		return handleStudioTheme(themeXmlMatch[1], false, res);

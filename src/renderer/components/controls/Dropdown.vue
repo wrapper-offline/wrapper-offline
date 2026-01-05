@@ -19,10 +19,10 @@
 .dropdown.right .dropdown_content {
 	right: 0;
 }
-.v-enter-from {
+.dropdown-enter-from {
 	opacity: 0;
 }
-.v-enter-active {
+.dropdown-enter-active {
 	transition: opacity 300ms linear;
 }
 </style>
@@ -83,7 +83,7 @@ if (props.openWithHover) {
 		<div class="dropdown_toggle" ref="toggle">
 			<slot name="toggle">what</slot>
 		</div>
-		<Transition appear>
+		<Transition appear name="dropdown">
 			<div class="dropdown_content" v-show="showDropdown" ref="content">
 				<slot></slot>
 			</div>

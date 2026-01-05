@@ -573,7 +573,7 @@ defineExpose({ slideMode, width });
 						</button>
 					</li>
 				</template>
-				<RouterLink to="/movies/create" class="dropdown_item">Create a character</RouterLink>
+				<RouterLink to="/characters/create" class="dropdown_item">Create a character</RouterLink>
 				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator/>
 				<DropdownItem @click="charInput.click()">Upload a character</DropdownItem>
@@ -581,12 +581,6 @@ defineExpose({ slideMode, width });
 				<DropdownItem @click="starterUpload_click()">Upload a starter</DropdownItem>
 			</Dropdown>
 			<div class="spacer"></div>
-			<li class="link" :class="{sel:router.currentRoute.value.name == 'old_cc_page'}">
-				<RouterLink to="/characters_old">
-					<i class="ico person"></i>
-					<div class="link_text">Characters (old)</div>
-				</RouterLink>
-			</li>
 			<li class="link" :class="{sel:router.currentRoute.value.name == 'char_list'}">
 				<RouterLink to="/characters">
 					<i class="ico person"></i>

@@ -19,11 +19,11 @@ export const apiServer = `${import.meta.env.VITE_API_SERVER_HOST}:${import.meta.
 export const staticServer = `${import.meta.env.VITE_STATIC_SERVER_HOST}:${import.meta.env.VITE_STATIC_SERVER_PORT}`;
 export const staticPaths = {
 	//@ts-ignore
-	swfUrl: import.meta.env.VITE_SWF_URL,
+	swfUrl: import.meta.env.VITE_SWF_URL as string,
 	//@ts-ignore
-	storeUrl: import.meta.env.VITE_STORE_URL,
+	storeUrl: import.meta.env.VITE_STORE_URL as string,
 	//@ts-ignore
-	clientUrl: import.meta.env.VITE_CLIENT_URL,
+	clientUrl: import.meta.env.VITE_CLIENT_URL as string,
 };
 export const swfUrlBase = staticServer + staticPaths.swfUrl;
 /**

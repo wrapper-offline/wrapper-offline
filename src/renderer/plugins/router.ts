@@ -1,6 +1,7 @@
 import { createMemoryHistory, createRouter } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
+import CCView from "../routes/CCView.vue";
 import DefaultLayout from "../DefaultLayout.vue"
 import Error404View from "../routes/Error404View.vue";
 import PlayerView from "../routes/PlayerView.vue";
@@ -8,7 +9,6 @@ import StudioView from "../routes/StudioView.vue";
 import UserCharacters from "../routes/UserCharacters.vue";
 import UserMovies from "../routes/UserMovies.vue";
 import UserStudioAssets from "../routes/UserStudioAssets.vue";
-import LegacyUserCharacters from "../routes/LegacyUserCharacters.vue";
 
 const routes:RouteRecordRaw[] = [
 	{
@@ -46,17 +46,17 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/characters_old/:themeId?",
+		path: "/characters/create/:themeId?",
 		component: DefaultLayout,
 		children: [
 			{
-				name: "old_cc_page",
+				name: "cc",
 				path: "",
-				component: LegacyUserCharacters
+				component: CCView
 			},
 		],
 		meta: {
-			title: "Characters (old)"
+			title: "Character Creator"
 		},
 	},
 	{

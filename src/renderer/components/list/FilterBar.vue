@@ -42,6 +42,19 @@ div.filter_bar .filter_button.active {
 div.filter_bar .filter_button.active:hover {
 	opacity: 0.8;
 }
+
+html.dark div.filter_bar .filter_button {
+	border-color: hsl(250 9% 36% / 1);
+	color: #fff;
+}
+html.dark div.filter_bar .filter_button:hover {
+	background-color: hsl(216deg 35% 28%);
+	border-color: hsl(216deg 25% 47%);
+}
+html.dark div.filter_bar .filter_button.active {
+	background-color: hsl(216deg 80% 47% / 0.55);
+	border-color: hsl(216deg 67% 55%);
+}
 </style>
 
 <script setup lang="ts">

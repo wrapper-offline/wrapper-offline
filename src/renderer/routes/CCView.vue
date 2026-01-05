@@ -24,13 +24,13 @@
 
 <script setup lang="ts">
 import CCObject from "../components/CCObject.vue";
-import Navbar, { NavbarEntry } from "../components/Navbar.vue";
+import Navbar from "../components/Navbar.vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 import { onMounted, Ref, ref, useTemplateRef } from "vue";
-import ThemeSelector from "../components/ThemeSelector.vue";
 import { useSidebar } from "../composables/useSidebar";
 import useTempStorage from "../composables/useTempStorage";
 import { useThemeList } from "../composables/useThemeList";
+import CCThemeSelector from "../components/CCThemeSelector.vue";
 
 type CCObjectType = InstanceType<typeof CCObject>;
 
@@ -44,7 +44,6 @@ const baseNavbarEntry = {
 	path: "/characters_old",
 	title: "Characters"
 };
-const navbarEntries:Ref<NavbarEntry[]> = ref([]);
 const showDlButton = ref(false);
 const showObject = ref(false);
 const showSelector = ref(false);
@@ -67,10 +66,7 @@ function initObject(id:string) {
 }
 
 function ccEntered() {
-	navbarEntries.value.push({
-		path: "hope you like it",
-		title: "Creating a character"
-	});
+	
 	showDlButton.value = true;
 }
 
@@ -111,16 +107,7 @@ function themeIdCheck() {
  * populates the navbar with the base link and theme chars link
  */
 async function populateNavbar() {
-	const themeList = await useThemeList();
-	const theme = themeList.find(t => t.cc_theme_id == themeId);
-	navbarEntries.value = [
-		baseNavbarEntry,
-		{
-			path: "/characters_old/",
-			title: `${theme.name} Characters`
-		}
-	];
-	showDlButton.value = false;
+	
 }
 
 /**
@@ -155,7 +142,6 @@ onMounted(() => {
 <template>
 	<div>
 		<Navbar
-			:entries="navbarEntries"
 			:supported="{ download:showDlButton, save:true }"
 			state="cc"
 			@download-click="charDownload"/>
@@ -171,8 +157,7 @@ onMounted(() => {
 			</div>
 		</div> -->
 		<div class="page_contents">
-			<theme-selector
-				heading-for="Characters"
+			<CCThemeSelector
 				v-if="showSelector"
 				cc-filter
 				@theme-clicked="(theme) => themeClicked(theme.cc_theme_id)"/>

@@ -40,7 +40,10 @@
 }
 
 .popup .popup_head .head_left {
+	opacity: 0.7;
+	font-size: 13px;
 	flex: 1;
+    align-self: center;
 }
 .popup .popup_head .head_center {
 	text-align: center;
@@ -140,7 +143,7 @@ const { class: classList, show = true } = defineProps<{
 				v-show="typeof show != undefined ? show !== false : true">
 				<div class="popup">
 					<div class="popup_head">
-						<div class="head_left"></div>
+						<div class="head_left"><slot name="head-left"></slot></div>
 						<div class="head_center">
 							<span class="small"><slot name=small-heading></slot></span>
 							<span class="main"><slot name="large-heading"></slot></span>

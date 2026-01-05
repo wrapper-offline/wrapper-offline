@@ -439,7 +439,6 @@ const props = defineProps<{
 	rowComponent: Row,
 }>();
 
-const modeRestriction = props.restrictions?.mode === null ? false : props.restrictions?.mode;
 const route = useRoute();
 const router = useRouter();
 const screenWidth = useScreenWidth();
@@ -464,7 +463,7 @@ const filteredEntryIds:{
 });
 const listRows = useTemplateRef("list-row");
 /** current view mode */
-const mode = () => modeRestriction ? modeRestriction : viewMode2.value;
+const mode = () => props.restrictions?.mode ?? viewMode2.value;
 
 /**
  * filters entries or folders by name
