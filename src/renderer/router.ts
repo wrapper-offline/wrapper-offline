@@ -1,13 +1,13 @@
 import { createMemoryHistory, createRouter } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
-import DefaultLayout from "./DefaultLayout.vue"
-import Error404View from "./routes/Error404View.vue";
-import PlayerView from "./routes/PlayerView.vue";
-import StudioView from "./routes/StudioView.vue";
-import UserCharacters from "./routes/UserCharacters.vue";
-import UserMovies from "./routes/UserMovies.vue";
-import UserStudioAssets from "./routes/UserStudioAssets.vue";
+const DefaultLayout = () => import("./DefaultLayout.vue");
+const Error404View = () => import("./routes/Error404View.vue");
+const PlayerView = () => import("./routes/PlayerView.vue");
+const StudioView = () => import("./routes/StudioView.vue");
+const UserCharacters = () => import("./routes/UserCharacters.vue");
+const UserMovies = () => import("./routes/UserMovies.vue");
+const UserStudioAssets = () => import("./routes/UserStudioAssets.vue");
 
 const routes:RouteRecordRaw[] = [
 	{

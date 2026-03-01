@@ -601,7 +601,6 @@ defineExpose({ slideMode, width });
 			</li>
 		</ul>
 		<ul class="user_custom">
-			<h3>Recent</h3>
 		</ul>
 		<ul>
 			<li class="group">
