@@ -231,33 +231,47 @@ export default function processVoice(
 				}
 	
 				case "tiktok": {
+					text = text.slice(0, 199).trim();
+					const params = new URLSearchParams({
+						aid: "1233",
+						req_text: text,
+						region: voice.country,
+						text_speaker: voice.arg,
+					}).toString();
 					const req = https.request(
 						{
-							hostname: "tiktok-tts.weilnet.workers.dev",
-							path: "/api/generation",
+							hostname: "api16-normal-useast5.us.tiktokv.com",
+							path: `/media/api/text/speech/invoke/?${params}`,
 							method: "POST",
 							headers: {
-								"Content-type": "application/json"
+								"cache-control": "no-cache",
+								"content-type": "application/json",
+								"cookie": "sessionid=cc11cb1a8f38fd855aad30660349dd8a",
+								"responsetype": "ResponseType.json",
+								"sdk-version": "2",
+								"user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:98.0) Gecko/20100101 Firefox/98.0"
 							}
 						},
 						(r) => {
 							let body = "";
 							r.on("error", (e) => rej(e));
-							r.on("data", (b) => body += b);
+							r.on("data", (c) => body += c);
 							r.on("end", () => {
-								const json = JSON.parse(body);
-								if (json.success != true) {
-									return rej(json.error);
+								try {
+									const json = JSON.parse(body);
+									if (json.status_code != 0) {
+										return rej(`TikTok error: ${json.status_code} - ${json.message}`);
+									}
+									console.log(Object.keys(json).join(" "))
+									resolve(Buffer.from(json.data.v_str, "base64"));
+								} catch (e) {
+									return rej(e);
 								}
-								resolve(Buffer.from(json.data, "base64"));
 							});
-							r.on("error", rej);
 						}
-					).on("error", (e) => rej(e));
-					req.end(JSON.stringify({
-						text: text,
-						voice: voice.arg
-					}));
+					);
+					req.on("error", (e) => rej(e));
+					req.end();
 					break;
 				}
 	

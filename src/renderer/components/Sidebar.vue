@@ -600,8 +600,7 @@ defineExpose({ slideMode, width });
 				</RouterLink>
 			</li>
 		</ul>
-		<ul class="user_custom">
-		</ul>
+		<ul class="user_custom"></ul>
 		<ul>
 			<li class="group">
 				<ul>
