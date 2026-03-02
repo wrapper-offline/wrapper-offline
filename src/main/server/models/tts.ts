@@ -162,19 +162,41 @@ export default function processVoice(
 					);
 					break;
 				}
-	
-				case "polly": {
-					const q = new URLSearchParams({
+
+				case "streamlabs": {
+					const query = new URLSearchParams({
 						voice: voice.arg,
 						text: text,
 					}).toString();
-	
-					https
-						.get(`https://api.streamelements.com/kappa/v2/speech?${q}`, resolve)
-						.on("error", rej);
+					const req = https.get(
+						{
+							hostname: "streamlabs.com",
+							path: `/polly/speak?${query}`,
+							method: "POST",
+							headers: {
+								"referer": "https://streamlabs.com"
+							}
+						}, (r) => {
+							let body = "";
+							r.on("data", (d) => body += d);
+							r.on("end", () => {
+								try {
+									const json = JSON.parse(body);
+									if (!json.success) {
+										return rej("Streamlabs error: " + json.message);
+									}
+									const url = json.speak_url;
+									https.get(url, resolve);
+								} catch (e) {
+									return rej(e);
+								}
+							});
+						}
+					);
+					req.on("error", (e) => rej("hello" + e));
 					break;
 				}
-	
+
 				case "readloud": {
 					const body = new URLSearchParams({
 						but1: text,
@@ -341,39 +363,6 @@ export default function processVoice(
 					https
 						.get(`https://api.ispeech.org/api/rest?${q}`, resolve)
 						.on("error", rej);
-					break;
-				}
-
-				// again thx unicom for this fix
-				case "voiceforge": {
-					// the people want this
-					text = await convertVoiceforgeText(text, voice.arg);
-					const queryString = new URLSearchParams({
-						msg: text,
-						voice: voice.arg,
-						email: "chopped@chin.com"
-					}).toString();
-					const req = https.request(
-						{
-							hostname: "api.voiceforge.com",
-							path: `/swift_engine?${queryString}`,
-							method: "GET",
-							headers: {
-								"Host": "api.voiceforge.com",
-								"User-Agent": "just_audio/2.7.0 (Linux;Android 14) ExoPlayerLib/2.15.0",
-								"Connection": "Keep-Alive",
-								"Http_x_api_key": "8b3f76a8539",
-								"Accept-Encoding": "gzip, deflate, br",
-								"Icy-Metadata": "1",
-							}
-						}, (r) => {
-							r.on("error", (e) => rej(e));
-							fileUtil.convertToMp3(r, "wav")
-								.then(stream => resolve(stream as Readable))
-								.catch((e) => rej(e));
-						}
-					).on("error", (e) => rej(e));
-					req.end();
 					break;
 				}
 	
