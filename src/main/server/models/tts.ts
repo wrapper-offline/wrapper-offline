@@ -1,5 +1,4 @@
 import brotli from "brotli";
-import fileUtil from "../utils/fileUtil";
 import https from "https";
 import voiceList from "../data/voices.json";
 import { Readable } from "stream";
@@ -16,80 +15,38 @@ export default function processVoice(
 	return new Promise(async (resolve, rej) => {
 		const voice = voiceList.voices[voiceName];
 		if (typeof voice == "undefined") {
-			return rej("Requested voice is not supported");
+			return rej("Requested voice is unavailable");
 		}
 
 		try {
 			switch (voice.source) {
 				case "acapela": {
-					let acapelaArray = [];
-					for (let c = 0; c < 15; c++) acapelaArray.push(~~(65 + Math.random() * 26));
-					const email = `${String.fromCharCode.apply(null, acapelaArray)}@gmail.com`;
-	
-					let req = https.request(
+					text = text.trim().slice(0, 2999);
+					const query = new URLSearchParams({
+						voice: voice.arg,
+						text: text,
+						output: "stream",
+						type: "mp3",
+						samplerate: "22050",
+						token: "bd8b22e3e5ebbaa05ea0055aec4e16c357c29486"
+					}).toString();
+					const req = https.get(
 						{
-							hostname: "acapelavoices.acapela-group.com",
-							path: "/index/getnonce",
-							method: "POST",
-							headers: {
-								"Content-Type": "application/x-www-form-urlencoded",
-							},
+							hostname: "www.acapela-cloud.com",
+							path: `/api/command/?${query}`,
 						},
 						(r) => {
-							let buffers = [];
-							r.on("data", (b) => buffers.push(b));
-							r.on("end", () => {
-								const nonce = JSON.parse(Buffer.concat(buffers).toString()).nonce;
-								let req = https.request(
-									{
-										hostname: "h-ir-ssd-1.acapela-group.com",
-										path: "/Services/Synthesizer",
-										method: "POST",
-										headers: {
-											"Content-Type": "application/x-www-form-urlencoded",
-										},
-									},
-									(r) => {
-										let buffers = [];
-										r.on("data", (d) => buffers.push(d));
-										r.on("end", () => {
-											const html = Buffer.concat(buffers);
-											const beg = html.indexOf("&snd_url=") + 9;
-											const end = html.indexOf("&", beg);
-											const sub = html.subarray(beg, end).toString();
-											if (sub.includes("err_code")) {
-												rej("An error occured during generation.");
-												return;
-											}
-											https
-												.get(sub, resolve)
-												.on("error", rej);
-										});
-										r.on("error", rej);
-									}
-								).on("error", rej);
-								req.end(
-									new URLSearchParams({
-										cl_vers: "1-30",
-										req_text: text,
-										cl_login: "AcapelaGroup",
-										cl_app: "AcapelaGroup_WebDemo_Android",
-										req_comment: `{"nonce":"${nonce}","user":"${email}"}`,
-										prot_vers: "2",
-										cl_env: "ACAPELA_VOICES",
-										cl_pwd: "",
-										req_voice: voice.arg,
-										req_echo: "ON",
-									}).toString()
-								);
-							});
+							try {
+								if (r.statusCode != 200) {
+									return rej("Acapela error occurred");
+								}
+								resolve(r);
+							} catch (e) {
+								rej(e);
+							}
 						}
-					).on("error", rej);
-					req.end(
-						new URLSearchParams({
-							json: `{"googleid":"${email}"`,
-						}).toString()
-					);
+					)
+					req.on("error", rej);
 					break;
 				}
 	
@@ -193,7 +150,7 @@ export default function processVoice(
 							});
 						}
 					);
-					req.on("error", (e) => rej("hello" + e));
+					req.on("error", (e) => rej(e));
 					break;
 				}
 
@@ -253,8 +210,8 @@ export default function processVoice(
 				}
 	
 				case "tiktok": {
-					text = text.slice(0, 199).trim();
-					const params = new URLSearchParams({
+					text = text.trim().slice(0, 199);
+					const query = new URLSearchParams({
 						aid: "1233",
 						req_text: text,
 						region: voice.country,
@@ -263,7 +220,7 @@ export default function processVoice(
 					const req = https.request(
 						{
 							hostname: "api16-normal-useast5.us.tiktokv.com",
-							path: `/media/api/text/speech/invoke/?${params}`,
+							path: `/media/api/text/speech/invoke/?${query}`,
 							method: "POST",
 							headers: {
 								"cache-control": "no-cache",
@@ -284,7 +241,6 @@ export default function processVoice(
 									if (json.status_code != 0) {
 										return rej(`TikTok error: ${json.status_code} - ${json.message}`);
 									}
-									console.log(Object.keys(json).join(" "))
 									resolve(Buffer.from(json.data.v_str, "base64"));
 								} catch (e) {
 									return rej(e);

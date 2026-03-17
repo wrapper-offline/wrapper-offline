@@ -2560,789 +2560,1757 @@
 			"arg": "ukenglishfemale",
 			"desc": "Victoria"
 		},
-		"leila": {
-			"country": "SA",
-			"language": "ar",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "leila22k",
-			"desc": "leila"
-		},
-		"mehdi": {
+		"jalal22k": {
 			"country": "SA",
 			"language": "ar",
 			"gender": "M",
 			"source": "acapela",
-			"arg": "mehdi22k",
-			"desc": "mehdi"
+			"arg": "Jalal22k_HQ",
+			"desc": "Jalal"
 		},
-		"nizar": {
-			"country": "SA",
-			"language": "ar",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "nizar22k",
-			"desc": "nizar"
-		},
-		"salma": {
+		"leila22k": {
 			"country": "SA",
 			"language": "ar",
 			"gender": "F",
 			"source": "acapela",
-			"arg": "salma22k",
-			"desc": "salma"
+			"arg": "Leila22k_HQ",
+			"desc": "Leila"
 		},
-		"laia": {
+		"mehdi22k": {
+			"country": "SA",
+			"language": "ar",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Mehdi22k_HQ",
+			"desc": "Mehdi"
+		},
+		"salma22k": {
+			"country": "SA",
+			"language": "ar",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Salma22k_HQ",
+			"desc": "Salma"
+		},
+		"laia22k": {
 			"country": "ES",
 			"language": "ca",
 			"gender": "F",
 			"source": "acapela",
-			"arg": "ca_es_laia22k",
-			"desc": "laia"
+			"arg": "Laia22k_HQ",
+			"desc": "Laia"
 		},
-		"eliska": {
-			"country": "CZ",
-			"language": "cs",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "czc_eliska22k",
-			"desc": "eliska"
-		},
-		"mette": {
-			"country": "DK",
-			"language": "da",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dad_mette22k",
-			"desc": "mette"
-		},
-		"rasmus": {
-			"country": "DK",
-			"language": "da",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dad_rasmus22k",
-			"desc": "rasmus"
-		},
-		"jeroen": {
-			"country": "BE",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dub_jeroen22k",
-			"desc": "jeroen"
-		},
-		"sofie": {
-			"country": "BE",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dub_sofie22k",
-			"desc": "sofie"
-		},
-		"zoe2": {
-			"country": "BE",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dub_zoe22k",
-			"desc": "zoe"
-		},
-		"jeroenhappy": {
-			"country": "BE",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dub_jeroenhappy22k",
-			"desc": "jeroenhappy"
-		},
-		"jeroensad": {
-			"country": "BE",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dub_jeroensad22k",
-			"desc": "jeroensad"
-		},
-		"daan": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dun_daan22k",
-			"desc": "daan"
-		},
-		"femke": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "dun_femke22k",
-			"desc": "femke"
-		},
-		"jasmijn": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "dun_jasmijn22k",
-			"desc": "jasmijn"
-		},
-		"max": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dun_max22k",
-			"desc": "max"
-		},
-		"lisa": {
-			"country": "AU",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "lisa22k",
-			"desc": "lisa"
-		},
-		"tyler": {
-			"country": "AU",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "tyler22k",
-			"desc": "tyler"
-		},
-		"rhona": {
-			"country": "GB",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "rhona22k",
-			"desc": "rhona"
-		},
-		"graham": {
-			"country": "GB",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "graham22k",
-			"desc": "graham"
-		},
-		"lucy": {
-			"country": "GB",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "lucy22k",
-			"desc": "lucy"
-		},
-		"peter": {
-			"country": "GB",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "peter22k",
-			"desc": "peter"
-		},
-		"rachel": {
-			"country": "GB",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "rachel22k",
-			"desc": "rachel"
-		},
-		"peterhappy": {
-			"country": "GB",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "peterhappy22k",
-			"desc": "peterhappy"
-		},
-		"petersad": {
-			"country": "GB",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "petersad22k",
-			"desc": "petersad"
-		},
-		"queenelizabeth": {
-			"country": "GB",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "queenelizabeth22k",
-			"desc": "queenelizabeth"
-		},
-		"kenny": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "kenny22k",
-			"desc": "kenny"
-		},
-		"laura2": {
-			"country": "US",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "laura22k",
-			"desc": "laura"
-		},
-		"nelly": {
-			"country": "US",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "nelly22k",
-			"desc": "nelly"
-		},
-		"rod": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "rod22k",
-			"desc": "rod"
-		},
-		"ryan": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "ryan22k",
-			"desc": "ryan"
-		},
-		"tracy": {
-			"country": "US",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "tracy22k",
-			"desc": "tracy"
-		},
-		"will": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "will22k",
-			"desc": "will"
-		},
-		"karen2": {
-			"country": "US",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "karen22k",
-			"desc": "karen"
-		},
-		"micah": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "micah22k",
-			"desc": "micah"
-		},
-		"saul": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "saul22k",
-			"desc": "saul"
-		},
-		"valeriaenglish": {
-			"country": "US",
-			"language": "en",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "valeriaenglish22k",
-			"desc": "valeriaenglish"
-		},
-		"willbadguy": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willbadguy22k",
-			"desc": "willbadguy"
-		},
-		"willfromafar": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willfromafar22k",
-			"desc": "willfromafar"
-		},
-		"willhappy": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willhappy22k",
-			"desc": "willhappy"
-		},
-		"willlittlecreature": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willlittlecreature22k",
-			"desc": "willlittlecreature"
-		},
-		"willoldman": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willoldman22k",
-			"desc": "willoldman"
-		},
-		"willsad": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willsad22k",
-			"desc": "willsad"
-		},
-		"willupclose": {
-			"country": "US",
-			"language": "en",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "willupclose22k",
-			"desc": "willupclose"
-		},
-		"sanna": {
-			"country": "FI",
-			"language": "fi",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "sanna22k",
-			"desc": "sanna"
-		},
-		"hanna": {
-			"country": "FO",
-			"language": "fo",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "hanna22k",
-			"desc": "hanna"
-		},
-		"hanus": {
-			"country": "FO",
-			"language": "fo",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "hanus22k",
-			"desc": "hanus"
-		},
-		"louise": {
-			"country": "CA",
-			"language": "fr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "louise22k",
-			"desc": "louise"
-		},
-		"antoinefromafar": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antoinefromafar22k",
-			"desc": "antoinefromafar"
-		},
-		"antoinehappy": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antoinehappy22k",
-			"desc": "antoinehappy"
-		},
-		"antoinesad": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antoinesad22k",
-			"desc": "antoinesad"
-		},
-		"antoineupclose": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antoineupclose22k",
-			"desc": "antoineupclose"
-		},
-		"alice": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "alice22k",
-			"desc": "alice"
-		},
-		"anais": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "anais22k",
-			"desc": "anais"
-		},
-		"antoine": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antoine22k",
-			"desc": "antoine"
-		},
-		"bruno": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "bruno22k",
-			"desc": "bruno"
-		},
-		"claire2": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "claire22k",
-			"desc": "claire"
-		},
-		"julie2": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "julie22k",
-			"desc": "julie"
-		},
-		"margaux": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "margaux22k",
-			"desc": "margaux"
-		},
-		"margauxhappy": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "margauxhappy22k",
-			"desc": "margauxhappy"
-		},
-		"margauxsad": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "margauxsad22k",
-			"desc": "margauxsad"
-		},
-		"robot2": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "robot22k",
-			"desc": "robot"
-		},
-		"kal": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "kal22k",
-			"desc": "kal"
-		},
-		"andreas": {
-			"country": "DE",
-			"language": "de",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "andreas22k",
-			"desc": "andreas"
-		},
-		"julia": {
-			"country": "DE",
-			"language": "de",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "julia22k",
-			"desc": "julia"
-		},
-		"klaus": {
-			"country": "DE",
-			"language": "de",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "klaus22k",
-			"desc": "klaus"
-		},
-		"sarah2": {
-			"country": "DE",
-			"language": "de",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "sarah22k",
-			"desc": "sarah"
-		},
-		"dimitrishappy": {
-			"country": "EL",
-			"language": "el",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dimitrishappy22k",
-			"desc": "dimitrishappy"
-		},
-		"dimitrissad": {
-			"country": "EL",
-			"language": "el",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dimitrissad22k",
-			"desc": "dimitrissad"
-		},
-		"dimitris": {
-			"country": "EL",
-			"language": "el",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "dimitris22k",
-			"desc": "dimitris"
-		},
-		"alessio": {
-			"country": "IT",
-			"language": "it",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "alessio22k",
-			"desc": "alessio"
-		},
-		"aurora": {
-			"country": "IT",
-			"language": "it",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "aurora22k",
-			"desc": "aurora"
-		},
-		"chiara": {
-			"country": "IT",
-			"language": "it",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "chiara22k",
-			"desc": "chiara"
-		},
-		"fabiana": {
-			"country": "IT",
-			"language": "it",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "fabiana22k",
-			"desc": "fabiana"
-		},
-		"vittorio": {
-			"country": "IT",
-			"language": "it",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "vittorio22k",
-			"desc": "vittorio"
-		},
-		"sakura": {
-			"country": "JP",
-			"language": "ja",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "sakura22k",
-			"desc": "sakura"
-		},
-		"minji": {
-			"country": "KO",
-			"language": "ko",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "minji22k",
-			"desc": "kr_minji"
-		},
-		"bente": {
-			"country": "NO",
-			"language": "no",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "bente22k",
-			"desc": "bente"
-		},
-		"kari": {
-			"country": "NO",
-			"language": "no",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "kari22k",
-			"desc": "kari"
-		},
-		"olav": {
-			"country": "NO",
-			"language": "no",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "olav22k",
-			"desc": "olav"
-		},
-		"marcia": {
-			"country": "BR",
-			"language": "pt",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "marcia22k",
-			"desc": "marcia"
-		},
-		"celia": {
-			"country": "PT",
-			"language": "pt",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "celia22k",
-			"desc": "celia"
-		},
-		"ania": {
-			"country": "PL",
-			"language": "pl",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "ania22k",
-			"desc": "ania"
-		},
-		"alyona": {
-			"country": "RU",
-			"language": "ru",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "alyona22k",
-			"desc": "alyona"
-		},
-		"se_mia": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "mia22k",
-			"desc": "se_mia"
-		},
-		"antonio": {
-			"country": "ES",
-			"language": "es",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "antonio22k",
-			"desc": "antonio"
-		},
-		"ines": {
-			"country": "ES",
-			"language": "es",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "ines22k",
-			"desc": "ines"
-		},
-		"maria": {
-			"country": "ES",
-			"language": "es",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "maria22k",
-			"desc": "maria"
-		},
-		"rodrigo": {
-			"country": "US",
-			"language": "es",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "rodrigo22k",
-			"desc": "rodrigo"
-		},
-		"rosa2": {
-			"country": "US",
-			"language": "es",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "rosa22k",
-			"desc": "rosa"
-		},
-		"samuel": {
-			"country": "FI",
-			"language": "sv",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "samuel22k",
-			"desc": "fi_samuel"
-		},
-		"elin": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "elin22k",
-			"desc": "elin"
-		},
-		"emil": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "emil22k",
-			"desc": "emil"
-		},
-		"emma": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "emma22k",
-			"desc": "emma"
-		},
-		"erik": {
-			"country": "SE",
-			"language": "sv",
-			"gender": "M",
-			"source": "acapela",
-			"arg": "erik22k",
-			"desc": "erik"
-		},
-		"ipek": {
-			"country": "TR",
-			"language": "tr",
-			"gender": "F",
-			"source": "acapela",
-			"arg": "ipek22k",
-			"desc": "ipek"
-		},
-		"lulu": {
+		"lulu22k": {
 			"country": "CN",
 			"language": "zh",
 			"gender": "F",
 			"source": "acapela",
-			"arg": "lulu22k",
-			"desc": "lulu"
+			"arg": "Lulu22k_HQ",
+			"desc": "Lulu"
+		},
+		"eliska22k": {
+			"country": "CZ",
+			"language": "cs",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Eliska22k_HQ",
+			"desc": "Eliska"
+		},
+		"mette22k": {
+			"country": "DK",
+			"language": "da",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Mette22k_HQ",
+			"desc": "Mette"
+		},
+		"rasmus22k": {
+			"country": "DK",
+			"language": "da",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Rasmus22k_HQ",
+			"desc": "Rasmus"
+		},
+		"rikke22k": {
+			"country": "DK",
+			"language": "da",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Rikke22k_HQ",
+			"desc": "Rikke"
+		},
+		"rikketransport22k": {
+			"country": "DK",
+			"language": "da",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "RikkeTransport22k_HQ",
+			"desc": "Rikke (Transport)"
+		},
+		"christinabtob22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Christinabtob22k_HQ",
+			"desc": "Christina"
+		},
+		"jeroen22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Jeroen22k_HQ",
+			"desc": "Jeroen"
+		},
+		"jeroenhappy22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "JeroenHappy22k_HQ",
+			"desc": "Jeroen (Happy)"
+		},
+		"jeroensad22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "JeroenSad22k_HQ",
+			"desc": "Jeroen (Sad)"
+		},
+		"sofie22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sofie22k_HQ",
+			"desc": "Sofie"
+		},
+		"zoe22k": {
+			"country": "BE",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Zoe22k_HQ",
+			"desc": "Zoe"
+		},
+		"daan22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Daan22k_HQ",
+			"desc": "Daan"
+		},
+		"femke22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Femke22k_HQ",
+			"desc": "Femke"
+		},
+		"jasmijn22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Jasmijn22k_HQ",
+			"desc": "Jasmijn"
+		},
+		"max22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Max22k_HQ",
+			"desc": "Max"
+		},
+		"merel22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Merel22k_HQ",
+			"desc": "Merel (Acapela)"
+		},
+		"tessabtob22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Tessabtob22k_HQ",
+			"desc": "Tessa"
+		},
+		"tessatransport22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Tessatransport22k_HQ",
+			"desc": "Tessa (Transport)"
+		},
+		"thijs22k": {
+			"country": "NL",
+			"language": "nl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Thijs22k_HQ",
+			"desc": "Thijs"
+		},
+		"nizar22k": {
+			"country": "SA",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Nizar22k_HQ",
+			"desc": "Nizar"
+		},
+		"liam22k": {
+			"country": "AU",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Liam22k_HQ",
+			"desc": "Liam (Acapela)"
+		},
+		"lisa22k": {
+			"country": "AU",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lisa22k_HQ",
+			"desc": "Lisa (Acapela)"
+		},
+		"olivia22k": {
+			"country": "AU",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Olivia22k_HQ",
+			"desc": "Olivia (Acapela)"
+		},
+		"tyler22k": {
+			"country": "AU",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Tyler22k_HQ",
+			"desc": "Tyler"
+		},
+		"melany22k": {
+			"country": "CA",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Melany22k_HQ",
+			"desc": "Melany"
+		},
+		"julian22k": {
+			"country": "CA",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Julian22k_HQ",
+			"desc": "Julian"
+		},
+		"victoria22k": {
+			"country": "CA",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Victoria22k_HQ",
+			"desc": "Victoria (Acapela)"
+		},
+		"deepa22k": {
+			"country": "IN",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Deepa22k_HQ",
+			"desc": "Deepa"
+		},
+		"vidhienglish22k": {
+			"country": "IN",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Vidhienglish22k_HQ",
+			"desc": "Vidhi"
+		},
+		"nizareng22k": {
+			"country": "SA",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Nizareng22k_HQ",
+			"desc": "Nizar"
+		},
+		"archie22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Archie22k_HQ",
+			"desc": "Archie"
+		},
+		"eilidh22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Eilidh22k_HQ",
+			"desc": "Eilidh"
+		},
+		"rhona22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Rhona22k_HQ",
+			"desc": "Rhona"
+		},	
+		"amelia22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Amelia22k_HQ",
+			"desc": "Amelia"
+		},
+		"ameliateen22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "AmeliaTeen22k_HQ",
+			"desc": "Amelia (Teen)"
+		},
+		"arthur22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Arthur22k_HQ",
+			"desc": "Arthur"
+		},
+		"arthurteen22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "ArthurTeen22k_HQ",
+			"desc": "Arthur (Teen)"
+		},
+		"caleb22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Caleb22k_HQ",
+			"desc": "Caleb"
+		},
+		"calebteen22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "CalebTeen22k_HQ",
+			"desc": "Caleb (Teen)"
+		},
+		"chloe22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Chloe22k_HQ",
+			"desc": "Chloe (Acapela)"
+		},
+		"chloeteen22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "ChloeTeen22k_HQ",
+			"desc": "Chloe (Acapela, Teen)"
+		},
+		"graham22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Graham22k_HQ",
+			"desc": "Graham"
+		},
+		"harry22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Harry22k_HQ",
+			"desc": "Harry"
+		},
+		"lucy22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lucy22k_HQ",
+			"desc": "Lucy"
+		},
+		"peter22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Peter22k_HQ",
+			"desc": "Peter"
+		},
+		"peterhappy22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "PeterHappy22k_HQ",
+			"desc": "Peter (Happy)"
+		},
+		"petersad22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "PeterSad22k_HQ",
+			"desc": "Peter (Sad)"
+		},
+		"queenelizabeth22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "QueenElizabeth22k_HQ",
+			"desc": "Queen Elizabeth"
+		},
+		"rachel22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Rachel22k_HQ",
+			"desc": "Rachel"
+		},
+		"racheltransport22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "RachelTransport22k_HQ",
+			"desc": "Rachel (Transport)"
+		},
+		"rosie22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Rosie22k_HQ",
+			"desc": "Rosie"
+		},
+		"sophiabtob22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sophiabtob22k_HQ",
+			"desc": "Sophia"
+		},
+		"alfie22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Alfie22k_HQ",
+			"desc": "Alfie"
+		},
+		"amy22k": {
+			"country": "GB",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Amy22k_HQ",
+			"desc": "Amy (Acapela)"
+		},
+		"alinora22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Alinora22k_HQ",
+			"desc": "Alinora"
+		},
+		"baelara22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Baelara22k_HQ",
+			"desc": "Baelara"
+		},
+		"camryn22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Camryn22k_HQ",
+			"desc": "Camryn"
+		},
+		"darian22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Darian22k_HQ",
+			"desc": "Darian"
+		},
+		"darius22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Darius22k_HQ",
+			"desc": "Darius"
+		},
+		"eldowen22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Eldowen22k_HQ",
+			"desc": "Eldowen"
+		},
+		"ella22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ella22k_HQ",
+			"desc": "Ella"
+		},
+		"emilioenglish22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "EmilioEnglish22k_HQ",
+			"desc": "Emilio"
+		},
+		"faelena22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Faelena22k_HQ",
+			"desc": "Faelena"
+		},
+		"gilthor22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Gilthor22k_HQ",
+			"desc": "Gilthor"
+		},
+		"haldria22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Haldria22k_HQ",
+			"desc": "Haldria"
+		},
+		"ilion22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Ilion22k_HQ",
+			"desc": "Ilion"
+		},
+		"jorvik22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Jorvik22k_HQ",
+			"desc": "Jorvik"
+		},
+		"josh22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Josh22k_HQ",
+			"desc": "Josh"
+		},
+		"karen22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Karen22k_HQ",
+			"desc": "Karen (Acapela)"
+		},
+		"kenny22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Kenny22k_HQ",
+			"desc": "Kenny"
+		},
+		"laura22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Laura22k_HQ",
+			"desc": "Laura"
+		},
+		"lily22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lily22k_HQ",
+			"desc": "Lily"
+		},
+		"lizzie22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lizzie22k_HQ",
+			"desc": "Lizzie"
+		},
+		"malik22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Malik22k_HQ",
+			"desc": "Malik"
+		},
+		"micah22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Micah22k_HQ",
+			"desc": "Micah"
+		},
+		"nelly22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Nelly22k_HQ",
+			"desc": "Nelly"
+		},
+		"owen22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Owen22k_HQ",
+			"desc": "Owen"
+		},
+		"rod22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Rod22k_HQ",
+			"desc": "Rod"
+		},
+		"ryan22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Ryan22k_HQ",
+			"desc": "Ryan"
+		},
+		"saul22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Saul22k_HQ",
+			"desc": "Saul"
+		},
+		"scott22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Scott22k_HQ",
+			"desc": "Scott"
+		},
+		"sharon22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sharon22k_HQ",
+			"desc": "Sharon"
+		},
+		"tamira22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Tamira22k_HQ",
+			"desc": "Tamira"
+		},
+		"taylor22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Taylor22k_HQ",
+			"desc": "Taylor"
+		},
+		"tiana22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Tiana22k_HQ",
+			"desc": "Tiana"
+		},
+		"tracy22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Tracy22k_HQ",
+			"desc": "Tracy"
+		},
+		"valeriaenglish22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "ValeriaEnglish22k_HQ",
+			"desc": "Valeria"
+		},
+		"will22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Will22k_HQ",
+			"desc": "Will"
+		},
+		"willbadguy22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillBadGuy22k_HQ",
+			"desc": "Will (Bad Guy)"
+		},
+		"willfromafar22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillFromAfar22k_HQ",
+			"desc": "Will (From Afar)"
+		},
+		"willhappy22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillHappy22k_HQ",
+			"desc": "Will (Happy)"
+		},
+		"willlittlecreature22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillLittleCreature22k_HQ",
+			"desc": "Will (Little Creature)"
+		},
+		"willoldman22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillOldMan22k_HQ",
+			"desc": "Will (Old Man)"
+		},
+		"willsad22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillSad22k_HQ",
+			"desc": "Will (Sad)"
+		},
+		"willupclose22k": {
+			"country": "US",
+			"language": "en",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "WillUpClose22k_HQ",
+			"desc": "Will (Up Close)"
+		},
+		"hanna22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Hanna22k_HQ",
+			"desc": "Hanna"
+		},
+		"hanus22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Hanus22k_HQ",
+			"desc": "Hanus"
+		},
+		"einar22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Einar22k_HQ",
+			"desc": "Einar"
+		},
+		"eva22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Eva22k_HQ",
+			"desc": "Eva"
+		},
+		"geir22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Geir22k_HQ",
+			"desc": "Geir"
+		},
+		"gunn22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Gunn22k_HQ",
+			"desc": "Gunn"
+		},
+		"karl22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Karl22k_HQ",
+			"desc": "Karl"
+		},
+		"katrina22k": {
+			"country": "FO",
+			"language": "fo",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Katrina22k_HQ",
+			"desc": "Katrina"
+		},
+		"sanna22k": {
+			"country": "FI",
+			"language": "fi",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sanna22k_HQ",
+			"desc": "Sanna (Acapela)"
+		},
+		"alice-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Alice-BE22k_HQ",
+			"desc": "Alice (Belgium)"
+		},
+		"anais-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Anais-BE22k_HQ",
+			"desc": "Anais (Belgium)"
+		},
+		"antoine-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Antoine-BE22k_HQ",
+			"desc": "Antoine (Acapela, Belgium)"
+		},
+		"bruno-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Bruno-BE22k_HQ",
+			"desc": "Bruno (Belgium)"
+		},
+		"claire-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Claire-BE22k_HQ",
+			"desc": "Claire (Belgium)"
+		},
+		"julie-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Julie-BE22k_HQ",
+			"desc": "Julie (Acapela, Belgium)"
+		},
+		"manon-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Manon-BE22k_HQ",
+			"desc": "Manon (Belgium)"
+		},
+		"margaux-be22k": {
+			"country": "BE",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Margaux-BE22k_HQ",
+			"desc": "Margaux (Belgium)"
+		},
+		"anthony22k": {
+			"country": "CA",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Anthony22k_HQ",
+			"desc": "Anthony"
+		},
+		"julien22k": {
+			"country": "CA",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Julien22k_HQ",
+			"desc": "Julien"
+		},
+		"louise22k": {
+			"country": "CA",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Louise22k_HQ",
+			"desc": "Louise (Acapela)"
+		},
+		"melanie22k": {
+			"country": "CA",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Melanie22k_HQ",
+			"desc": "Melanie"
+		},
+		"victoire22k": {
+			"country": "CA",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Victoire22k_HQ",
+			"desc": "Victoire"
+		},
+		"alice22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Alice22k_HQ",
+			"desc": "Alice"
+		},
+		"anais22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Anais22k_HQ",
+			"desc": "Anais"
+		},
+		"anaisbtob22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Anaisbtob22k_HQ",
+			"desc": "Anais (Btob)"
+		},
+		"antoine22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Antoine22k_HQ",
+			"desc": "Antoine (Acapela)"
+		},
+		"antoinefromafar22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "AntoineFromAfar22k_HQ",
+			"desc": "Antoine (Acapela, From Afar)"
+		},
+		"antoinehappy22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "AntoineHappy22k_HQ",
+			"desc": "Antoine (Acapela, Happy)"
+		},
+		"antoinesad22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "AntoineSad22k_HQ",
+			"desc": "Antoine (Acapela, Sad)"
+		},
+		"antoineupclose22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "AntoineUpClose22k_HQ",
+			"desc": "Antoine (Acapela, Up Close)"
+		},
+		"bruno22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Bruno22k_HQ",
+			"desc": "Bruno"
+		},
+		"claire22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Claire22k_HQ",
+			"desc": "Claire"
+		},
+		"constance22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Constance22k_HQ",
+			"desc": "Constance"
+		},
+		"taylorfrench22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorFrench22k_NT",
+			"desc": "Taylor"
+		},
+		"elise22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Elise22k_HQ",
+			"desc": "Elise"
+		},
+		"julie22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Julie22k_HQ",
+			"desc": "Julie (Acapela)"
+		},
+		"manon22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Manon22k_HQ",
+			"desc": "Manon"
+		},
+		"margaux22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Margaux22k_HQ",
+			"desc": "Margaux"
+		},
+		"margauxhappy22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "MargauxHappy22k_HQ",
+			"desc": "Margaux (Happy)"
+		},
+		"margauxsad22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "MargauxSad22k_HQ",
+			"desc": "Margaux (Sad)"
+		},
+		"valentin22k": {
+			"country": "FR",
+			"language": "fr",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Valentin22k_HQ",
+			"desc": "Valentin"
+		},
+		"andreas22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Andreas22k_HQ",
+			"desc": "Andreas"
+		},
+		"ankebtob22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ankebtob22k_HQ",
+			"desc": "Anke"
+		},
+		"taylorgerman22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorGerman22k_NT",
+			"desc": "Taylor"
+		},
+		"claudia22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Claudia22k_HQ",
+			"desc": "Claudia"
+		},
+		"claudiasmile22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "ClaudiaSmile22k_HQ",
+			"desc": "Claudia (Smile)"
+		},
+		"finn22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Finn22k_HQ",
+			"desc": "Finn"
+		},
+		"jonas22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Jonas22k_HQ",
+			"desc": "Jonas"
+		},
+		"julia22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Julia22k_HQ",
+			"desc": "Julia"
+		},
+		"klaus22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Klaus22k_HQ",
+			"desc": "Klaus"
+		},
+		"lea22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lea22k_HQ",
+			"desc": "Lea"
+		},
+		"leonie22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Leonie22k_HQ",
+			"desc": "Leonie"
+		},
+		"mathilda22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Mathilda22k_HQ",
+			"desc": "Mathilda"
+		},
+		"nele22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Nele22k_HQ",
+			"desc": "Nele"
+		},
+		"sarah22k": {
+			"country": "DE",
+			"language": "de",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sarah22k_HQ",
+			"desc": "Sarah"
+		},
+		"dimitris22k": {
+			"country": "GR",
+			"language": "el",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Dimitris22k_HQ",
+			"desc": "Dimitris"
+		},
+		"dimitrishappy22k": {
+			"country": "GR",
+			"language": "el",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "DimitrisHappy22k_HQ",
+			"desc": "Dimitris (Happy)"
+		},
+		"dimitrissad22k": {
+			"country": "GR",
+			"language": "el",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "DimitrisSad22k_HQ",
+			"desc": "Dimitris (Sad)"
+		},
+		"vidhi22k": {
+			"country": "IN",
+			"language": "hi",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Vidhi22k_HQ",
+			"desc": "Vidhi"
+		},
+		"alessio22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Alessio22k_HQ",
+			"desc": "Alessio"
+		},
+		"aurora22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Aurora22k_HQ",
+			"desc": "Aurora"
+		},
+		"barbarabtob22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Barbarabtob22k_HQ",
+			"desc": "Barbara"
+		},
+		"taylorItalian22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorItalian22k_NT",
+			"desc": "Taylor"
+		},
+		"chiara22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Chiara22k_HQ",
+			"desc": "Chiara"
+		},
+		"fabiana22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Fabiana22k_HQ",
+			"desc": "Fabiana"
+		},
+		"vittorio22k": {
+			"country": "IT",
+			"language": "it",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Vittorio22k_HQ",
+			"desc": "Vittorio"
+		},
+		"sakura22k": {
+			"country": "JP",
+			"language": "ja",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Sakura22k_HQ",
+			"desc": "Sakura"
+		},
+		"minji22k": {
+			"country": "KR",
+			"language": "ko",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Minji22k_HQ",
+			"desc": "Minji"
+		},
+		"bente22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Bente22k_HQ",
+			"desc": "Bente"
+		},
+		"elias22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Elias22k_HQ",
+			"desc": "Elias"
+		},
+		"emilie22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Emilie22k_HQ",
+			"desc": "Emilie"
+		},
+		"ida22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ida22k_HQ",
+			"desc": "Ida"
+		},
+		"kari22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Kari22k_HQ",
+			"desc": "Kari"
+		},
+		"olav22k": {
+			"country": "no",
+			"language": "no",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Olav22k_HQ",
+			"desc": "Olav"
+		},
+		"ania22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ania22k_HQ",
+			"desc": "Ania"
+		},
+		"antek22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Antek22k_HQ",
+			"desc": "Antek"
+		},
+		"gosia22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Gosia22k_HQ",
+			"desc": "Gosia"
+		},
+		"hania22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Hania22k_HQ",
+			"desc": "Hania"
+		},
+		"julka22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Julka22k_HQ",
+			"desc": "Julka"
+		},
+		"kuba22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Kuba22k_HQ",
+			"desc": "Kuba"
+		},
+		"piotr22k": {
+			"country": "PL",
+			"language": "pl",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Piotr22k_HQ",
+			"desc": "Piotr"
+		},
+		"celia22k": {
+			"country": "PT",
+			"language": "pt",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Celia22k_HQ",
+			"desc": "Celia"
+		},
+		"isabel22k": {
+			"country": "PT",
+			"language": "pt",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Isabel22k_HQ",
+			"desc": "Isabel"
+		},
+		"rui22k": {
+			"country": "PT",
+			"language": "pt",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Rui22k_HQ",
+			"desc": "Rui"
+		},
+		"gabriela22k": {
+			"country": "BR",
+			"language": "pt",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Gabriela22k_HQ",
+			"desc": "Gabriela (Acapela)"
+		},
+		"marcia22k": {
+			"country": "BR",
+			"language": "pt",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Marcia22k_HQ",
+			"desc": "Marcia"
+		},
+		"sergio22k": {
+			"country": "BR",
+			"language": "pt",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Sergio22k_HQ",
+			"desc": "Sergio"
+		},
+		"alyona22k": {
+			"country": "RU",
+			"language": "ru",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Alyona22k_HQ",
+			"desc": "Alyona"
+		},
+		"lena22k": {
+			"country": "RU",
+			"language": "ru",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Lena22k_HQ",
+			"desc": "Lena"
+		},
+		"elle22k": {
+			"country": "no",
+			"language": "se",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Elle22k_NT",
+			"desc": "Elle"
+		},
+		"biera22k": {
+			"country": "no",
+			"language": "se",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Biera22k_NT",
+			"desc": "Biera"
+		},
+		"anabtob22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Anabtob22k_HQ",
+			"desc": "Ana (Acapela)"
+		},
+		"antonio22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Antonio22k_HQ",
+			"desc": "Antonio"
+		},
+		"elenabtob22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Elenabtob22k_HQ",
+			"desc": "Elena"
+		},
+		"taylorspanish22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorSpanish22k_NT",
+			"desc": "Taylor (Castilian)"
+		},
+		"ines22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ines22k_HQ",
+			"desc": "Ines"
+		},
+		"maria22k": {
+			"country": "ES",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Maria22k_HQ",
+			"desc": "Maria"
+		},
+		"carlos22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Carlos22k_HQ",
+			"desc": "Carlos (Acapela)"
+		},
+		"carmen22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Carmen22k_HQ",
+			"desc": "Carmen (Acapela)"
+		},
+		"daniela22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Daniela22k_HQ",
+			"desc": "Daniela (Acapela)"
+		},	
+		"diego22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Diego22k_HQ",
+			"desc": "Diego (Acapela)"
+		},		
+		"emilio22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Emilio22k_HQ",
+			"desc": "Emilio"
+		},
+		"taylorusspanish22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorUSSpanish22k_NT",
+			"desc": "Taylor (American)"
+		},
+		"rodrigo22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Rodrigo22k_HQ",
+			"desc": "Rodrigo"
+		},
+		"rosa22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Rosa22k_HQ",
+			"desc": "Rosa (Acapela)"
+		},
+		"valeria22k": {
+			"country": "US",
+			"language": "es",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Valeria22k_HQ",
+			"desc": "Valeria"
+		},	
+		"taylorswedish22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "TaylorSwedish22k_NT",
+			"desc": "Taylor"
+		},
+		"elin22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Elin22k_HQ",
+			"desc": "Elin"
+		},
+		"emil22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Emil22k_HQ",
+			"desc": "Emil"
+		},
+		"emma22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Emma22k_HQ",
+			"desc": "Emma"
+		},
+		"erik22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Erik22k_HQ",
+			"desc": "Erik"
+		},
+		"filip22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Filip22k_HQ",
+			"desc": "Filip"
+		},
+		"freja22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Freja22k_HQ",
+			"desc": "Freja"
+		},
+		"kal22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Kal22k_HQ",
+			"desc": "Kal"
+		},
+		"mia22k": {
+			"country": "SE",
+			"language": "sv",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Mia22k_HQ",
+			"desc": "Mia"
+		},
+		"samuel22k": {
+			"country": "FI",
+			"language": "sv",
+			"gender": "M",
+			"source": "acapela",
+			"arg": "Samuel22k_HQ",
+			"desc": "Samuel"
+		},
+		"ipek22k": {
+			"country": "TR",
+			"language": "tr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Ipek22k_HQ",
+			"desc": "Ipek"
+		},
+		"zeynep22k": {
+			"country": "TR",
+			"language": "tr",
+			"gender": "F",
+			"source": "acapela",
+			"arg": "Zeynep22k_HQ",
+			"desc": "Zeynep (Acapela)"
 		},
 		"choirboyi": {
 			"country": "EN",
