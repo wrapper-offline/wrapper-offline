@@ -1,7 +1,8 @@
-import brotli from "brotli";
 import https from "https";
-import voiceList from "../data/voices.json";
+import { once } from "events";
 import { Readable } from "stream";
+import voiceList from "../data/voices.json";
+import fileUtil from "../utils/fileUtil";
 
 /**
  * uses tts demos to generate tts
@@ -89,34 +90,59 @@ export default function processVoice(
 				case "cereproc": {
 					const req = https.request(
 						{
-							hostname: "www.cereproc.com",
-							path: "/themes/benchpress/livedemo.php",
+							hostname: "app.cereproc.com",
+							path: "/live-demo?ajax_form=1&_wrapper_format=drupal_ajax",
 							method: "POST",
 							headers: {
-								"content-type": "text/xml",
-								"accept-encoding": "gzip, deflate, br",
-								origin: "https://www.cereproc.com",
-								referer: "https://www.cereproc.com/en/products/voices",
-								"x-requested-with": "XMLHttpRequest",
-								cookie: "Drupal.visitor.liveDemoCookie=666",
+								"content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+								"origin": "https://app.cereproc.com",
+								"referer": "https://app.cereproc.com/live-demo",
+								"x-requested-with": "XMLHttpRequest"
 							},
 						},
-						(r) => {
-							var buffers = [];
-							r.on("data", (d) => buffers.push(d));
-							r.on("end", () => {
-								const xml = String.fromCharCode.apply(null, brotli.decompress(Buffer.concat(buffers)));
-								const beg = xml.indexOf("<url>") + 5;
-								const end = xml.lastIndexOf("</url>");
-								const loc = xml.substring(beg, end).toString();
-								https.get(loc, resolve).on("error", rej);
-							});
-							r.on("error", rej);
+						async (r) => {
+							try {
+								if (r.statusCode != 200) {
+									return rej("Cereproc error occurred");
+								}
+								let data = "";
+								r.on("data", (d) => data += d);
+								await once(r, "end");
+								const array = JSON.parse(data);
+								const resultElem = array.find((c) => {
+									return c.selector && c.selector == "#live-demo-result"
+								});
+								const start = resultElem.data.indexOf("https://cerevoice.s3.amazonaws.com");
+								const end = resultElem.data.indexOf(".wav", start) + 4;
+								const url = resultElem.data.slice(start, end);
+								https.get(url, async (r) => {
+									try {
+										if (r.statusCode != 200) {
+											return rej("Cereproc error occurred");
+										}
+										resolve(await fileUtil.convertToMp3(r, "wav") as Readable);
+									} catch (e) {
+										rej(e);
+									}
+								});
+							} catch (e) {
+								rej(e);
+							}
 						}
-					).on("error", rej);
-					req.end(
-						`<speakExtended key='666'><voice>${voice.arg}</voice><text>${text}</text><audioFormat>mp3</audioFormat></speakExtended>`
-					);
+					)
+					req.on("error", rej);
+					req.end(new URLSearchParams({
+						text,
+						voice: voice.arg,
+						form_build_id: "form-j2HwP0NRkG-0HjoVI2ZeaGtBvtZYoI6hHeCDIKSCCPs",
+						form_id: "live_demo_form",
+						"_triggering_element_name": "op",
+						"_triggering_element_value": "Convert to Speech",
+						"_drupal_ajax": "1",
+						"ajax_page_state[theme]": "sandbox",
+						"ajax_page_state[theme_token]": "",
+						"ajax_page_state[libraries]": "eJx1klFywyAMRC_k2D-9DyNAJjgYUUmk8e2LWzvpxO4PA08LixZABNXEPKFT4sGJ9A5YDd2ROXrs4EwgaESrX9q4JJQzUcCMDMl8oZWop-dUQW5kJJ5BI-V_NYVYIZ2V7xQdmsLkq1MxKYp2lkhFGYqx0HqgwVEiliNfjY80JLKQLmtnMYdjvdGbdI4YB8-1QOphgscviFmRc0PTZ0Ve-h-HFO9oPM7r1m1m2t1P-dQwhZiNTeRuwxZvAYbQrnCV3fJF-ppLta3xK_o_QhPa6w1v6_7ZzEcnkL2lx5qiQR9boC9URWm-bOY7HSmrxxFq0mc4e-0tM1lEcR5s-yff7_LxAQ"		
+					}).toString());
 					break;
 				}
 

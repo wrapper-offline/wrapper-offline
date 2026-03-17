@@ -10,7 +10,7 @@ export default {
 	/**
 	 * converts a readable stream to an mp3
 	 * @param data readable stream
-	 * @param fileExt file extension
+	 * @param fileExt input file extension
 	 * @returns returns a passthrough stream
 	 */
 	convertToMp3(data:Readable, fileExt:string): Promise<PassThrough | Writable> {
