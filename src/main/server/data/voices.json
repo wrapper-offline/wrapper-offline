@@ -4834,7 +4834,7 @@
 		},
 		"sl_zhiyu": {
 			"country": "CN",
-			"language": "cn",
+			"language": "zh",
 			"gender": "F",
 			"arg": "Zhiyu",
 			"source": "streamlabs",
@@ -4842,7 +4842,7 @@
 		},
 		"sl_Mads": {
 			"country": "DK",
-			"language": "dk",
+			"language": "da",
 			"gender": "M",
 			"arg": "Mads",
 			"source": "streamlabs",
@@ -4850,7 +4850,7 @@
 		},
 		"sl_Naja": {
 			"country": "DK",
-			"language": "dk",
+			"language": "da",
 			"gender": "F",
 			"arg": "Naja",
 			"source": "streamlabs",
@@ -4978,7 +4978,7 @@
 		},
 		"sl_Takumi": {
 			"country": "JP",
-			"language": "jp",
+			"language": "ja",
 			"gender": "M",
 			"arg": "Takumi",
 			"source": "streamlabs",
@@ -4986,7 +4986,7 @@
 		},
 		"sl_Mizuki": {
 			"country": "JP",
-			"language": "jp",
+			"language": "ja",
 			"gender": "F",
 			"arg": "Mizuki",
 			"source": "streamlabs",
@@ -4994,7 +4994,7 @@
 		},
 		"sl_Seoyeon": {
 			"country": "KR",
-			"language": "kr",
+			"language": "ko",
 			"gender": "F",
 			"arg": "Seoyeon",
 			"source": "streamlabs",
@@ -5216,6 +5216,11 @@
 		"pl": "Polish",
 		"nl": "Dutch",
 		"cy": "Welsh",
-		"is": "Icelandic"
+		"is": "Icelandic",
+		"fo": "Faroese",
+		"cs": "Czech",
+		"gd": "Scottish Gaelic",
+		"se": "Northern Sámi",
+		"id": "Indonesian"
 	}
 }
