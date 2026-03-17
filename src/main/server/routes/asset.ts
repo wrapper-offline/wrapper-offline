@@ -271,12 +271,15 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 				const temppath = tempfile(".mp3");
 				const writeStream = fs.createWriteStream(temppath);
 				await new Promise(async (resolve, reject) => {
-					setTimeout(() => {
+					const id = setTimeout(() => {
 						writeStream.close();
 						fs.unlinkSync(temppath);
 						return reject("read stream timed out");
 					}, 1.2e+6);
-					stream.on("end", resolve).pipe(writeStream)
+					stream.on("end", () => {
+						clearTimeout(id);
+						resolve(null);
+					}).pipe(writeStream);
 				});
 				info.duration = await mp3Duration(temppath) * 1e3;
 				info.id = await AssetModel.save(temppath, "mp3", info);

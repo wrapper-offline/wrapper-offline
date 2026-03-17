@@ -219,10 +219,9 @@ function addFile(file:File) {
 /**
  * called when a cancel button has been clicked in a pending asset
  * removes a file from the queue based on its PendingFile object
- * @param file PendingFile object belonging to the ImporterFile elem
+ * @param index index of pending file
  */
-function cancelClicked(file:PendingFile) {
-	const index = toValue(pendingFiles).indexOf(file);
+function cancelClicked(index:number) {
 	pendingFiles.value.splice(index, 1);
 }
 
@@ -271,7 +270,7 @@ function onUploadSuccess(
 				v-bind:key="file.name + +(new Date()).toString()"
 				:file="file" 
 				@add-to-scene="onAddToScene"
-				@cancel-clicked="cancelClicked(file)"
+				@cancel-clicked="cancelClicked(pendingFiles.indexOf(file))"
 				@status-updated="onStatusUpdated"
 				@upload-success="onUploadSuccess"/>
 		</div>

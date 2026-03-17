@@ -279,6 +279,9 @@ async function beginUpload() {
 
 	const responseData = await response.json();
 	uploadComplete(responseData);
+	// for some reason this never gets garbage collected
+	b = null;
+	props.file.file = null;
 }
 
 /**
