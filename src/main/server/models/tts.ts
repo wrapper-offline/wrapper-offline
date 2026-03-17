@@ -19,10 +19,12 @@ export default function processVoice(
 			return rej("Requested voice is unavailable");
 		}
 
+		text = text.trim();
+
 		try {
 			switch (voice.source) {
 				case "acapela": {
-					text = text.trim().slice(0, 2999);
+					text = text.slice(0, 2999);
 					const query = new URLSearchParams({
 						voice: voice.arg,
 						text: text,
@@ -134,14 +136,7 @@ export default function processVoice(
 					req.end(new URLSearchParams({
 						text,
 						voice: voice.arg,
-						form_build_id: "form-j2HwP0NRkG-0HjoVI2ZeaGtBvtZYoI6hHeCDIKSCCPs",
-						form_id: "live_demo_form",
-						"_triggering_element_name": "op",
-						"_triggering_element_value": "Convert to Speech",
-						"_drupal_ajax": "1",
-						"ajax_page_state[theme]": "sandbox",
-						"ajax_page_state[theme_token]": "",
-						"ajax_page_state[libraries]": "eJx1klFywyAMRC_k2D-9DyNAJjgYUUmk8e2LWzvpxO4PA08LixZABNXEPKFT4sGJ9A5YDd2ROXrs4EwgaESrX9q4JJQzUcCMDMl8oZWop-dUQW5kJJ5BI-V_NYVYIZ2V7xQdmsLkq1MxKYp2lkhFGYqx0HqgwVEiliNfjY80JLKQLmtnMYdjvdGbdI4YB8-1QOphgscviFmRc0PTZ0Ve-h-HFO9oPM7r1m1m2t1P-dQwhZiNTeRuwxZvAYbQrnCV3fJF-ppLta3xK_o_QhPa6w1v6_7ZzEcnkL2lx5qiQR9boC9URWm-bOY7HSmrxxFq0mc4e-0tM1lEcR5s-yff7_LxAQ"		
+						form_id: "live_demo_form",	
 					}).toString());
 					break;
 				}
@@ -236,7 +231,7 @@ export default function processVoice(
 				}
 	
 				case "tiktok": {
-					text = text.trim().slice(0, 199);
+					text = text.slice(0, 199);
 					const query = new URLSearchParams({
 						aid: "1233",
 						req_text: text,
