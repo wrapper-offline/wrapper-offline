@@ -1,6 +1,7 @@
 <style lang="css">
 .preview_popup_container {
 	background: #0000;
+	backdrop-filter: none;
 }
 #player_object {
 	display: block;

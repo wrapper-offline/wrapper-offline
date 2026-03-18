@@ -1,16 +1,18 @@
-export function flattenAssetType(type:string, subtype:string, ptype?:string): string {
-	switch (type) {
+import { Asset } from "../interfaces/Asset";
+
+export function flattenAssetType(asset:Asset): string {
+	switch (asset.type) {
 		case "bg": {
-			return type;
+			return asset.type;
 		}
 		case "sound": {
-			return subtype;
+			return asset.subtype;
 		}
 		case "prop": {
-			if (subtype == "video") {
-				return subtype;
+			if (asset.subtype == "video") {
+				return asset.subtype;
 			}
-			return ptype;
+			return asset.ptype;
 		}
 	}
 };

@@ -70,7 +70,10 @@ group.route("POST", "/api_v2/assets/imported", (req, res) => {
 	const filters:Partial<Asset> = {
 		type: req.body.data.type
 	};
-	if (req.body.data.subtype) filters.subtype = req.body.data.subtype;
+	if (
+		req.body.data.subtype && 
+		(filters.type == "prop" || filters.type == "sound")
+	) filters.subtype = req.body.data.subtype;
 
 	// what's even the point of this if it still uses an xml
 	// it's dumb
@@ -233,12 +236,11 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 
 	let info:Partial<Asset> = {
 		type: req.body.type,
-		subtype: req.body.subtype,
 		title: req.body.name || filename
 	}, stream;
 
 	// validate the file type
-	const ok = info.subtype == "video" ? "video" : info.type;
+	const ok = req.body.subtype == "video" ? "video" : info.type;
 	if ((fileTypes[ok] || []).indexOf(ext) < 0) {
 		return res.status(400).json({msg:"Invalid file type."});
 	}
@@ -262,6 +264,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 				break;
 			}
 			case "sound": {
+				info.subtype = req.body.subtype;
 				if (ext != "mp3") {
 					stream = await fileUtil.convertToMp3(filepath, ext);
 				} else {
@@ -287,6 +290,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 				break;
 			}
 			case "prop": {
+				info.subtype = req.body.subtype;
 				if (info.subtype == "video") {
 					// get the height and width from the original video
 					const asyncFfprobe = promisify(ffprobe);

@@ -1,18 +1,16 @@
 <style lang="css">
-table.list_tree tbody tr.movie td.title img {
+table.data_list tbody tr.movie td.title img {
 	width: calc(calc(calc(v-bind("zoomLevel + 'px'") - 20px) / 9) * 16);
 }
 </style>
 
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
-import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
-import ListTree from "../components/list/ListTree.vue";
+import type { DataListRow2, FieldId, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
+import DataList from "../components/list/DataList.vue";
 import type { Movie } from "../interfaces/Movie";
-import MovieRowOptions from "../components/list/options/MovieRowOptions.vue";
-import MovieListRow from "../components/list/MovieListRow.vue";
+import MovieListRow from "../components/list/rows/MovieListRow.vue";
 import Navbar from "../components/Navbar.vue";
-import type { NavbarEntry } from "../components/Navbar.vue";
 import {
 	onMounted,
 	ref,
@@ -38,8 +36,6 @@ const movieList = ref<{
 	folders: [],
 	entries: Movie[]
 }>();
-/** list of links to display in the navbar's address */
-const navbarEntries = ref<NavbarEntry[]>([]);
 
 let columnWidths = JSON.parse(localStorage.getItem("movie_list-columnWidths")) ??
 	{ "title":250, "id":100, "duration":100, "date":180 };
@@ -100,9 +96,9 @@ function timestampToSeconds(time:string) {
  * @param movie1 movie 1
  * @param movie2 movie 2
  */
-function movieSortCb(movie1:Movie, movie2:Movie): number {
-	let mul = toValue(selectedSort).descending ? 1 : -1;
-	const sortOption = toValue(selectedSort).id;
+function movieSort(movie1:Movie, movie2:Movie): number {
+	let mul = selectedSort.value.descending ? 1 : -1;
+	const sortOption = selectedSort.value.id;
 	switch (sortOption) {
 		case "id":
 		case "title": {
@@ -126,7 +122,7 @@ function movieSortCb(movie1:Movie, movie2:Movie): number {
  * called when the user clicks a sort option
  * @param newSort sort option to switch to
  */
-function changeSort(newSort:FieldIdOf<Movie>) {
+function changeSort(newSort:FieldId<Movie>) {
 	if (selectedSort.value.id == newSort) {
 		selectedSort.value.descending = !selectedSort.value.descending;
 	} else {
@@ -136,7 +132,7 @@ function changeSort(newSort:FieldIdOf<Movie>) {
 		};
 	}
 	localStorage.setItem("movie_list-selectedSort", JSON.stringify(toValue(selectedSort)));
-	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
+	movieList.value.entries = movieList.value.entries.sort(movieSort);
 }
 
 /**
@@ -144,7 +140,7 @@ function changeSort(newSort:FieldIdOf<Movie>) {
  * @param id column id
  * @param newWidth new width in pixels
  */
-function columnResized(id:FieldIdOf<Movie>, newWidth:number) {
+function columnResized(id:FieldId<Movie>, newWidth:number) {
 	columnWidths[id] = newWidth;
 	localStorage.setItem("movie_list-columnWidths", JSON.stringify(columnWidths));
 }
@@ -162,7 +158,8 @@ function getMovieTree(filter:"starter"): Promise<{
 	}
 }>
 function getMovieTree(filter:"movie", folderId:string): Promise<{
-	navbar_parent_folders: NavbarEntry[],
+	// navbar_parent_folders: NavbarEntry[],
+	navbar_parent_folders: void,
 	list_data: {
 		folders: [],
 		entries: Movie[],
@@ -177,7 +174,8 @@ function getMovieTree(filter:"movie"|"starter", folderId?:string) {
 			}
 			let responseJson = JSON.parse(this.responseText);
 
-			let parentFolderEntries: NavbarEntry[] | void;
+			// let parentFolderEntries:NavbarEntry[] | void;
+			let parentFolderEntries:void;
 			if (filter == "movie") {
 				parentFolderEntries = responseJson.folder_path.map(v => ({
 					path: "/movies/" + v.id,
@@ -221,25 +219,25 @@ async function routeUpdated() {
 async function loadMovieList() {
 	if (listPage == "movie") {
 		const response = await getMovieTree(listPage, toValue(currentFolder));
-		navbarEntries.value = [
-			{
-				path: "/movies",
-				title: "Videos"
-			},
-			...response.navbar_parent_folders
-		];
+		// navbarEntries.value = [
+		// 	{
+		// 		path: "/movies",
+		// 		title: "Videos"
+		// 	},
+		// 	...response.navbar_parent_folders
+		// ];
 		movieList.value = response.list_data;
 	} else {
 		const response = await getMovieTree(listPage);
-		navbarEntries.value = [
-			{
-				path: "/starters",
-				title: "Starters"
-			}
-		];
+		// navbarEntries.value = [
+		// 	{
+		// 		path: "/starters",
+		// 		title: "Starters"
+		// 	}
+		// ];
 		movieList.value = response.list_data;
 	}
-	movieList.value.entries = movieList.value.entries.sort(movieSortCb);
+	movieList.value.entries = movieList.value.entries.sort(movieSort);
 	setTimeout(() => {
 		isLoading.value = false;
 	}, 80);
@@ -259,27 +257,26 @@ initList();
 	<div>
 		<Navbar
 			:count="movieList.entries.length"
-			:entries="navbarEntries"
 			:supported="{
 				newFolder: listPage != 'starter',
 				search: true,
 				viewMode: true,
 				zoom: true
-			}"/>
+			}"
+		/>
 
 		<div class="page_contents">
-			<ListTree
-				:class="{
-					load_state: isLoading
-				}"
+			<br/><br/><br/>new movie, recents<br/><br/><br/><br/>
+			<DataList
 				ref="list-tree"
 				:data="movieList"
-				:row-component="MovieListRow"
-				:row-options-component="MovieRowOptions"
+				:is-loading="isLoading"
 				:columns="columns"
 				:selected-sort="selectedSort"
+				:row-component="MovieListRow as any as DataListRow2<Movie>"
 				@column-resize="columnResized"
-				@sort-change="changeSort"/>
+				@sort-change="changeSort"
+			/>
 		</div>
 	</div>
 </template>

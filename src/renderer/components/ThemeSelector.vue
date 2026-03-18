@@ -1,6 +1,7 @@
 <style lang="css">
 .popup_container.theme_sel_popup {
 	background: var(--popup-gradient-bg);
+	backdrop-filter: none;
 }
 .popup_container.theme_sel_popup .popup {
 	width: 70%;

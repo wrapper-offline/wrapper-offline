@@ -126,29 +126,27 @@ html.dark header .search_box:focus {
 <script setup lang="ts">
 import Dropdown from "./controls/Dropdown.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
-import { useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import useListStore from "../composables/useListStore";
-
-export interface NavbarEntry {
-	path: string,
-	title: string,
-};
+import { useNavbar } from "../composables/useNavbar";
+import { ViewMode } from "../interfaces/DataList";
 
 const emit = defineEmits<{
 	downloadClick: [],
 	newFolderClick: []
+	saveClick: [],
 }>();
 defineProps<{
 	/** display a number at the end of a final link */
 	count?: number,
-	/** address entries */
-	entries: NavbarEntry[],
 	/** specify supported features to show */
 	supported?: {
 		/**	displays a download button */
 		download?: boolean,
 		/** displays a new folder icon */
 		newFolder?: boolean,
+		/** display a save button */
+		save?: boolean,
 		/** display a search box */
 		search?: boolean,
 		/** display view mode toggle (list or grid) */
@@ -160,6 +158,8 @@ defineProps<{
 
 const router = useRouter();
 const { search, viewMode, zoomLevel } = useListStore();
+const navbar = useNavbar();
+let entries = navbar.currentState.entries;
 
 function backButtonClick() {
 	router.back();
@@ -171,6 +171,13 @@ function forwardButtonClick() {
 function onSearchInput(e:InputEvent) {
 	const target = e.currentTarget as HTMLInputElement;
 	search.set(target.value);
+}
+
+/**
+ * called when the save button is clicked, emits event for it
+ */
+function saveButton_click() {
+	emit("saveClick");
 }
 
 /**
@@ -191,7 +198,7 @@ function newFolderClick() {
  * called when the user clicks the view buttons
  * @param newView view to switch to
  */
-function changeView(newView:"grid"|"list") {
+function changeView(newView:ViewMode) {
 	viewMode.set(newView);
 }
 
@@ -203,18 +210,29 @@ function zoomSliderMoved(e:InputEvent) {
 	const newVal = target.valueAsNumber;
 	zoomLevel.set(newVal);
 }
+
+onBeforeRouteLeave(() => {
+	navbar.resetState();
+});
 </script>
 
 <template>
 	<header>
 		<div class="head_left">
-			<div class="nav_btn" @click="backButtonClick"><i class="ico left"></i></div>
-			<div class="nav_btn" @click="forwardButtonClick"><i class="ico right"></i></div>
+			<div class="nav_btn" v-tooltip="'Back'" @click="backButtonClick"><i class="ico left"></i></div>
+			<div class="nav_btn" v-tooltip="'Forward'" @click="forwardButtonClick"><i class="ico right"></i></div>
 			<div class="link_container">
-				<RouterLink v-for="parent in entries.slice(0, -1)" :to="parent.path" class="link parent_link">
-					{{ parent.title }}
-					<div class="caret"><i class="ico right"></i></div>
-				</RouterLink>
+				<template v-for="parent in entries.slice(0, -1)">
+					<RouterLink v-if="parent.path" :to="parent.path" class="link parent_link">
+						{{ parent.title }}
+						<div class="caret"><i class="ico right"></i></div>
+					</RouterLink>
+					<div v-else class="link parent_link">
+						{{ parent.title }}
+						<div class="caret"><i class="ico right"></i></div>
+					</div>
+				</template>
+				
 				<span v-if="entries.length > 0" class="link final_link">
 					{{ entries[entries.length - 1].title }}
 					<template v-if="count">
@@ -224,6 +242,13 @@ function zoomSliderMoved(e:InputEvent) {
 			</div>
 		</div>
 		<div class="head_right">
+			<!-- save button -->
+			<div v-if="supported?.save"
+				class="nav_btn"
+				title="Save"
+				@click="saveButton_click">
+				<i class="ico save"></i>
+			</div>
 			<!-- download button -->
 			<div v-if="supported?.download"
 				class="nav_btn"
@@ -247,7 +272,7 @@ function zoomSliderMoved(e:InputEvent) {
 			<!-- zoom slider -->
 			<Dropdown v-if="supported?.zoom" align="right">
 				<template #toggle>
-					<div class="nav_btn" title="Adjust zoom level">
+					<div class="nav_btn" v-tooltip="'Zoom'">
 						<i class="ico magnify"></i>
 					</div>
 				</template>
@@ -256,16 +281,16 @@ function zoomSliderMoved(e:InputEvent) {
 				</DropdownItem>
 			</Dropdown>
 			<!-- view options -->
-			<div v-if="supported?.viewMode && viewMode.value == 'list'"
+			<div v-if="supported?.viewMode && viewMode.value == ViewMode.List"
 				class="nav_btn"
-				title="Grid view"
-				@click="() => changeView('grid')">
+				v-tooltip="'Display as grid'"
+				@click="() => changeView(ViewMode.Grid)">
 				<i class="ico grid"></i>
 			</div>
-			<div v-if="supported?.viewMode && viewMode.value == 'grid'"
+			<div v-if="supported?.viewMode && viewMode.value == ViewMode.Grid"
 				class="nav_btn"
-				title="List view"
-				@click="() => changeView('list')">
+				v-tooltip="'Display as list'"
+				@click="() => changeView(ViewMode.List)">
 				<i class="ico blist"></i>
 			</div>
 		</div>

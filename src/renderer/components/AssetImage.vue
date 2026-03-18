@@ -63,16 +63,16 @@ function containerClicked() {
 		<div v-if="playable && asset.type == 'sound'" class="audio_play">
 			<div v-if="playing" class="play_icon"><i class="ico pause"></i></div>
 			<div v-else class="play_icon"><i class="ico play"></i></div>
-		</div> 
+		</div>
+
 		<img v-if="asset.id.endsWith('swf')" src="/img/importer/flash.svg"/>
 
 		<img v-else-if="asset.type == 'sound'" src="/img/importer/sound.svg"/>
 
-		<img v-else-if="asset.subtype == 'video'"
+		<img v-else-if="asset.type == 'prop' && asset.subtype == 'video'"
 			:src="`${apiServer}/assets/${asset.id.slice(0, -4)}.png`"/>
 
-		<img v-else-if="asset.type == 'bg' || asset.type == 'prop'"
-			:src="`${apiServer}/assets/${asset.id}`"/>
+		<img v-else :src="`${apiServer}/assets/${asset.id}`"/>
 
 		<audio
 			v-if="asset.type == 'sound'"

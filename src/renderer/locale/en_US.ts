@@ -16,6 +16,7 @@ export default {
 	},
 	"list": {
 		"column_name": {
+			"index": "Created",
 			"id": "ID",
 			"title": "Name",
 			"type": "Type",

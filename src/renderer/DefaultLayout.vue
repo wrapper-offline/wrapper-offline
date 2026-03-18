@@ -7,7 +7,7 @@
 	flex-direction: column;
 }
 .page_contents {
-	background: #eeedf2;
+	background: hsl(252deg 16% 94%);
 	overflow: auto;
 	flex-grow: 1;
 }
@@ -41,7 +41,11 @@ if (localSettings.darkMode == true) {
 </script>
 
 <template>
-	<Sidebar ref="sidebar"/>
+	<Sidebar ref="sidebar">
+		<template #page_specific>
+			<slot name="hi"></slot>
+		</template>
+	</Sidebar>
 	<RouterView id="right_page_container" :style="{
 		width: `calc(100% - ${sidebar?.width + sidebar?.slideMode.margin}px)`
 	}"/>

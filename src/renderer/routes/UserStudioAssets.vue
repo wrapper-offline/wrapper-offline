@@ -7,13 +7,12 @@
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
 import type { Asset } from "../interfaces/Asset";
-import AssetRowOptions from "../components/list/options/AssetRowOptions.vue";
-import AssetListRow from "../components/list/AssetListRow.vue";
-import type { FieldIdOf, ListFieldColumn, SelectedListSort } from "../interfaces/ListTypes";
+import AssetRowOptions from "../components/list/options/AssetListOptions.vue";
+import AssetListRow from "../components/list/rows/AssetListRow.vue";
+import { ViewMode, type DataListRow2, type FieldId, type ListFieldColumn, type SelectedListSort } from "../interfaces/DataList";
 import { flattenAssetType } from "../utils/flattenAssetType";
-import ListTree from "../components/list/ListTree.vue";
+import DataList from "../components/list/DataList.vue";
 import Navbar from "../components/Navbar.vue";
-import type { NavbarEntry } from "../components/Navbar.vue";
 import {
 	onMounted,
 	ref,
@@ -24,8 +23,6 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-/** list of links to display in the navbar's address */
-const navbarEntries = ref<NavbarEntry[]>([]);
 /** list of user assets */
 const assetList = ref<Asset[]>();
 /** is the asset list currently being loaded */
@@ -74,8 +71,8 @@ function assetSortCb(asset1:Asset, asset2:Asset): number {
 	const sortOption = toValue(selectedSort).id;
 	switch (sortOption) {
 		case "type": {
-			const type1 = flattenAssetType(asset1.type, asset1.subtype, asset1.ptype);
-			const type2 = flattenAssetType(asset2.type, asset2.subtype, asset2.ptype);
+			const type1 = flattenAssetType(asset1);
+			const type2 = flattenAssetType(asset2);
 			return type1.localeCompare(type2) * mul;
 		}
 		default: {
@@ -90,7 +87,7 @@ function assetSortCb(asset1:Asset, asset2:Asset): number {
  * called when the user clicks a sort option
  * @param newSort sort option to switch to
  */
-function changeSort(newSort:FieldIdOf<Asset>) {
+function changeSort(newSort:FieldId<Asset>) {
 	if (selectedSort.value.id == newSort) {
 		selectedSort.value.descending = !selectedSort.value.descending;
 	} else {
@@ -108,7 +105,7 @@ function changeSort(newSort:FieldIdOf<Asset>) {
  * @param id column id
  * @param newWidth new width in pixels
  */
-function columnResized(id:FieldIdOf<Asset>, newWidth:number) {
+function columnResized(id:FieldId<Asset>, newWidth:number) {
 	columnWidths[id] = newWidth;
 	localStorage.setItem("sasset_list-columnWidths", JSON.stringify(columnWidths));
 }
@@ -137,7 +134,9 @@ function getAssetList(): Promise<Asset[]> {
  */
 async function routeUpdated() {
 	isLoading.value = true;
-	await loadAssetList();
+	setTimeout(() => {
+		loadAssetList();
+	}, 20);
 }
 
 /**
@@ -146,12 +145,12 @@ async function routeUpdated() {
 async function loadAssetList() {
 	initList();
 	const response = await getAssetList();
-	navbarEntries.value = [
-		{
-			path: "/assets",
-			title: `Your Library`
-		}
-	];
+	// navbarEntries.value = [
+	// 	{
+	// 		path: "/assets",
+	// 		title: `Your Library`
+	// 	}
+	// ];
 	assetList.value = response.sort(assetSortCb);
 	setTimeout(() => {
 		isLoading.value = false;
@@ -171,28 +170,26 @@ initList();
 	<div>
 		<Navbar
 			:count="assetList.length"
-			:entries="navbarEntries"
 			:supported="{
 				search: true,
 				zoom: true
-			}"/>
+			}"
+		/>
 
 		<div class="page_contents">
-			<ListTree
-				:class="{
-					load_state: isLoading
-				}"
-				ref="base-tree"
+			Filter by [Type]
+			<DataList
 				:data="{ folders:[], entries:assetList }"
-				:row-component="AssetListRow"
-				:row-options-component="AssetRowOptions"
+				:is-loading="isLoading"
 				:columns="columns"
 				:selected-sort="selectedSort"
 				:restrictions="{
-					mode: 'list'
+					mode: ViewMode.List
 				}"
+				:row-component="AssetListRow as any as DataListRow2<Asset>"
 				@column-resize="columnResized"
-				@sort-change="changeSort"/>
+				@sort-change="changeSort"
+			/>
 		</div>
 	</div>
 </template>

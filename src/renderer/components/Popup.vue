@@ -1,6 +1,7 @@
 <style lang="css">
 .popup_container {
 	background: #0e0e109d;
+	backdrop-filter: blur(2px);
 	animation: 0.1s popup_container_fade forwards ease-out;
 	z-index: 9;
 	display: flex;
@@ -39,7 +40,10 @@
 }
 
 .popup .popup_head .head_left {
+	opacity: 0.7;
+	font-size: 13px;
 	flex: 1;
+    align-self: center;
 }
 .popup .popup_head .head_center {
 	text-align: center;
@@ -139,7 +143,7 @@ const { class: classList, show = true } = defineProps<{
 				v-show="typeof show != undefined ? show !== false : true">
 				<div class="popup">
 					<div class="popup_head">
-						<div class="head_left"></div>
+						<div class="head_left"><slot name="head-left"></slot></div>
 						<div class="head_center">
 							<span class="small"><slot name=small-heading></slot></span>
 							<span class="main"><slot name="large-heading"></slot></span>

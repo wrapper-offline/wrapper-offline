@@ -406,7 +406,6 @@ export default {
 						const buffer = await stream2Buffer(readStream);
 						AssetModel.save(buffer, elem.attr.id, {
 							type: "bg",
-							subtype: "0",
 							title: elem.attr.name,
 							id: "c55fb6c.swf"
 						});
@@ -459,7 +458,6 @@ export default {
 						const buffer = await stream2Buffer(readStream);
 						CharModel.save(buffer, {
 							type: "char",
-							subtype: "0",
 							title: elem.attr.name,
 							themeId: CharModel.getThemeId(buffer),
 							id: elem.attr.id

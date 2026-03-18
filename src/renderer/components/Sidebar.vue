@@ -1,4 +1,4 @@
-<style lang="css" scoped>
+<style lang="css">
 .app_sidebar {
 	background: hsl(240deg 17% 23%);
 	z-index: 8;
@@ -55,6 +55,18 @@ sidebar sections *OR* grouped link containers
 /* sections */
 .app_sidebar>ul:first-of-type {
 	border-bottom: 1px solid hsl(240 14% 32% / 1);
+}
+.app_sidebar>ul.page_specific {
+	padding-right: 0;
+	flex-grow: 1;
+	overflow-y: scroll;
+}
+.app_sidebar>ul.page_specific::-webkit-scrollbar {
+	width: 13px;
+}
+.app_sidebar>ul.page_specific::-webkit-scrollbar-thumb {
+	background: hsl(240deg 10% 73%);
+	border-color: hsl(240deg 17% 23%);
 }
 .app_sidebar>ul:last-of-type {
 	border-top: 1px solid hsl(240 14% 32% / 1);
@@ -129,6 +141,13 @@ links
 .app_sidebar .link:hover::after {
 	background: linear-gradient(90deg, #0000 0, hsl(240 17% 29% / 1) 10px);
 }
+.app_sidebar .link.sel {
+	background: hsl(240deg 17% 35%);
+	font-weight: bold;
+}
+.app_sidebar .link.sel::after {
+	background: linear-gradient(90deg, #0000 0, hsl(240deg 17% 35%) 10px);
+}
 
 
 /**
@@ -172,47 +191,13 @@ dragger
 	transition-delay: 0.18s;
 }
 
-
-/**
-pinned links
-**/
-
-/* pinned links heading */
+/* headings */
 .app_sidebar h3 {
 	color: #918fa0;
 	font-size: 13px;
 	font-weight: bold;
 	text-transform: uppercase;
 	margin: 5px 0;
-}
-/* page folders unpin button */
-.app_sidebar .user_custom .link>button.unpin {
-	border-radius: 3px 0 0 3px;
-	font-size: 12px;
-	text-align: left;
-	padding: 5px 5px 5px 8px;
-	height: 100%;
-}
-.app_sidebar .user_custom .link>button.unpin:hover {
-	background: #ffd3e8;
-}
-.app_sidebar .user_custom .link>a {
-	padding: 5px 6px 5px 3px;
-}
-/* pin button */
-.app_sidebar .link[data-toggle]>button {
-	display: flex;
-	padding: 5px 12px;
-	flex-grow: 1;
-	line-height: 24px;
-}
-.app_sidebar .link[data-toggle]>button i.ico::before {
-	transition: transform 0.2s cubic-bezier(0, 0.8, 0.45, 1.35);
-	transform: scale(-1) translate(0.5px, 0);
-	display: block;
-}
-.app_sidebar .link[data-toggle]>button:hover {
-	background: #0000
 }
 
 /* version string */
@@ -244,6 +229,13 @@ html.dark .app_sidebar #logo_container .logo_btn:hover {
 html.dark .app_sidebar>ul:first-of-type {
 	border-color: hsl(250deg 14% 23%);
 }
+html.dark .app_sidebar>ul.page_specific::-webkit-scrollbar {
+	width: 13px;
+}
+html.dark .app_sidebar>ul.page_specific::-webkit-scrollbar-thumb {
+	background: hsl(250 10% 40% / 1);
+	border-color: hsl(250 10% 13% / 1);
+}
 html.dark .app_sidebar>ul:last-of-type {
 	border-color: hsl(250deg 14% 23%);
 }
@@ -254,11 +246,9 @@ html.dark  .app_sidebar .group>ul>.divider {
 	width: 1px;
 }
 /* links */
-html.dark .app_sidebar .link>a {
-	color: #ccc;
-}
+html.dark .app_sidebar .link>a,
 html.dark .app_sidebar .link>button {
-	color: #ccc;
+	color: #ddd;
 }
 html.dark .app_sidebar .link i {
 	color: #9f9eab;
@@ -271,6 +261,12 @@ html.dark .app_sidebar .link:hover {
 }
 html.dark .app_sidebar .link:hover::after {
 	background: linear-gradient(90deg, #0000 0, hsl(250 10% 18% / 1) 10px);
+}
+html.dark .app_sidebar .link.sel {
+	background: hsl(250 10% 23% / 1);
+}
+html.dark .app_sidebar .link.sel::after {
+	background: linear-gradient(90deg, #0000 0, hsl(250 10% 23% / 1) 10px);
 }
 /* create button */
 html.dark .app_sidebar .link.create {
@@ -374,6 +370,7 @@ import { ref, toValue, useTemplateRef } from "vue";
 import SettingsModal from "./settings/SettingsModal.vue";
 import useListStore from "../composables/useListStore";
 import useLocalSettings from "../composables/useLocalSettings";
+import { onStateUpdate, useSidebar } from "../composables/useSidebar";
 import useTempStorage from "../composables/useTempStorage";
 import { wrapperVer } from "../utils/AppInit";
 
@@ -382,6 +379,7 @@ const movieInput = useTemplateRef("movie-input");
 const localSettings = useLocalSettings();
 const { pendingRefresh } = useListStore();
 const router = useRouter();
+const sidebar = useSidebar();
 const tempStorage = useTempStorage();
 
 const collapsed = ref(false);
@@ -437,6 +435,7 @@ async function charInput_input(e:InputEvent) {
 	tempStorage.store("charXmlData", xmlData);
 	const themeId = extractCharThemeId(xmlData);
 	router.push("/characters/" + themeId);
+	// todo fix upload button on same theme routes
 }
 
 /**
@@ -527,16 +526,22 @@ function draggerDown(e:MouseEvent) {
 	});
 }
 
-onBeforeRouteLeave((to, from) => {
-	if (to.path.startsWith("/character") && !from.path.startsWith("/character")) {
-		window.addEventListener("resize", watchWidth);
-		watchWidth();
-		slideMode.value.enabled = true;
-	} else if (from.path.startsWith("/character") && !to.path.startsWith("/character")) {
-		window.removeEventListener("resize", watchWidth);
-		slideMode.value.margin = 0;
-		slideMode.value.enabled = false;
+onStateUpdate((to, from) => {
+	if (to.slideMode != from.slideMode) {
+		if (to.slideMode) {
+			window.addEventListener("resize", watchWidth);
+			watchWidth();
+			slideMode.value.enabled = true;
+		} else {
+			window.removeEventListener("resize", watchWidth);
+			slideMode.value.margin = 0;
+			slideMode.value.enabled = false;
+		}
 	}
+
+});
+onBeforeRouteLeave(() => {
+	sidebar.resetState();
 });
 
 defineExpose({ slideMode, width });
@@ -568,6 +573,7 @@ defineExpose({ slideMode, width });
 						</button>
 					</li>
 				</template>
+				<RouterLink to="/characters/create" class="dropdown_item">Create a character</RouterLink>
 				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator/>
 				<DropdownItem @click="charInput.click()">Upload a character</DropdownItem>
@@ -575,32 +581,124 @@ defineExpose({ slideMode, width });
 				<DropdownItem @click="starterUpload_click()">Upload a starter</DropdownItem>
 			</Dropdown>
 			<div class="spacer"></div>
-			<li class="link">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'char_list'}">
 				<RouterLink to="/characters">
 					<i class="ico person"></i>
 					<div class="link_text">Characters</div>
 				</RouterLink>
 			</li>
-			<li class="link">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'movie_list'}">
 				<RouterLink to="/movies">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
 			</li>
-			<li class="link">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'starter_list'}">
 				<RouterLink to="/starters">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
 				</RouterLink>
 			</li>
-			<li class="link">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'asset_list'}">
 				<RouterLink to="/assets">
 					<i class="ico cloud"></i>
 					<div class="link_text">Your Library</div>
 				</RouterLink>
 			</li>
 		</ul>
-		<ul class="user_custom"></ul>
+		<ul class="page_specific">
+			<h3>Starred</h3>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico folder"></i>
+					<div class="link_text">Example folder</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+			<li class="link">
+				<RouterLink to="/">
+					<i class="ico film"></i>
+					<div class="link_text">Example movie</div>
+				</RouterLink>
+			</li>
+		</ul>
 		<ul>
 			<li class="group">
 				<ul>

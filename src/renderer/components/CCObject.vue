@@ -9,6 +9,7 @@ import {
 } from "../utils/AppInit";
 import extractCharThemeId from "../utils/extractCharThemeId";
 import { onMounted, onUnmounted, ref, useTemplateRef } from "vue";
+import Button from "./controls/Button.vue";
 
 const emit = defineEmits<{
 	/** emitted when the object switches to the cc */
@@ -42,20 +43,6 @@ let params:Params = {
 };
 
 onMounted(() => {
-	//@ts-expect-error
-	window.typeSelected = function typeSelected(type:string) {
-		showObject.value = false;
-		setTimeout(() => {
-			createCharacter(params.flashvars.themeId, type);
-		}, 55);
-	};
-	//@ts-expect-error
-	window.copyClicked = function copyClicked(assetId:string) {
-		showObject.value = false;
-		setTimeout(() => {
-			copyCharacter(params.flashvars.themeId, assetId);
-		}, 55);
-	};
 	/**
 	 * character is saved, wait on parent to either begin new cc session or exit
 	 * @param id new character id
@@ -69,10 +56,6 @@ onMounted(() => {
 	};
 });
 onUnmounted(() => {
-	//@ts-ignore
-	delete window.typeSelected;
-	//@ts-ignore
-	delete window.copyClicked;
 	//@ts-ignore
 	delete window.characterSaved;
 });
@@ -111,17 +94,6 @@ function getXml(): string {
 function displayCreator() {
 	emit("ccEnter");
 	swfUrl = swfUrlBase + "/cc.swf";
-	params.movie = swfUrl;
-	showObject.value = true;
-}
-
-/**
- * shows the cc browser
- * @param themeId cc theme id
- */
-function displayBrowser(themeId:string) {
-	swfUrl = swfUrlBase + "/cc_browser.swf";
-	params.flashvars.themeId = themeId;
 	params.movie = swfUrl;
 	showObject.value = true;
 }
@@ -172,8 +144,17 @@ function reset() {
 	swfUrl = "";
 }
 
+function undoBtn_click() {
+	//@ts-ignore
+	ccObject.value.undo();
+}
+
+function redoBtn_click() {
+	//@ts-ignore
+	ccObject.value.redo();
+}
+
 defineExpose({
-	displayBrowser,
 	createCharacter,
 	copyCharacter,
 	getXml,
@@ -183,6 +164,19 @@ defineExpose({
 </script>
 
 <template>
+	<div class="cc_hotbar">
+		<div class="hb_left">
+			upload asset, preview bg color
+		</div>
+		<div class="hb_left">
+			<Button @click="undoBtn_click">Undo</Button>
+			<Button @click="redoBtn_click">Redo</Button>
+			(reset, random, bodytype)
+		</div>
+		<div class="hb_left">
+			preview zoom, fit, flip
+		</div>
+	</div>
 	<object v-if="showObject"
 		id="cc_object"
 		:src="swfUrl"
@@ -193,5 +187,15 @@ defineExpose({
 		@dragover.prevent.stop=""
 		@drop.prevent.stop="fileDropped">
 		<param v-for="[name, param] of Object.entries(params)" :name="name" :value="toAttrString(param)"/>
+	</object>
+	<object v-if="showObject"
+		id="cc_object2"
+		:src="swfUrl.replace('cc', 'cc_old')"
+		type="application/x-shockwave-flash"
+		width="980"
+		height="600"
+		@dragover.prevent.stop=""
+		@drop.prevent.stop="fileDropped">
+		<param v-for="[name, param] of Object.entries(Object.assign(params, { movie:params.movie.replace('cc', 'cc_old') }))" :name="name" :value="toAttrString(param)"/>
 	</object>
 </template>

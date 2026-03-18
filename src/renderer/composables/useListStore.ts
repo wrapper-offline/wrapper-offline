@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import { ViewMode } from "../interfaces/DataList";
 
 /** list needs to be refreshed */
 const pendingRefresh = reactive({
@@ -18,9 +19,9 @@ const search = reactive({
 
 /** list view, grid or list */
 const viewMode = reactive({
-	value: localStorage.getItem("list_view") || "list",
-	set(newValue: "list"|"grid") {
-		this.value = newValue;
+	value: ((Number(localStorage.getItem("list_view")) as ViewMode) || ViewMode.List) as ViewMode,
+	set(newValue: ViewMode) {
+		this.value = newValue.toString();
 		localStorage.setItem("list_view", this.value);
 	}
 });

@@ -1,13 +1,14 @@
 import { createMemoryHistory, createRouter } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
-const DefaultLayout = () => import("./DefaultLayout.vue");
-const Error404View = () => import("./routes/Error404View.vue");
-const PlayerView = () => import("./routes/PlayerView.vue");
-const StudioView = () => import("./routes/StudioView.vue");
-const UserCharacters = () => import("./routes/UserCharacters.vue");
-const UserMovies = () => import("./routes/UserMovies.vue");
-const UserStudioAssets = () => import("./routes/UserStudioAssets.vue");
+const CCView = () => import("../routes/CCView.vue");
+const DefaultLayout = () => import("../DefaultLayout.vue");
+const Error404View = () => import("../routes/Error404View.vue");
+const PlayerView = () => import("../routes/PlayerView.vue");
+const StudioView = () => import("../routes/StudioView.vue");
+const UserCharacters = () => import("../routes/UserCharacters.vue");
+const UserMovies = () => import("../routes/UserMovies.vue");
+const UserStudioAssets = () => import("../routes/UserStudioAssets.vue");
 
 const routes:RouteRecordRaw[] = [
 	{
@@ -20,24 +21,42 @@ const routes:RouteRecordRaw[] = [
 		path: "/assets",
 		component: DefaultLayout,
 		children: [
-			{ path:"", component:UserStudioAssets },
+			{
+				name: "asset_list",
+				path: "",
+				component:UserStudioAssets
+			},
 		],
 		meta: {
 			title: "Your Library"
 		},
 	},
 	{
-		path: "/characters/:themeId?",
+		path: "/characters",
 		component: DefaultLayout,
 		children: [
 			{
-				name: "cc_page",
+				name: "char_list",
 				path: "",
 				component: UserCharacters
 			},
 		],
 		meta: {
 			title: "Characters"
+		},
+	},
+	{
+		path: "/characters/create/:themeId?/:bs?",
+		component: DefaultLayout,
+		children: [
+			{
+				name: "cc",
+				path: "",
+				component: CCView
+			},
+		],
+		meta: {
+			title: "Character Creator"
 		},
 	},
 	{

@@ -49,6 +49,9 @@ i.ico.film::before {
 i.ico.flop::before {
 	content: '\E444';
 }
+i.ico.folder::before {
+	content: '\E145';
+}
 i.ico.grid::before {
 	content: '\E156';
 }
@@ -84,6 +87,9 @@ i.ico.redo::before {
 }
 i.ico.right::before {
 	content: "\E224";
+}
+i.ico.save::before {
+	content: '\E444';
 }
 i.ico.speech::before {
 	content: '\E310';

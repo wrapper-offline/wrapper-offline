@@ -20,6 +20,7 @@ const bfTypes = {
 	heavy_woman: "heavy&ft=_sticky_filter_heavygirl"
 };
 const thumbUrl = process.env.THUMB_BASE_URL;
+const url = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const group = new httpz.Group();
 
 /*
@@ -31,7 +32,12 @@ group.route("GET", "/api/char/list", (req, res) => {
 	for (const key in req.query) {
 		filter[key] = req.query[key];
 	}
-	return res.json(Database.select("assets", filter));
+	const chars = Database.select("assets", filter)
+		.map((c:any) => {
+			c.thumbnail = `${url}/assets/${c.id}.png`;
+			return c;
+		});
+	return res.json(chars);
 });
 
 /*
@@ -109,7 +115,6 @@ group.route("POST", "/goapi/saveCCCharacter/", (req, res) => {
 
 	const meta:Partial<Char> = {
 		type: "char",
-		subtype: "0",
 		title: req.body.title,
 		themeId: req.body.themeId
 	};
@@ -148,7 +153,6 @@ group.route("*", "/api/char/upload", (req, res) => {
 
 	const meta:Partial<Char> = {
 		type: "char",
-		subtype: "0",
 		title: origName || "Untitled",
 		themeId: CharModel.getThemeId(buffer)
 	};

@@ -21,6 +21,7 @@ class AppSettings {
 	}
 
 	set(id:string, value:boolean|string) {
+		this.settings[id] = value;
 		const form = new FormData();
 		form.append("setting", id);
 		form.append("value", value.toString());

@@ -5,6 +5,8 @@ import http from "http";
 import httpz from "@octanuary/httpz";
 import { join } from "path";
 import settings from "../../storage/settings";
+import { charThumb, readStockCCChars } from "../staticServer";
+import { Char } from "../models/char";
 
 const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST;
 const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT;
@@ -58,9 +60,9 @@ group.route("POST", "/goapi/getThemeList/", async (req, res) => {
 load
 */
 group.route("POST", "/goapi/getTheme/", async (req, res) => {
-	const id = req.body.themeId;
+	const id = req.body.themeId as string | null;
 	if (!id) {
-		return res.status(400).json({msg:"Expected parameter 'themeId' on the request body."});
+		return res.status(400).json({ msg:"Expected parameter 'themeId' on the request body." });
 	}
 
 	const host = `${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}`;
@@ -68,6 +70,28 @@ group.route("POST", "/goapi/getTheme/", async (req, res) => {
 	http.get(host + path, (staticRes) => {
 		staticRes.pipe(res)
 	});
+});
+group.route("GET", "/api/theme/get_chars", async (req, res) => {
+	const themeId = req.query.id as string | null;
+	if (!themeId) {
+		return res.status(400).json({ msg:"Expected parameter 'themeId'" });
+	}
+
+	const themeList = parseThemeList();
+	const ccThemeId = themeList.find((t) => t.id == themeId).cc_theme_id;
+
+	const bareChars = readStockCCChars(themeId);
+	const chars:Char[] = bareChars.map((c) => {
+		return {
+			type: "char",
+			title: c.name || "Untitled",
+			tags: `${ccThemeId},_free,_cat:${c.category || "Stock characters"}`,
+			themeId: ccThemeId,
+			thumbnail: charThumb(c.id),
+			id: c.id.toString()
+		};
+	})
+	res.json(chars);
 });
 
 export default group;

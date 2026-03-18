@@ -4,15 +4,21 @@ tr.movie td.title img {
 }
 </style>
 
+<script lang="ts">
+export default {
+	optionsComponent: MovieListOptions
+};
+</script>
+
 <script setup lang="ts" generic="MovieEntry extends Movie">
-import { apiServer } from "../../utils/AppInit";
-import type { FieldIdOf } from "../../interfaces/ListTypes";
-import { genericColumnIdKey } from "../../keys/listTreeKeys";
+import { apiServer } from "../../../utils/AppInit";
+import { ViewMode, type FieldId } from "../../../interfaces/DataList";
+import { genericColumnIdKey, modeKey } from "../../../keys/listTreeKeys";
 import { inject } from "vue";
-import type { Movie } from "../../interfaces/Movie";
-import MovieRowOptions from "./options/MovieRowOptions.vue";
-import openPlayerWindow from "../../utils/openPlayerWindow";
-import useLocalSettings from "../../composables/useLocalSettings";
+import type { Movie } from "../../../interfaces/Movie";
+import MovieListOptions from "../options/MovieListOptions.vue";
+import openPlayerWindow from "../../../utils/openPlayerWindow";
+import useLocalSettings from "../../../composables/useLocalSettings";
 import { useRouter } from "vue-router";
 
 const emit = defineEmits<{
@@ -48,7 +54,7 @@ function entryElem_ctrlClick() {
 }
 
 /**
- * called when the `tr` element is clicked
+ * called when the entry element is clicked
  * does user action and emits event
  */
 function entryElem_dblClick() {
@@ -87,8 +93,9 @@ function deleteBtn_click() {
  * returns a fixed date string for a movie
  * @param entry movie object
  */
-function movieInfo(field:FieldIdOf<MovieEntry>): string {
+function movieInfo(field:FieldId<MovieEntry>): string {
 	switch (field) {
+		case "index": {}
 		case "date": {
 			const split = props.entry.date.split("T");
 			const date = split[0];
@@ -98,15 +105,45 @@ function movieInfo(field:FieldIdOf<MovieEntry>): string {
 		default: return props.entry[field].toString();
 	}
 }
+
+const mode = inject(modeKey);
 </script>
 
 <template>
-	<tr
-		:class="{ checked, movie:true }"
+	<div v-if="mode() == ViewMode.Grid"
+		:class="{
+			checked,
+			dl_cell: true,
+			movie: true
+		}"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
 		@click.shift.exact="entryElem_shiftClick"
-		@click.exact="entryElem_click">
+		@click.exact="entryElem_click"
+	>
+			<img
+				:src="`${apiServer}/file/movie/thumb/${movieInfo('id')}`"
+				alt="thumbnail"/>
+			<span class="duration">{{ movieInfo('duration') }}</span>
+			<div class="actions hidden">
+				<MovieListOptions :entry="entry" @entry-delete="deleteBtn_click"/>
+			</div>
+			<div class="data">
+				<span :title="movieInfo('title')" v-html="movieInfo('title')"></span>
+				<span>{{ movieInfo('date') }}</span>
+			</div>
+	</div>
+	<tr v-else
+		:class="{
+			checked,
+			dl_row: true,
+			movie: true
+		}"
+		@dblclick="entryElem_dblClick"
+		@click.ctrl.exact="entryElem_ctrlClick"
+		@click.shift.exact="entryElem_shiftClick"
+		@click.exact="entryElem_click"
+	>
 		<!-- 
 		draggable="true"
 		@dragstart="onMovieDrag($event, movie.id)"> -->
@@ -121,7 +158,7 @@ function movieInfo(field:FieldIdOf<MovieEntry>): string {
 			<span :title="movieInfo(columnId)" v-html="movieInfo(columnId)"></span>
 		</td>
 		<td class="actions hidden" @click.stop>
-			<MovieRowOptions :entry="entry" @entry-delete="deleteBtn_click"/>
+			<MovieListOptions :entry="entry" @entry-delete="deleteBtn_click"/>
 		</td>
 	</tr>
 </template>
