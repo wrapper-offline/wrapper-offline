@@ -35,7 +35,6 @@ import CCThemeSelector from "../components/CCThemeSelector.vue";
 type CCObjectType = InstanceType<typeof CCObject>;
 
 const ccObject = useTemplateRef<CCObjectType>("cc-object");
-const route = useRoute();
 const router = useRouter();
 const sidebar = useSidebar();
 const tempStorage = useTempStorage();
@@ -47,22 +46,21 @@ const baseNavbarEntry = {
 const showDlButton = ref(false);
 const showObject = ref(false);
 const showSelector = ref(false);
-let themeId = "";
 
 /**
  * initializes cc object
  * @param id theme id
  */
 function initObject(id:string) {
-	themeId = id;
-	showSelector.value = false;
-	showObject.value = true;
-	const xml = tempStorage.retrieve("charXmlData") as string | void;
-	if (typeof xml != "undefined") {
-		ccObject.value.uploadCharacter(themeId, xml);
-		return;
-	}
-	ccObject.value.displayBrowser(themeId);
+	// themeId = id;
+	// showSelector.value = false;
+	// showObject.value = true;
+	// const xml = tempStorage.retrieve("charXmlData") as string | void;
+	// if (typeof xml != "undefined") {
+	// 	ccObject.value.uploadCharacter(themeId, xml);
+	// 	return;
+	// }
+	// ccObject.value.displayBrowser(themeId);
 }
 
 function ccEntered() {
@@ -83,60 +81,36 @@ function charDownload() {
 }
 
 /**
- * called when a character is saved, returns to browser
+ * called when a character is saved, returns to char list
  */
 function charSaved() {
-	populateNavbar();
-	ccObject.value.displayBrowser(themeId);
-}
-
-/**
- * displays the cc if there is an id, shows theme selector if not
- */
-function themeIdCheck() {
-	if (themeId.length > 0) {
-		populateNavbar();
-		initObject(themeId);
-	} else {
-		showSelector.value = true;
-		showObject.value = false;
-	}
-}
-
-/**
- * populates the navbar with the base link and theme chars link
- */
-async function populateNavbar() {
-	
+	router.push({ name:"char_list" });
 }
 
 /**
  * called when a theme has been clicked in the theme selector
- * @param id theme id
+ * @param themeId theme id
+ * @param bsId bodyshape
  */
-function themeClicked(id:string) {
-	router.push({
-		name: "old_cc_page",
-		params: {
-			themeId: id
-		}
-	});
+function themeSelector_themeClick(themeId:string, bsId:string) {
+	ccObject.value.createCharacter(themeId, bsId);
+	showSelector.value = false;
+	showObject.value = true;
 }
-
-onBeforeRouteUpdate((newRoute) => {
-	ccObject.value.reset();
-	themeId = newRoute.params.themeId as string || "";
-	themeIdCheck();
-});
 
 sidebar.setRouteState({
 	slideMode: true
 });
 
-onMounted(() => {
-	themeId = route.params.themeId as string || "";
-	themeIdCheck();
-});
+const route = useRoute();
+const themeId = route.params.themeId as string | void;
+const bs = route.params.bs as string | void;
+if (themeId) {
+	themeSelector_themeClick(themeId, bs || "default");
+} else {
+	showSelector.value = true;
+	showObject.value = false;
+}
 </script>
 
 <template>
@@ -145,22 +119,13 @@ onMounted(() => {
 			:supported="{ download:showDlButton, save:true }"
 			state="cc"
 			@download-click="charDownload"/>
-		<!-- <div class="cc_hotbar">
-			<div class="hb_left">
-				upload asset, preview bg color
-			</div>
-			<div class="hb_left">
-				undo, redo, (reset, andom, bodytype)
-			</div>
-			<div class="hb_left">
-				preview zoom, fit, flip
-			</div>
-		</div> -->
+		
 		<div class="page_contents">
 			<CCThemeSelector
 				v-if="showSelector"
 				cc-filter
-				@theme-clicked="(theme) => themeClicked(theme.cc_theme_id)"/>
+				@theme-click="themeSelector_themeClick"
+			/>
 			<CCObject v-show="showObject" ref="cc-object" @cc-enter="ccEntered" @char-saved="charSaved"/>
 		</div>
 	</div>

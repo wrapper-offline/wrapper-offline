@@ -121,7 +121,7 @@ import { Theme, useThemeList } from "../composables/useThemeList";
 import CCTheme from "../models/cc/CCTheme";
 
 const emit = defineEmits<{
-	themeClicked: [string, string?]
+	themeClick: [string, string]
 }>();
 const props = defineProps<{
 	ccFilter?: boolean
@@ -195,7 +195,7 @@ async function ccTheme_click(id:string) {
 	const theme = new CCTheme(id);
 	await theme.load();
 	if (Object.keys(theme.bodyShapes).length == 1) {
-		emit("themeClicked", id);
+		emit("themeClick", id, "default");
 		return;
 	}
 	themeModel.value = theme;
@@ -205,9 +205,9 @@ async function ccTheme_click(id:string) {
  * called when a bodyshape is clicked, emits event
  * @param id bodyshape id
  */
-async function bs_click(id:string) {
+function bs_click(id:string) {
 	const themeId = themeModel.value.id;
-	emit("themeClicked", themeId, id);
+	emit("themeClick", themeId, id);
 }
 
 onMounted(async () => {

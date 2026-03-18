@@ -32,7 +32,7 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/characters/:themeId?",
+		path: "/characters",
 		component: DefaultLayout,
 		children: [
 			{
@@ -46,7 +46,7 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/characters/create/:themeId?",
+		path: "/characters/create/:themeId?/:bs?",
 		component: DefaultLayout,
 		children: [
 			{
