@@ -182,7 +182,7 @@
 			"gender": "M",
 			"source": "cepstral",
 			"arg": "William",
-			"desc": "William"
+			"desc": "William (Cepstral)"
 		},
 		"whispery": {
 			"country": "US",
@@ -232,7 +232,7 @@
 			"arg": "Matthias",
 			"desc": "Matthias"
 		},
-		"isabelle2": {
+		"isabelle": {
 			"country": "CA",
 			"language": "fr",
 			"gender": "F",
@@ -263,182 +263,6 @@
 			"source": "cepstral",
 			"arg": "Miguel",
 			"desc": "Miguel (Cepstral)"
-		},
-		"birgit": {
-			"country": "DE",
-			"language": "de",
-			"gender": "F",
-			"source": "watson",
-			"arg": "de-DE_BirgitVoice",
-			"desc": "Birgit"
-		},
-		"birgitv3": {
-			"country": "DE",
-			"language": "de",
-			"gender": "F",
-			"source": "watson",
-			"arg": "de-DE_BirgitV3Voice",
-			"desc": "BirgitV3"
-		},
-		"dieter": {
-			"country": "DE",
-			"language": "de",
-			"gender": "M",
-			"source": "watson",
-			"arg": "de-DE_DieterVoice",
-			"desc": "Dieter"
-		},
-		"dieterv3": {
-			"country": "DE",
-			"language": "de",
-			"gender": "M",
-			"source": "watson",
-			"arg": "de-DE_DieterV3Voice",
-			"desc": "DieterV3"
-		},
-		"erikav3": {
-			"country": "DE",
-			"language": "de",
-			"gender": "F",
-			"source": "watson",
-			"arg": "de-DE_ErikaV3Voice",
-			"desc": "ErikaV3"
-		},
-		"enrique1": {
-			"country": "ES",
-			"language": "es",
-			"gender": "M",
-			"source": "watson",
-			"arg": "es-ES_EnriqueVoice",
-			"desc": "Enrique (Watson)"
-		},
-		"enriquev3": {
-			"country": "ES",
-			"language": "es",
-			"gender": "M",
-			"source": "watson",
-			"arg": "es-ES_EnriqueV3Voice",
-			"desc": "EnriqueV3 (Watson)"
-		},
-		"sofia": {
-			"country": "MX",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-LA_SofiaVoice",
-			"desc": "Sofia (Mexican)"
-		},
-		"sofiav3": {
-			"country": "MX",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-LA_SofiaV3Voice",
-			"desc": "SofiaV3 (Mexican)"
-		},
-		"sofia1": {
-			"country": "US",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-US_SofiaVoice",
-			"desc": "Sofia"
-		},
-		"sofiav31": {
-			"country": "US",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-US_SofiaV3Voice",
-			"desc": "SofiaV3"
-		},
-		"laura3": {
-			"country": "ES",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-ES_LauraVoice",
-			"desc": "Laura"
-		},
-		"laurav3": {
-			"country": "ES",
-			"language": "es",
-			"gender": "F",
-			"source": "watson",
-			"arg": "es-ES_LauraV3Voice",
-			"desc": "LauraV3"
-		},
-		"lina": {
-			"country": "CN",
-			"language": "zh",
-			"gender": "F",
-			"source": "watson",
-			"arg": "zh-CN_LiNaVoice",
-			"desc": "Laura"
-		},
-		"wangwei": {
-			"country": "CN",
-			"language": "zh",
-			"gender": "M",
-			"source": "watson",
-			"arg": "zh-CN_WangWeiVoice",
-			"desc": "WangWei"
-		},
-		"zhangjing": {
-			"country": "CN",
-			"language": "zh",
-			"gender": "F",
-			"source": "watson",
-			"arg": "zh-CN_ZhangJingVoice",
-			"desc": "ZhangJing"
-		},
-		"emma3": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "F",
-			"source": "watson",
-			"arg": "nl-NL_EmmaVoice",
-			"desc": "Emma"
-		},
-		"liam2": {
-			"country": "NL",
-			"language": "nl",
-			"gender": "F",
-			"source": "watson",
-			"arg": "nl-NL_LiamVoice",
-			"desc": "Emma"
-		},
-		"nicolasv3": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "M",
-			"source": "watson",
-			"arg": "fr-FR_NicolasV3Voice",
-			"desc": "NicolasV3"
-		},
-		"renee": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "watson",
-			"arg": "fr-FR_ReneeVoice",
-			"desc": "Renee"
-		},
-		"reneev3": {
-			"country": "FR",
-			"language": "fr",
-			"gender": "F",
-			"source": "watson",
-			"arg": "fr-FR_ReneeV3Voice",
-			"desc": "ReneeV3"
-		},
-		"isabelle": {
-			"country": "CA",
-			"language": "fr",
-			"gender": "F",
-			"source": "cepstral",
-			"arg": "Isabelle",
-			"desc": "Isabelle"
 		},
 		"laila": {
 			"country": "SA",
@@ -678,7 +502,7 @@
 			"gender": "F",
 			"arg": [1, 1, 3],
 			"source": "vocalware",
-			"desc": "Claire"
+			"desc": "Claire (Vocalware)"
 		},
 		"rich": {
 			"country": "US",
@@ -894,7 +718,7 @@
 			"gender": "F",
 			"arg": [2, 4, 4],
 			"source": "vocalware",
-			"desc": "Florence"
+			"desc": "Florence (Vocalware)"
 		},
 		"jolie": {
 			"country": "FR",
@@ -1521,7 +1345,7 @@
 			"desc": "Takeru"
 		},
 		"dayoung": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 7],
@@ -1529,7 +1353,7 @@
 			"desc": "Dayoung"
 		},
 		"hyeryun": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 4],
@@ -1537,7 +1361,7 @@
 			"desc": "Hyeryun"
 		},
 		"hyuna": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 8],
@@ -1545,7 +1369,7 @@
 			"desc": "Hyuna"
 		},
 		"jihun": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "M",
 			"arg": [3, 13, 10],
@@ -1553,7 +1377,7 @@
 			"desc": "Jihun"
 		},
 		"jimin": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 5],
@@ -1561,7 +1385,7 @@
 			"desc": "Jimin"
 		},
 		"junwoo": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "M",
 			"arg": [3, 13, 2],
@@ -1569,7 +1393,7 @@
 			"desc": "Junwoo"
 		},
 		"sena": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 6],
@@ -1577,7 +1401,7 @@
 			"desc": "Sena"
 		},
 		"yumi": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 1],
@@ -1585,7 +1409,7 @@
 			"desc": "Yumi"
 		},
 		"yura": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": [3, 13, 9],
@@ -1757,7 +1581,7 @@
 			"language": "tr",
 			"gender": "F",
 			"source": "readloud",
-			"arg": "/turkish/20-kadın-sesi-filiz.html",
+			"arg": "/turkish/20-kad%C4%B1n-sesi-filiz.html",
 			"desc": "Filiz (Readloud)"
 		},
 		"ada1": {
@@ -1942,7 +1766,7 @@
 			"gender": "F",
 			"source": "cereproc",
 			"arg": "Claire",
-			"desc": "Claire"
+			"desc": "Claire (Cereproc)"
 		},
 		"daria1": {
 			"country": "ro",
@@ -1974,7 +1798,7 @@
 			"gender": "F",
 			"source": "cereproc",
 			"arg": "Florence",
-			"desc": "Florence"
+			"desc": "Florence (Cereproc)"
 		},
 		"florence": {
 			"country": "CA",
@@ -2478,7 +2302,7 @@
 			"gender": "M",
 			"source": "cereproc",
 			"arg": "William",
-			"desc": "William"
+			"desc": "William (Cereproc)"
 		},
 		"william": {
 			"country": "GB",
@@ -2558,7 +2382,7 @@
 			"gender": "F",
 			"source": "svox",
 			"arg": "ukenglishfemale",
-			"desc": "Victoria"
+			"desc": "Victoria (SVOX)"
 		},
 		"jalal22k": {
 			"country": "SA",
@@ -3478,7 +3302,7 @@
 			"gender": "F",
 			"source": "acapela",
 			"arg": "Claire-BE22k_HQ",
-			"desc": "Claire (Belgium)"
+			"desc": "Claire"
 		},
 		"julie-be22k": {
 			"country": "BE",
@@ -4617,7 +4441,7 @@
 			"desc": "Japan Male (TikTok)"
 		},
 		"tiktok_kr_002": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "M",
 			"arg": "kr_002",
@@ -4625,7 +4449,7 @@
 			"desc": "Korea Male 1 (TikTok)"
 		},
 		"tiktok_kr_004": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "M",
 			"arg": "kr_004",
@@ -4633,7 +4457,7 @@
 			"desc": "Korea Male 2 (TikTok)"
 		},
 		"tiktok_kr_003": {
-			"country": "KO",
+			"country": "KR",
 			"language": "ko",
 			"gender": "F",
 			"arg": "kr_003",
