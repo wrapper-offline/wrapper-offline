@@ -1,0 +1,44 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Ava-ml",
+		"name": "Ava"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Evan",
+		"name": "Evan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Joelle",
+		"name": "Joelle"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Nathan",
+		"name": "Nathan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Noelle",
+		"name": "Noelle"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Zoe-ml",
+		"name": "Zoe"
+	}
+]

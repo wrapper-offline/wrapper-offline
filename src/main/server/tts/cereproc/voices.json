@@ -1,0 +1,667 @@
+[
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "F",
+		"arg": "Ada",
+		"name": "Ada"
+	},
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "F",
+		"arg": "Ada-CereWave",
+		"name": "Ada (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Adam",
+		"name": "Adam"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Adam-CereWave",
+		"name": "Adam (CereWave)"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Alex",
+		"name": "Alex"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Alex-CereWave",
+		"name": "Alex (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Amy",
+		"name": "Amy"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Amy-CereWave",
+		"name": "Amy (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Ana",
+		"name": "Ana"
+	},
+	{
+		"country": "US",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Ana-CereWave",
+		"name": "Ana (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Andrew",
+		"name": "Andrew"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Andrew-CereWave",
+		"name": "Andrew (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Andy",
+		"name": "Andy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Andy-CereWave",
+		"name": "Andy (CereWave)"
+	},
+	{
+		"country": "RU",
+		"lang": "ru",
+		"gender": "F",
+		"arg": "Avrora",
+		"name": "Avrora"
+	},
+	{
+		"country": "RU",
+		"lang": "ru",
+		"gender": "F",
+		"arg": "Avrora-CereWave",
+		"name": "Avrora (CereWave)"
+	},
+	{
+		"country": "IE",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Caitlin",
+		"name": "Caitlin"
+	},
+	{
+		"country": "IE",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Caitlin-CereWave",
+		"name": "Caitlin (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Carolyn",
+		"name": "Carolyn"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Carolyn-CereWave",
+		"name": "Carolyn (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "gd",
+		"gender": "F",
+		"arg": "Ceitidh",
+		"name": "Ceitidh"
+	},
+	{
+		"country": "GB",
+		"lang": "gd",
+		"gender": "F",
+		"arg": "Ceitidh-CereWave",
+		"name": "Ceitidh (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Claire",
+		"name": "Claire"
+	},
+	{
+		"country": "ro",
+		"lang": "ro",
+		"gender": "F",
+		"arg": "Daria",
+		"name": "Daria"
+	},
+	{
+		"country": "ro",
+		"lang": "ro",
+		"gender": "F",
+		"arg": "Daria-CereWave",
+		"name": "Daria (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Demon",
+		"name": "Demon"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Florence",
+		"name": "Florence"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Florence-CereWave",
+		"name": "Florence (CereWave)"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "Gabriel",
+		"name": "Gabriel"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "Gabriel-CereWave",
+		"name": "Gabriel (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Ghost",
+		"name": "Ghost"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Giles",
+		"name": "Giles"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Giles-CereWave",
+		"name": "Giles (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Goblin",
+		"name": "Goblin"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "Gudrun",
+		"name": "Gudrun"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "Gudrun-CereWave",
+		"name": "Gudrun (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Hannah",
+		"name": "Hannah"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Hannah-CereWave",
+		"name": "Hannah (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Heather",
+		"name": "Heather"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Heather-CereWave",
+		"name": "Heather (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Isabella",
+		"name": "Isabella"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Isabella-CereWave",
+		"name": "Isabella (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Jack",
+		"name": "Jack"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Jack-CereWave",
+		"name": "Jack (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Jess",
+		"name": "Jess"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Jess-CereWave",
+		"name": "Jess (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Jordan",
+		"name": "Jordan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Jordan-CereWave",
+		"name": "Jordan (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Katherine",
+		"name": "Katherine"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Katherine-CereWave",
+		"name": "Katherine (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Kirsty",
+		"name": "Kirsty"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Kirsty-CereWave",
+		"name": "Kirsty (CereWave)"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "Laura",
+		"name": "Laura"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "Laura-CereWave",
+		"name": "Laura (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Lauren",
+		"name": "Lauren"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Lauren-CereWave",
+		"name": "Lauren (CereWave)"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "Laurent",
+		"name": "Laurent"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Laurent-CereWave",
+		"name": "Laurent (CereWave)"
+	},
+	{
+		"country": "AT",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Leopold",
+		"name": "Leopold"
+	},
+	{
+		"country": "AT",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Leopold-CereWave",
+		"name": "Leopold (CereWave)"
+	},
+	{
+		"country": "PT",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "Lucia",
+		"name": "Lucia"
+	},
+	{
+		"country": "PT",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "Lucia-CereWave",
+		"name": "Lucia (CereWave)"
+	},
+	{
+		"country": "CN",
+		"lang": "zh",
+		"gender": "F",
+		"arg": "Mailin-CereWave",
+		"name": "Mailin (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Mairi",
+		"name": "Mairi"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Mairi-CereWave",
+		"name": "Mairi (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Megan",
+		"name": "Megan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Megan-CereWave",
+		"name": "Megan (CereWave)"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Nathan",
+		"name": "Nathan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Nathan-CereWave",
+		"name": "Nathan (CereWave)"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Nicole",
+		"name": "Nicole"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Nicole-CereWave",
+		"name": "Nicole (CereWave)"
+	},
+	{
+		"country": "IE",
+		"lang": "gl",
+		"gender": "F",
+		"arg": "Peig",
+		"name": "Peig"
+	},
+	{
+		"country": "IE",
+		"lang": "gl",
+		"gender": "F",
+		"arg": "Peig-CereWave",
+		"name": "Peig (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Pixie",
+		"name": "Pixie"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "Pola",
+		"name": "Pola"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "Pola-CereWave",
+		"name": "Pola (CereWave)"
+	},
+	{
+		"country": "ES",
+		"lang": "ca",
+		"gender": "F",
+		"arg": "Rita",
+		"name": "Rita"
+	},
+	{
+		"country": "ES",
+		"lang": "ca",
+		"gender": "F",
+		"arg": "Rita-CereWave",
+		"name": "Rita (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Robot",
+		"name": "Robot"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Sara",
+		"name": "Sara"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Sara-CereWave",
+		"name": "Sara (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Sarah",
+		"name": "Sarah"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Sarah-CereWave",
+		"name": "Sarah (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Stuart",
+		"name": "Stuart"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Stuart-CereWave",
+		"name": "Stuart (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Sue",
+		"name": "Sue"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Sue-CereWave",
+		"name": "Sue (CereWave)"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Suzanne",
+		"name": "Suzanne"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Suzanne-CereWave",
+		"name": "Suzanne (CereWave)"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "William",
+		"name": "William"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "William-CereWave",
+		"name": "William (CereWave)"
+	},
+	{
+		"country": "SE",
+		"lang": "sv",
+		"gender": "F",
+		"arg": "Ylva",
+		"name": "Ylva"
+	},
+	{
+		"country": "SE",
+		"lang": "sv",
+		"gender": "F",
+		"arg": "Ylva-CereWave",
+		"name": "Ylva (CereWave)"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "Yuki",
+		"name": "Yuki"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "Yuki-CereWave",
+		"name": "Yuki (CereWave)"
+	}
+]

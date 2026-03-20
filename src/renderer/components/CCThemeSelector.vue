@@ -1,3 +1,5 @@
+<style src="./theme_sel_popup.css"></style>
+
 <style lang="css">
 :root {
 	--height-anim: cubic-bezier(0.02, 0.71, 0.31, 0.99);

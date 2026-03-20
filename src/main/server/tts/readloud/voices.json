@@ -1,0 +1,86 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/american/3-male-voice-eric.html",
+		"name": "Eric"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/american/28-female-voice-jennifer.html",
+		"name": "Jennifer"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/american/49-funny-toy-voice-skippy-the-chipmunk.html",
+		"name": "Skippy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/american/25-child-s-girl-voice-ivy.html",
+		"name": "Ivy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/american/29-male-voice-joey.html",
+		"name": "Joey"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/british/1-male-voice-brian.html",
+		"name": "Brian"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/american/33-female-voice-kimberly.html",
+		"name": "Kimberly"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/american/32-female-voice-kendra.html",
+		"name": "Kendra"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/british/5-male-voice-amy.html",
+		"name": "Amy"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/british/17-female-voice-emma.html",
+		"name": "Emma"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/american/30-child-s-boy-voice-justin.html",
+		"name": "Justin"
+	},
+	{
+		"country": "TR",
+		"lang": "tr",
+		"gender": "F",
+		"arg": "/turkish/20-kad%C4%B1n-sesi-filiz.html",
+		"name": "Filiz"
+	}
+]

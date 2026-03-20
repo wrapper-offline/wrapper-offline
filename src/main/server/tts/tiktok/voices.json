@@ -1,0 +1,240 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_us_001",
+		"name": "US Female"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_us_006",
+		"name": "US Male 1"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_us_007",
+		"name": "US Male 2"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_us_009",
+		"name": "US Male 3"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_us_010",
+		"name": "US Male 4"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_uk_001",
+		"name": "UK Male 1"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_uk_003",
+		"name": "UK Male 2"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_au_001",
+		"name": "Australia Female"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_au_002",
+		"name": "Australia Male"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "fr_001",
+		"name": "France Male 1"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "fr_002",
+		"name": "France Male 2"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "de_001",
+		"name": "Germany Female"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "de_002",
+		"name": "Germany Male"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "M",
+		"arg": "es_002",
+		"name": "Spain Male"
+	},
+	{
+		"country": "MX",
+		"lang": "es",
+		"gender": "M",
+		"arg": "es_mx_002",
+		"name": "Mexico Male"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "br_003",
+		"name": "Brazil Female 2"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "br_004",
+		"name": "Brazil Female 3"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "br_005",
+		"name": "Brazil Male"
+	},
+	{
+		"country": "ID",
+		"lang": "id",
+		"gender": "F",
+		"arg": "id_001",
+		"name": "Indonesia Female"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "jp_001",
+		"name": "Japan Female 1"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "jp_003",
+		"name": "Japan Female 2"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "jp_005",
+		"name": "Japan Female 3"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "M",
+		"arg": "jp_006",
+		"name": "Japan Male"
+	},
+	{
+		"country": "KR",
+		"lang": "ko",
+		"gender": "M",
+		"arg": "kr_002",
+		"name": "Korea Male 1"
+	},
+	{
+		"country": "KR",
+		"lang": "ko",
+		"gender": "M",
+		"arg": "kr_004",
+		"name": "Korea Male 2"
+	},
+	{
+		"country": "KR",
+		"lang": "ko",
+		"gender": "F",
+		"arg": "kr_003",
+		"name": "Korea Female"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_female_f08_salut_damour",
+		"name": "Alto"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_male_m03_lobby",
+		"name": "Tenor"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_male_m03_sunshine_soon",
+		"name": "Sunshine Soon"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_female_f08_warmy_breeze",
+		"name": "Warmy Breeze"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_female_ht_f08_glorious",
+		"name": "Glorious"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_male_sing_funny_it_goes_up",
+		"name": "It Goes Up"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "en_male_m2_xhxs_m03_silly",
+		"name": "Chipmunk"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "en_female_ht_f08_wonderful_world",
+		"name": "Dramatic"
+	}
+]

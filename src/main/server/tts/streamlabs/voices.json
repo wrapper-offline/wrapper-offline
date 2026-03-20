@@ -1,0 +1,422 @@
+[
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Brian",
+		"name": "Brian"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Amy",
+		"name": "Amy"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Emma",
+		"name": "Emma"
+	},
+	{
+		"country": "CY",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Geraint",
+		"name": "Geraint"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Russell",
+		"name": "Russell"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Nicole",
+		"name": "Nicole"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Joey",
+		"name": "Joey"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Justin",
+		"name": "Justin"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Matthew",
+		"name": "Matthew"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Ivy",
+		"name": "Ivy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Joanna",
+		"name": "Joanna"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Kendra",
+		"name": "Kendra"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Kimberly",
+		"name": "Kimberly"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Salli",
+		"name": "Salli"
+	},
+	{
+		"country": "IN",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Raveena",
+		"name": "Raveena"
+	},
+	{
+		"country": "AR",
+		"lang": "ar",
+		"gender": "F",
+		"arg": "Zeina",
+		"name": "Zeina"
+	},
+	{
+		"country": "CN",
+		"lang": "zh",
+		"gender": "F",
+		"arg": "Zhiyu",
+		"name": "Zhiyu"
+	},
+	{
+		"country": "DK",
+		"lang": "da",
+		"gender": "M",
+		"arg": "Mads",
+		"name": "Mads"
+	},
+	{
+		"country": "DK",
+		"lang": "da",
+		"gender": "F",
+		"arg": "Naja",
+		"name": "Naja"
+	},
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "M",
+		"arg": "Ruben",
+		"name": "Ruben"
+	},
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "F",
+		"arg": "Lotte",
+		"name": "Lotte"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "Mathieu",
+		"name": "Mathieu"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Celine",
+		"name": "Celine"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Lea",
+		"name": "Lea"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Chantal",
+		"name": "Chantal"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Hans",
+		"name": "Hans"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "Marlene",
+		"name": "Marlene"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "Vicki",
+		"name": "Vicki"
+	},
+	{
+		"country": "IN",
+		"lang": "hi",
+		"gender": "F",
+		"arg": "Aditi",
+		"name": "Aditi"
+	},
+	{
+		"country": "IS",
+		"lang": "is",
+		"gender": "M",
+		"arg": "Karl",
+		"name": "Karl"
+	},
+	{
+		"country": "IS",
+		"lang": "is",
+		"gender": "F",
+		"arg": "Dora",
+		"name": "Dora"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "Carla",
+		"name": "Carla"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "Bianca",
+		"name": "Bianca"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "M",
+		"arg": "Giorgio",
+		"name": "Giorgio"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "M",
+		"arg": "Takumi",
+		"name": "Takumi"
+	},
+	{
+		"country": "JP",
+		"lang": "ja",
+		"gender": "F",
+		"arg": "Mizuki",
+		"name": "Mizuki"
+	},
+	{
+		"country": "KR",
+		"lang": "ko",
+		"gender": "F",
+		"arg": "Seoyeon",
+		"name": "Seoyeon"
+	},
+	{
+		"country": "NO",
+		"lang": "no",
+		"gender": "F",
+		"arg": "Liv",
+		"name": "Liv"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "Ewa",
+		"name": "Ewa"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "Maja",
+		"name": "Maja"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "M",
+		"arg": "Jacek",
+		"name": "Jacek"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "M",
+		"arg": "Jan",
+		"name": "Jan"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "Ricardo",
+		"name": "Ricardo"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "Camila",
+		"name": "Camila"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "Vitoria",
+		"name": "Vitoria"
+	},
+	{
+		"country": "PT",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "Cristiano",
+		"name": "Cristiano"
+	},
+	{
+		"country": "PT",
+		"lang": "pt",
+		"gender": "F",
+		"arg": "Ines",
+		"name": "Ines"
+	},
+	{
+		"country": "RO",
+		"lang": "ro",
+		"gender": "F",
+		"arg": "Carmen",
+		"name": "Carmen"
+	},
+	{
+		"country": "RU",
+		"lang": "ru",
+		"gender": "M",
+		"arg": "Maxim",
+		"name": "Maxim"
+	},
+	{
+		"country": "RU",
+		"lang": "ru",
+		"gender": "F",
+		"arg": "Tatyana",
+		"name": "Tatyana"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "M",
+		"arg": "Enrique",
+		"name": "Enrique"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Conchita",
+		"name": "Conchita"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Lucia",
+		"name": "Lucia"
+	},
+	{
+		"country": "MX",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Mia",
+		"name": "Mia"
+	},
+	{
+		"country": "US",
+		"lang": "es",
+		"gender": "M",
+		"arg": "Miguel",
+		"name": "Miguel"
+	},
+	{
+		"country": "US",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Lupe",
+		"name": "Lupe"
+	},
+	{
+		"country": "US",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Penelope",
+		"name": "Penelope"
+	},
+	{
+		"country": "SE",
+		"lang": "se",
+		"gender": "F",
+		"arg": "Astrid",
+		"name": "Astrid"
+	},
+	{
+		"country": "TR",
+		"lang": "tr",
+		"gender": "F",
+		"arg": "Filiz",
+		"name": "Filiz"
+	},
+	{
+		"country": "CY",
+		"lang": "cy",
+		"gender": "F",
+		"arg": "Gwyneth",
+		"name": "Gwyneth"
+	}
+]

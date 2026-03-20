@@ -1,0 +1,191 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Allison",
+		"name": "Allison"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Amy",
+		"name": "Amy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Belle",
+		"name": "Belle"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Callie",
+		"name": "Callie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Charlie",
+		"name": "Charlie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Dallas",
+		"name": "Dallas"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Damien",
+		"name": "Damien"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "David",
+		"name": "David"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Diane",
+		"name": "Diane"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Duchess",
+		"name": "Duchess"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Duncan",
+		"name": "Duncan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Emily",
+		"name": "Emily"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Linda",
+		"name": "Linda"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Robin",
+		"name": "Robin"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Shouty",
+		"name": "Shouty"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Walter",
+		"name": "Walter"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "William",
+		"name": "William"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Whispery",
+		"name": "Whispery"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Lawrence",
+		"name": "Lawrence"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Millie",
+		"name": "Millie"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "Vittoria",
+		"name": "Vittoria"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "Katrin",
+		"name": "Katrin"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "Matthias",
+		"name": "Matthias"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "Isabelle",
+		"name": "Isabelle"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "Jean-Pierre",
+		"name": "Jean-Pierre"
+	},
+	{
+		"country": "MX",
+		"lang": "es",
+		"gender": "F",
+		"arg": "Alejandra",
+		"name": "Alejandra"
+	},
+	{
+		"country": "MX",
+		"lang": "es",
+		"gender": "M",
+		"arg": "Miguel",
+		"name": "Miguel"
+	}
+]

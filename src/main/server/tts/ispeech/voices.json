@@ -1,0 +1,42 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "usenglishmale",
+		"key": false,
+		"name": "Michael"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "usenglishfemale",
+		"key": false,
+		"name": "Grace"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "ukenglishfemale",
+		"key": false,
+		"name": "Victoria"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "usenglishfemale",
+		"key": true,
+		"name": "Julie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "usenglishmale",
+		"key": true,
+		"name": "Paul"
+	}
+]
