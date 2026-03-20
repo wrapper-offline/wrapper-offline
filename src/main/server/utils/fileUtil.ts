@@ -1,8 +1,10 @@
-import fs from "fs";
 import Ffmpeg from "fluent-ffmpeg";
+import ffmpegPath from "ffmpeg-static";
+import ffprobePath from "@derhuerst/ffprobe-static";
+import fs from "fs";
 import nodezip from "node-zip";
 import type { PassThrough, Readable, Writable } from "stream";
-import { path as ffmpegPath } from "@ffmpeg-installer/ffmpeg";
+import { spawn } from "child_process";
 
 Ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -24,8 +26,30 @@ export default {
 		});
 	},
 
-	async mp3Duration(filepath:string) {
-		
+	/**
+	 * returns the duration of a media file in seconds using ffprobe
+	 * @param filepath path of the media file
+	 */
+	mediaDuration(filepath:string): Promise<number> {
+		return new Promise((res, rej) => {
+			const ffprobe = spawn(
+				ffprobePath,
+				[
+					"-v", "quiet",
+					"-print_format", "compact=nk=1:p=0",
+					"-show_entries", "format=duration",
+					filepath
+				]
+			);
+			ffprobe.stdout.on("data", (c) => {
+				console.log(c);
+				res(Number(c));
+			});
+			ffprobe.stderr.on("data", (c) => {
+				console.log("Error occurred getting duration:", c);
+				rej(c);
+			});
+		});
 	},
 
 	/**

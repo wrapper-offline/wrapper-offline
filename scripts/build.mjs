@@ -11,10 +11,10 @@ const DEV_PORT = viteConfig.server.port || 5173;
 const BASE_OPTIONS = {
 	bundle: true,
 	external: [
-		"@ffmpeg-installer/ffmpeg",
-		"@ffprobe-installer/ffprobe",
+		"@derhuerst/ffprobe-static",
 		"electron",
 		"es6-promise",
+		"ffmpeg-static",
 		"formidable",
 		"sharp"
 	],
@@ -115,8 +115,8 @@ if (process.argv.includes("--dev")) {
 		version: pkg.version,
 		dependencies: Object.fromEntries(Object.entries(pkg.dependencies).filter((a) => {
 			return [
-				"@ffmpeg-installer/ffmpeg",
-				"@ffprobe-installer/ffprobe",
+				"@derhuerst/ffprobe-static",
+				"ffmpeg-static",
 				"formidable",
 				"sharp",
 			].indexOf(a[0]) != -1;

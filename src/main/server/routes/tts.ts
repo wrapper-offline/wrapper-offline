@@ -1,8 +1,8 @@
 import AssetModel, { Asset } from "../models/asset";
 import { engines, JOEY_ID, voiceList } from "../tts";
+import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
-import mp3Duration from "mp3-duration";
 import { Readable } from "stream";
 import tempfile from "tempfile";
 import { once } from "events";
@@ -52,7 +52,7 @@ group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 		}
 
 		await once(writeStream, "close");
-		const duration = await mp3Duration(filepath) * 1e3;
+		const duration = await fileUtil.mediaDuration(filepath) * 1e3;
 		const meta:Partial<Asset> = {
 			duration,
 			type: "sound",

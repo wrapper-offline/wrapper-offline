@@ -6,14 +6,13 @@ import type { Asset } from "../models/asset";
 import AssetModel from "../models/asset";
 import { extensions, FileExtension, fromFile, mimeTypes } from "file-type";
 import Ffmpeg, { FfprobeData, ffprobe } from "fluent-ffmpeg";
-import { path as ffmpegPath } from "@ffmpeg-installer/ffmpeg";
-import { path as ffprobePath } from "@ffprobe-installer/ffprobe";
+import ffmpegPath from "ffmpeg-static";
+import ffprobePath from "@derhuerst/ffprobe-static";
 import fileTypes from "../data/allowed_file_types.json";
 import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import MovieModel, { Starter } from "../models/movie";
-import mp3Duration from "mp3-duration";
 import path from "path";
 import { promisify } from "util";
 import sharp from "sharp";
@@ -284,7 +283,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 						resolve(null);
 					}).pipe(writeStream);
 				});
-				info.duration = await mp3Duration(temppath) * 1e3;
+				info.duration = await fileUtil.mediaDuration(temppath) * 1e3;
 				info.id = await AssetModel.save(temppath, "mp3", info);
 				fs.unlinkSync(temppath);
 				break;
@@ -388,7 +387,7 @@ group.route("POST", "/goapi/saveSound/", async (req, res) => {
 			const writeStream = fs.createWriteStream(filepath);
 			await new Promise((resolve) => stream.pipe(writeStream).on("end", resolve));
 		}
-		info.duration = await mp3Duration(filepath) * 1e3;
+		info.duration = await fileUtil.mediaDuration(filepath) * 1e3;
 		const id = await AssetModel.save(filepath, "mp3", info as Asset);
 		res.end(
 			`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>${info.subtype}</subtype><title>${info.title}</title><published>0</published><tags></tags><duration>${info.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`
