@@ -53,25 +53,26 @@ export class Database {
 			}
 		}
 		this.refresh();
-		if (!this.json.version) {
+		let json = this.json;
+		if (!json.version) {
 			// wrapper versions prior to 2.1.0 don't store the database
 			// version so we're going to be adding it and modifying things
 			// as the database structure changes
-			this.json.version = "2.0.0";
+			json.version = "2.0.0";
 		}
-		if (this.json.version == "2.0.0") {
-			const oldVer = this.json.version;
-			this.json.version = "2.1.0";
-			this.json.movie_folders = [];
+		if (json.version == "2.0.0") {
+			const oldVer = json.version;
+			json.version = "2.1.0";
+			json.movie_folders = [];
 			const watermarks = this.select("assets", {
 				type: "watermark"
 			});
-			this.json.watermarks = watermarks.map(w => ({
+			json.watermarks = watermarks.map(w => ({
 				id: w.id
 			}));
-			this.save(this.json);
 			console.log(`Database upgraded from ${oldVer} to v2.1.0!`);
 		}
+		this.save(json);
 		// just keep adding onto this as you change stuff
 	}
 

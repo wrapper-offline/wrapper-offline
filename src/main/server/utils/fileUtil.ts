@@ -24,6 +24,10 @@ export default {
 		});
 	},
 
+	async mp3Duration(filepath:string) {
+		
+	},
+
 	/**
 	 * creates a new zip with a file inside it
 	 * @param fileName path to the actual file
