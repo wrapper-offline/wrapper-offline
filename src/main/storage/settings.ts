@@ -2,6 +2,8 @@ import DirUtil from "./directories";
 import fs from "fs";
 import { join } from "path";
 
+type SettingListener = (newValue:any) => any;
+
 class Settings {
 	private path = join(DirUtil.saved, "settings.json");
 	private json = {
@@ -11,7 +13,9 @@ class Settings {
 		SAVE_LOG_FILES: false,
 		HIDE_NAVBAR: true,
 		DEFAULT_WATERMARK: "none",
+		POLLY_SERVICE: "both",
 	};
+	private listeners:Record<string, SettingListener[]> = {};
 	private static _instance:Settings;
 
 	constructor() {
@@ -70,6 +74,28 @@ class Settings {
 	}
 
 	/**
+	 * calls every listener for a setting update
+	 * @param setting setting name
+	 */
+	private callListeners(setting:keyof Settings) {
+		for (const listener of this.listeners[setting] || []) {
+			listener(this[setting]);
+		}
+	}
+
+	/**
+	 * queues a callback to be called whenever a setting is changed
+	 * @param setting setting to listen for changes to
+	 * @param callback callback when the setting is updated
+	 */
+	addListener(setting:keyof Settings, callback:SettingListener) {
+		if (!this.listeners[setting]) {
+			this.listeners[setting] = [];
+		}
+		this.listeners[setting].push(callback);
+	}
+
+	/**
 	 * returns all the stored settings in an object
 	 */
 	getAllSettings() {
@@ -78,8 +104,9 @@ class Settings {
 			showWaveforms: this.showWaveforms,
 			isWide: this.isWide,
 			saveLogFiles: this.saveLogFiles,
-			hideNavbar: this.hideNavbar,
-			defaultWatermark: this.defaultWatermark
+			enableMenuBar: this.enableMenuBar,
+			defaultWatermark: this.defaultWatermark,
+			pollyService: this.pollyService,
 		};
 	}
 
@@ -92,6 +119,7 @@ class Settings {
 	set truncatedThemeList(newValue:boolean) {
 		this.json["TRUNCATED_THEMELIST"] = newValue;
 		this.save(this.json);
+		this.callListeners("truncatedThemeList");
 	}
 
 	/**
@@ -103,6 +131,7 @@ class Settings {
 	set showWaveforms(newValue:boolean) {
 		this.json["SHOW_WAVEFORMS"] = newValue;
 		this.save(this.json);
+		this.callListeners("showWaveforms");
 	}
 
 	/**
@@ -115,6 +144,7 @@ class Settings {
 		const whythefuckdididothis_sob = newValue == true ? "1" : "0";
 		this.json["IS_WIDE"] = whythefuckdididothis_sob;
 		this.save(this.json);
+		this.callListeners("isWide");
 	}
 
 	/**
@@ -126,17 +156,19 @@ class Settings {
 	set saveLogFiles(newValue:boolean) {
 		this.json["SAVE_LOG_FILES"] = newValue;
 		this.save(this.json);
+		this.callListeners("saveLogFiles");
 	}
 
 	/**
 	 * Automatically hides the navbar instead of keeping it always visible.
 	 */
-	get hideNavbar() {
+	get enableMenuBar() {
 		return this.json["HIDE_NAVBAR"];
 	}
-	set hideNavbar(newValue:boolean) {
+	set enableMenuBar(newValue:boolean) {
 		this.json["HIDE_NAVBAR"] = newValue;
 		this.save(this.json);
+		this.callListeners("enableMenuBar");
 	}
 
 	/**
@@ -148,6 +180,19 @@ class Settings {
 	set defaultWatermark(newValue) {
 		this.json["DEFAULT_WATERMARK"] = newValue;
 		this.save(this.json);
+		this.callListeners("defaultWatermark");
+	}
+
+	/**
+	 * preferred service use when listing polly voices
+	 */
+	get pollyService() {
+		return this.json["POLLY_SERVICE"];
+	}
+	set pollyService(newValue) {
+		this.json["POLLY_SERVICE"] = newValue;
+		this.save(this.json);
+		this.callListeners("pollyService");
 	}
 }
 export default Settings.instance;

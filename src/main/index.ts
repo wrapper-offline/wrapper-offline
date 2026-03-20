@@ -3,7 +3,7 @@ Wrapper: Offline
 License: MIT
 */
 
-const env = Object.assign(process.env, require("../../env.json"), require("../../config.json"));
+Object.assign(process.env, require("../../env.json"), require("../../config.json"));
 
 import { app, BrowserWindow, Menu, shell, ipcMain } from "electron";
 import { createWriteStream } from "fs";
@@ -121,8 +121,17 @@ app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") app.quit();
 });
 
+function updateMenuVisibility(newValue:boolean) {
+	mainWindow.setAutoHideMenuBar(newValue);
+	if (newValue == false) {
+		mainWindow.menuBarVisible = false;
+	}
+}
+
+settings.addListener("enableMenuBar", updateMenuVisibility);
+
 function setMenuBar(mainWindow:BrowserWindow) {
-	mainWindow.setAutoHideMenuBar(settings.hideNavbar);
+	updateMenuVisibility(settings.enableMenuBar);
 	Menu.setApplicationMenu(Menu.buildFromTemplate([
 		{
 			label: "Home",

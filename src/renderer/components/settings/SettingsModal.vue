@@ -53,6 +53,10 @@ const tabs = [
 		name: "Behavior"
 	},
 	{
+		id: "tts",
+		name: "Text-to-speech"
+	},
+	{
 		id: "appearance",
 		name: "Appearance"
 	},
@@ -120,15 +124,24 @@ onUnmounted(() => {
 						<template #title>After uploading a video...</template>
 					</SettingToggle>
 
-					<SettingToggle id="hideNavbar" binary>
-						<template #title>Auto-hide navbar</template>
-						<template #description><i>You must restart the program for this change to take effect.</i></template>
+					<SettingToggle id="enableMenuBar" binary>
+						<template #title>Enable menu bar</template>
+						<template #description>This controls whether the menu bar can be toggled on using the Alt key.</template>
 					</SettingToggle>
 
 					<SettingToggle id="saveLogFiles" binary>
 						<template #title>Save log files</template>
 						<template #description>Saves everything in the console to the _LOGS folder. This may take up a lot of space if left on.<br/>
 							<i>Applies on next restart.</i></template>
+					</SettingToggle>
+				</div>
+				<div v-if="selectedTab == 'tts'" class="tab">
+					<SettingToggle id="pollyService" :options="{
+						both: 'List both',
+						rl: 'ReadLoud only',
+						sl: 'Streamlabs only',
+					}">
+						<template #title>Preferred service for Polly voices</template>
 					</SettingToggle>
 				</div>
 				<div v-if="selectedTab == 'appearance'" class="tab">

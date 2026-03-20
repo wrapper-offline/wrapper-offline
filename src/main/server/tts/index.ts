@@ -3,31 +3,60 @@ import cepstral from "./cepstral";
 import cereproc from "./cereproc";
 import ispeech from "./ispeech";
 import langCodeMap from "../data/lang_code_map.json";
+import nuance from "./nuance";
 import streamlabs from "./streamlabs";
 import tiktok from "./tiktok";
 import vocalware from "./vocalware";
 import { Voice } from "../interfaces/tts";
 import readloud from "./readloud";
-import nuance from "./nuance";
+import settings from "../../storage/settings";
 
-export const JOEY_ID = "Streamlabs\\Joey";
-export const engines = [
-	acapela,
-	cepstral,
-	cereproc,
-	ispeech,
-	nuance,
-	readloud,
-	streamlabs,
-	tiktok,
-	vocalware
-];
+export let JOEY_ID:string;
+export let engines = [];
+export let voiceList:string;
+
+settings.addListener("pollyService", () => {
+	updateEngineList();
+});
+
+updateEngineList();
+voiceList = generateListXml();
+
+/**
+ * updates the array of every tts engine
+ */
+function updateEngineList() {
+	engines = [
+		acapela,
+		cepstral,
+		cereproc,
+		ispeech,
+		nuance,
+		tiktok,
+		vocalware
+	];
+	switch (settings.pollyService) {
+		case "rl":
+			engines.push(readloud);
+			JOEY_ID = "ReadLoud\\Joey";
+			break;
+		case "sl":
+			engines.push(streamlabs);
+			JOEY_ID = "Streamlabs\\Joey";
+			break;
+		default:
+			engines.push(readloud);
+			engines.push(streamlabs);
+			JOEY_ID = "Streamlabs\\Joey";
+	}
+	voiceList = generateListXml();
+};
 
 /**
  * returns an xml containing a list of voices
  * @returns xml
  */
-export function voiceList() {
+function generateListXml() {
 	const voices:(Record<string, any> & Voice)[] = [];
 	for (const engine of engines) {
 		for (const vI in engine.voices) {
@@ -58,4 +87,4 @@ export function voiceList() {
 		}).join("")
 	}</voices>`;
 	return xml;
-};
+}; 

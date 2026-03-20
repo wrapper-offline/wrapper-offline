@@ -8,14 +8,13 @@ import tempfile from "tempfile";
 import { once } from "events";
 
 const group = new httpz.Group();
-const voiceXml = voiceList();
 
 /*
 list
 */
 group.route("POST", "/goapi/getTextToSpeechVoices/", (req, res) => {
 	res.setHeader("Content-Type", "text/xml; charset=UTF-8");
-	res.end(voiceXml);
+	res.end(voiceList);
 });
 
 /*
