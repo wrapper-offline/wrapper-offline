@@ -82,5 +82,201 @@
 		"gender": "F",
 		"arg": "/turkish/20-kad%C4%B1n-sesi-filiz.html",
 		"name": "Filiz"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/american/2-girl-s-voice-sally.html",
+		"name": "Salli"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "M",
+		"arg": "/italian/22-voce-maschile-giorgio.html",
+		"name": "Giorgio"
+	},
+	{
+		"country": "IT",
+		"lang": "it",
+		"gender": "F",
+		"arg": "/italian/8-voce-femminile-carla.html",
+		"name": "Carla"
+	},
+	{
+		"country": "BR",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "/portuguese/brasilian/46-voz-masculina-ricardo.html",
+		"name": "Ricardo"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "F",
+		"arg": "/german/39-frauenstimme-marlene.html",
+		"name": "Marlene"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/australian/48-male-voice-russell.html",
+		"name": "Russell"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "F",
+		"arg": "/spanish/castilian/14-voz-femenina-conchita.html",
+		"name": "Conchita"
+	},
+	{
+		"country": "ES",
+		"lang": "es",
+		"gender": "M",
+		"arg": "/spanish/castilian/18-voz-masculina-enrique.html",
+		"name": "Enrique"
+	},
+	{
+		"country": "FR",
+		"lang": "fr",
+		"gender": "M",
+		"arg": "/french/40-voix-masculine-mathieu.html",
+		"name": "Mathieu"
+	},
+	{
+		"country": "DE",
+		"lang": "de",
+		"gender": "M",
+		"arg": "/german/24-mannerstimme-hans.html",
+		"name": "Hans"
+	},
+	{
+		"country": "CY",
+		"lang": "en",
+		"gender": "M",
+		"arg": "/english/welsh/21-male-voice-geraint.html",
+		"name": "Geraint"
+	},
+	{
+		"country": "AU",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/australian/43-female-voice-nicole.html",
+		"name": "Nicole"
+	},
+	{
+		"country": "RU",
+		"lang": "ru",
+		"gender": "F",
+		"arg": "/russian/50-zhenskiy-golos-tatyana.html",
+		"name": "Tatyana"
+	},
+	{
+		"country": "CY",
+		"lang": "en",
+		"gender": "F",
+		"arg": "/english/welsh/23-female-voice-gwyneth.html",
+		"name": "Gwyneth"
+	},
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "M",
+		"arg": "/dutch/47-mannelijke-stem-ruben.html",
+		"name": "Ruben"
+	},
+	{
+		"country": "PT",
+		"lang": "pt",
+		"gender": "M",
+		"arg": "/portuguese/15-voz-masculina-cristiano.html",
+		"name": "Cristiano"
+	},
+	{
+		"country": "SE",
+		"lang": "sv",
+		"gender": "F",
+		"arg": "/swedish/10-kvinnlig-rost-astrid.html",
+		"name": "Astrid"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "/polish/38-kobiecy-glos-maja.html",
+		"name": "Maja"
+	},
+	{
+		"country": "CA",
+		"lang": "fr",
+		"gender": "F",
+		"arg": "/french/canadian/13-voix-de-femme-chantal.html",
+		"name": "Chantal"
+	},
+	{
+		"country": "DK",
+		"lang": "da",
+		"gender": "M",
+		"arg": "/danish/37-mandlig-stemme-mads.html",
+		"name": "Mads"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "M",
+		"arg": "/polish/26-meski-glos-jacek.html",
+		"name": "Jacek"
+	},
+	{
+		"country": "NL",
+		"lang": "nl",
+		"gender": "F",
+		"arg": "/dutch/36-vrouwelijke-stem-lotte.html",
+		"name": "Lotte"
+	},
+	{
+		"country": "DK",
+		"lang": "da",
+		"gender": "F",
+		"arg": "/danish/42-kvinde-stemme-naja.html",
+		"name": "Naja"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "M",
+		"arg": "/polish/27-meski-glos-jan.html",
+		"name": "Jan"
+	},
+	{
+		"country": "no",
+		"lang": "no",
+		"gender": "F",
+		"arg": "/norwegian/34-kvinne-stemme-liv.html",
+		"name": "Liv"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "/polish/9-kobiecy-glos-agnieszka.html",
+		"name": "Agnieszka"
+	},
+	{
+		"country": "IS",
+		"lang": "is",
+		"gender": "M",
+		"arg": "/icelandic/31-male-rodd-karl.html",
+		"name": "Karl"
+	},
+	{
+		"country": "PL",
+		"lang": "pl",
+		"gender": "F",
+		"arg": "/polish/19-kobiecy-glos-ewa.html",
+		"name": "Ewa"
 	}
 ]
