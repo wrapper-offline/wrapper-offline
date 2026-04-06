@@ -66,7 +66,7 @@ const createWindow = () => {
 		width: 1200,
 		height: 700,
 		title: "Wrapper: Offline",
-		icon: join(__dirname, "app/favicon.ico"),
+		icon: join(__dirname, "../resources/favicon.png"),
 		webPreferences: {
 			preload: join(__dirname, "preload.js"),
 			plugins: true,
