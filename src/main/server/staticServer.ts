@@ -1,8 +1,7 @@
+import AdmZip from "adm-zip";
 import Directories from "../storage/directories";
-import fileUtil from "./utils/fileUtil.js";
 import handler from "serve-handler";
 import { IncomingMessage, ServerResponse } from "http";
-import nodezip from "node-zip";
 import path from "path";
 import { readFileSync } from "fs";
 
@@ -39,9 +38,9 @@ async function handleStudioTheme(
 	const filepath = path.join(Directories.store, themeId, "theme.xml");
 	const themeXml = fixThemeXml(themeId, readFileSync(filepath));
 	if (returnZip) {
-		const zip = nodezip.create();
-		fileUtil.addToZip(zip, "theme.xml", themeXml);
-		res.end(await zip.zip());
+		const zip = new AdmZip();
+		zip.addFile("theme.xml", themeXml);
+		res.end(await zip.toBufferPromise());
 	} else {
 		res.end(themeXml);
 	}

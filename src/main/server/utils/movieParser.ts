@@ -4,13 +4,12 @@ movie parsing
  ffdec does a great job with that
 */
 
+import AdmZip from "adm-zip";
 import AssetModel, { Asset } from "../models/asset";
 import type { Char } from "../models/char";
 import CharModel from "../models/char";
 import database from "../../storage/database";
-import fileUtil from "./fileUtil";
 import fs from "fs";
-import nodezip from "node-zip";
 import path from "path";
 import { Readable } from "stream";
 import { XmlDocument } from "xmldoc";
@@ -87,7 +86,8 @@ export default {
 	async pack(xmlBuffer:Buffer, thumbBuffer?:Buffer): Promise<Buffer> {
 		if (xmlBuffer.length == 0) throw null;
 
-		const zip = nodezip.create();
+		// const zip = nodezip.create();
+		const zip = new AdmZip();
 		const themes:Record<string, boolean> = { common: true };
 		let ugc = `${header}<theme id="ugc" name="ugc">`;
 		/** were changes made to the movie xml */
@@ -98,7 +98,6 @@ export default {
 		 * @param file specifies the asset that's being loaded
 		 * @param type asset type
 		 * @param subtype asset subtype
-		 * @param sceneId id of the scene the asset occurs in
 		 */
 		async function basicParse(file:string, type:string, subtype?:string) {
 			const pieces = file.split(".");
@@ -131,7 +130,7 @@ export default {
 						pieces[2] = pieces[2].slice(0, -3) + "png";
 						const filename = pieces.join(".")
 						const buffer = AssetModel.load(pieces[2], true);
-						fileUtil.addToZip(zip, filename, buffer);
+						zip.addFile(filename, buffer);
 					}
 				} else {
 					if (type == "prop" && pieces.indexOf("head") > -1) {
@@ -149,7 +148,7 @@ export default {
 				return false;
 			}
 
-			fileUtil.addToZip(zip, filename, buffer);	
+			zip.addFile(filename, buffer);
 			themes[themeId] = true;
 			return true;
 		}
@@ -225,7 +224,7 @@ export default {
 											type: "char",
 											themeId: CharModel.getThemeId(charXml)
 										} as Char);
-										fileUtil.addToZip(zip, filename + ".xml", charXml);
+										zip.addFile(filename + ".xml", charXml);
 									} catch (e) {
 										elem.children[e2I].name = "ELEMENT";
 										elem.children[e2I].attr = {};
@@ -236,7 +235,7 @@ export default {
 									const filename = pieces.join(".");
 
 									try {
-										fileUtil.addToZip(zip, filename, fs.readFileSync(filepath));
+										zip.addLocalFile(filepath, "", filename);
 									} catch (e) {
 										elem.children[e2I].name = "ELEMENT";
 										elem.children[e2I].attr = {};
@@ -270,8 +269,8 @@ export default {
 	
 										pieces2.splice(1, 1, "prop");
 										const filename = `${pieces2.join(".")}.swf`;
-										try {	
-											fileUtil.addToZip(zip, filename, fs.readFileSync(filepath));
+										try {
+											zip.addLocalFile(filepath, "", filename);
 										} catch (e) {
 											elem2.children[e3I].name = "ELEMENT";
 											elem2.children[e3I].attr = {};
@@ -295,7 +294,7 @@ export default {
 	
 								const filename = `${fontId2File(text.attr.font)}.swf`;
 								const filepath = `${source}/go/font/${filename}`;
-								fileUtil.addToZip(zip, filename, fs.readFileSync(filepath));
+								zip.addLocalFile(filepath, "", filename);
 								break;
 							}
 						}
@@ -319,22 +318,21 @@ export default {
 		themeKs.forEach((themeId) => {
 			if (themeId == "ugc") return;
 			const xmlPath = `${store}/${themeId}/theme.xml`;
-			const file = fs.readFileSync(xmlPath);
-			fileUtil.addToZip(zip, `${themeId}.xml`, file);
+			zip.addLocalFile(xmlPath, "", `${themeId}.xml`);
 		});
 	
-		fileUtil.addToZip(zip, "themelist.xml", Buffer.from(
+		zip.addFile("themelist.xml", Buffer.from(
 			`${header}<themes>${themeKs.map((t) => `<theme>${t}</theme>`).join("")}</themes>`
 		));
-		fileUtil.addToZip(zip, "ugc.xml", Buffer.from(ugc + "</theme>"));
+		zip.addFile("ugc.xml", Buffer.from(ugc + "</theme>"));
 		if (thumbBuffer) {
-			fileUtil.addToZip(zip, "thumbnail.png", thumbBuffer);
+			zip.addFile("thumbnail.png", thumbBuffer);
 		}
 		if (changesMade) {
 			xmlBuffer = Buffer.from(film.toString());
 		}
-		fileUtil.addToZip(zip, "movie.xml", xmlBuffer);
-		return await zip.zip();
+		zip.addFile("movie.xml", xmlBuffer);
+		return await zip.toBufferPromise();
 	},
 
 	/**
@@ -391,10 +389,9 @@ export default {
 	 * @returns [moviexml buffer, movie thumb buffer]
 	 */
 	async unpack(body:Buffer): Promise<[Buffer, Buffer]> {
-		const zip = nodezip.unzip(body);
-		const ugcStream = zip["ugc.xml"].toReadStream();
-		const ugcBuffer = await stream2Buffer(ugcStream);
-		const ugc = new XmlDocument(ugcBuffer.toString());
+		const zip = new AdmZip(body);
+		const ugcXml = zip.readAsText("ugc.xml");
+		const ugc = new XmlDocument(ugcXml);
 
 		for (const eI in ugc.children) {
 			const elem = ugc.children[eI];
@@ -402,8 +399,7 @@ export default {
 			switch (elem.name) {
 				case "background": {
 					if (!AssetModel.exists(elem.attr.id)) {
-						const readStream = zip[`ugc.bg.${elem.attr.id}`].toReadStream();
-						const buffer = await stream2Buffer(readStream);
+						const buffer = zip.readFile(`ugc.bg.${elem.attr.id}`);
 						AssetModel.save(buffer, elem.attr.id, {
 							type: "bg",
 							title: elem.attr.name,
@@ -416,9 +412,8 @@ export default {
 				case "prop": {
 					if (!AssetModel.exists(elem.attr.id)) {
 						if (elem.attr.subtype == "video") {
-							const readStream = zip[`ugc.prop.${elem.attr.id}`].toReadStream();
-							const buffer = await stream2Buffer(readStream);
-							AssetModel.save(buffer, elem.attr.id, {
+							const assetBuf = zip.readFile(`ugc.prop.${elem.attr.id}`);
+							AssetModel.save(assetBuf, elem.attr.id, {
 								type: "prop",
 								subtype: "video",
 								title: elem.attr.name,
@@ -427,17 +422,15 @@ export default {
 								id: elem.attr.id
 							} as Asset);
 
-							const readStream2 = zip[`ugc.prop.${elem.attr.id.slice(0, -4)}.png`].toReadStream();
-							const buffer2 = await stream2Buffer(readStream2);
+							const thumbBuf = zip.readFile(`ugc.prop.${elem.attr.id.slice(0, -4)}.png`);
 							fs.writeFileSync(path.join(
 								__dirname,
 								"../../",
 								AssetModel.folder,
 								elem.attr.id.slice(0, -4) + ".png"
-							), buffer2);
+							), thumbBuf);
 						} else {
-							const readStream = zip[`ugc.prop.${elem.attr.id}`].toReadStream();
-							const buffer = await stream2Buffer(readStream);
+							const buffer = zip.readFile(`ugc.prop.${elem.attr.id}`);
 							AssetModel.save(buffer, elem.attr.id, {
 								type: "prop",
 								subtype: "0",
@@ -454,8 +447,7 @@ export default {
 
 				case "char": {
 					if (!CharModel.exists(elem.attr.id)) {
-						const readStream = zip[`ugc.char.${elem.attr.id}.xml`].toReadStream();
-						const buffer = await stream2Buffer(readStream);
+						const buffer = zip.readFile(`ugc.char.${elem.attr.id}.xml`);
 						CharModel.save(buffer, {
 							type: "char",
 							title: elem.attr.name,
@@ -476,8 +468,7 @@ export default {
 						default: continue;
 					}
 					if (!AssetModel.exists(elem.attr.id)) {
-						const readStream = zip[`ugc.${elem.name}.${elem.attr.id}`].toReadStream();
-						const buffer = await stream2Buffer(readStream);
+						const buffer = zip.readFile(`ugc.${elem.name}.${elem.attr.id}`);
 						AssetModel.save(buffer, elem.attr.id, {
 							duration: +elem.attr.duration,
 							type: elem.name,
@@ -491,14 +482,13 @@ export default {
 			}
 		}
 
-		const readStream = zip["movie.xml"].toReadStream();
-		const buffer = await stream2Buffer(readStream);
+		const xmlBuffer = zip.readFile("movie.xml");
 
-		let thumbBuffer = Buffer.from([0x00]);
-		if (zip["thumbnail.png"]) {
-			const readStream2 = zip["thumbnail.png"].toReadStream();
-			thumbBuffer = await stream2Buffer(readStream2);
+		let thumbBuffer:Buffer = Buffer.from([0x00]);
+		const thumbEntry = zip.getEntry("thumbnail.png");
+		if (thumbEntry) {
+			thumbBuffer = zip.readFile(thumbEntry);
 		}
-		return [buffer, thumbBuffer];
+		return [xmlBuffer, thumbBuffer];
 	}
 };

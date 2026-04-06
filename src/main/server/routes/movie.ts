@@ -1,9 +1,8 @@
+import AdmZip from "adm-zip";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import Database from "../../storage/database.js";
 import MovieModel, { Movie } from "../models/movie.js";
-import nodezip from "node-zip";
-import fileUtil from "../utils/fileUtil.js";
 
 const group = new httpz.Group();
 
@@ -270,7 +269,7 @@ group.route(
 		}
 		const ids = idField.split(",");
 
-		let zip = nodezip.create();
+		let zip = new AdmZip();
 		let zipBuf:Buffer;
 		for (const id of ids) {
 			try {
@@ -279,7 +278,7 @@ group.route(
 					zipBuf = zipped;
 					break;
 				}
-				fileUtil.addToZip(zip, id + ".zip", zipped);
+				zip.addFile(id + ".zip", zipped);
 			} catch (err) {
 				if (err == "404") {
 					return res.status(404).end("movie no existing !!");
@@ -288,7 +287,7 @@ group.route(
 				res.status(500).end("Internal server error");
 			}
 		}
-		zipBuf = zipBuf || await zip.zip();
+		zipBuf = zipBuf || await zip.toBufferPromise();
 		if (isPost) {
 			zipBuf = Buffer.concat([Buffer.alloc(1, 0), zipBuf]);
 		}
@@ -300,7 +299,7 @@ group.route(
 /*
 save
 */
-group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], (req, res) => {
+group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], async (req, res) => {
 	const zipField = req.body.body_zip;
 	if (typeof zipField == "undefined") {
 		return res.status(400).end("Expected body_zip field");
@@ -330,24 +329,21 @@ group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], (req, res) =>
 	}
 	
 	res.log(`Saving movie #${movieId || "<new movie>"}...`);
-	const xmlStream = nodezip.unzip(body)["movie.xml"].toReadStream();
-	let buffers = [];
-	xmlStream.on("data", (c:Buffer) => buffers.push(c));
-	xmlStream.on("end", async () => {
-		const movieXml = Buffer.concat(buffers);
-		const saveAsStarter = req.parsedUrl.pathname == "/goapi/saveTemplate/";
-		try {
-			const id = await MovieModel.save(movieXml, thumb, movieId, saveAsStarter);
-			res.log("Successfully saved movie #" + id);
-			res.end("0" + id);
-		} catch (err) {
-			if (err == "404") {
-				return res.status(404).end("Specified movie does not exist");
-			}
-			res.log("Error saving movie: " + err);
-			res.status(500).end("Internal server error");
+
+	const zip = new AdmZip(body);
+	const movieXml = zip.readFile("movie.xml");
+	const saveAsStarter = req.parsedUrl.pathname == "/goapi/saveTemplate/";
+	try {
+		const id = await MovieModel.save(movieXml, thumb, movieId, saveAsStarter);
+		res.log("Successfully saved movie #" + id);
+		res.end("0" + id);
+	} catch (err) {
+		if (err == "404") {
+			return res.status(404).end("Specified movie does not exist");
 		}
-	});
+		res.log("Error saving movie: " + err);
+		res.status(500).end("Internal server error");
+	}
 });
 
 export default group;

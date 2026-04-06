@@ -1,7 +1,5 @@
 import ffmpegPath from "ffmpeg-static";
 import ffprobePath from "@derhuerst/ffprobe-static";
-import fs from "fs";
-import nodezip from "node-zip";
 import { once } from "events";
 import type { Readable } from "stream";
 import { spawn } from "child_process";
@@ -74,31 +72,5 @@ export default {
 				input.pipe(ffprobe.stdin);
 			}
 		});
-	},
-
-	/**
-	 * creates a new zip with a file inside it
-	 * @param fileName path to the actual file
-	 * @param zipName file path within the zip
-	 */
-	zippy(fileName:string, zipName:string) {
-		if (!fs.existsSync(fileName)) {
-			throw new Error(`Directory '${fileName}' doesn't exist.`);
-		}
-		const buffer = fs.readFileSync(fileName);
-		const zip = nodezip.create();
-		this.addToZip(zip, zipName, buffer);
-		return zip.zip();
-	},
-
-	/**
-	 * @param zip nodezip zipfile instance
-	 * @param zipName file path within the zip
-	 * @param buffer file contents
-	 */
-	addToZip(zip:nodezip.ZipFile, zipName:string, buffer:Buffer) {
-		zip.add(zipName, buffer);
-		if (zip[zipName].crc32 < 0)
-			zip[zipName].crc32 += 4294967296;
-	},
+	}
 };

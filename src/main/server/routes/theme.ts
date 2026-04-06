@@ -1,5 +1,5 @@
+import AdmZip from "adm-zip";
 import Directories from "../../storage/directories";
-import fileUtil from "../utils/fileUtil.js";
 import fs from "fs";
 import http from "http";
 import httpz from "@octanuary/httpz";
@@ -51,9 +51,10 @@ group.route("POST", "/goapi/getThemeList/", async (req, res) => {
 		"themelist.xml" : 
 		"themelist-allthemes.xml";
 	const xmlPath = join(THEME_FOLDER, filepath);
-	const zip = await fileUtil.zippy(xmlPath, "themelist.xml");
+	const zip = new AdmZip();
+	zip.addLocalFile(xmlPath, "", "themelist.xml");
 	res.setHeader("Content-Type", "application/zip");
-	res.end(zip);
+	res.end(await zip.toBufferPromise());
 });
 
 /*
