@@ -7,6 +7,7 @@
 
 .tab_selector {
 	display: flex;
+	min-height: 100%;
 }
 .tab_selector .tab_col {
 	margin-right: 16px;
@@ -20,6 +21,7 @@
 }
 .tab_selector .tab {
 	width: 550px;
+	min-height: 100%;
 }
 
 html.dark .tab_selector .tab_col {

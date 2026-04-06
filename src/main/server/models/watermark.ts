@@ -55,6 +55,15 @@ export default class WatermarkModel {
 			id = `${generateId()}.${ext}`;
 		}
 		return new Promise((res, rej) => {
+			if (!id.endsWith(ext)) {
+				const oldId = id;
+				id = `${id.split(".")[0]}.${ext}`;
+				const filepath = path.join(this.folder, oldId);
+				if (fs.existsSync(filepath)) {
+					fs.unlinkSync(filepath);
+				}
+				Database.update("watermarks", oldId, { id });
+			}
 			const filepath = path.join(this.folder, id);
 			const write = fs.createWriteStream(filepath);
 			const read = fs.createReadStream(input);
@@ -62,9 +71,7 @@ export default class WatermarkModel {
 			read.on("end", () => {
 				write.close();
 				if (!Database.get("watermarks", id)) {
-					Database.insert("watermarks", {
-						id
-					});
+					Database.insert("watermarks", { id });
 				}
 				res(id);
 			});

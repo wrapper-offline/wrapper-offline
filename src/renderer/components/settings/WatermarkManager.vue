@@ -1,4 +1,8 @@
 <style>
+.wm_manager {
+	min-height: 100%;
+}
+
 .wm_manager input {
 	display: none;
 }
@@ -32,6 +36,8 @@
 }
 
 .wm_manager .watermark .thumbnail  {
+	border-radius: 3px;
+	pointer-events: none;
 	object-fit: contain;
 	width: 100%;
 	height: 100%;
@@ -135,17 +141,48 @@ async function loadWatermarks() {
 }
 
 /**
+ * called when a file has been selected
+ * @param e file input event
+ */
+function filesAdded(e:InputEvent, replace:boolean = false) {
+	console.log(replace)
+	const fileUpload = e.currentTarget as HTMLInputElement;
+	for (let i = 0; i < fileUpload.files.length; i++) {
+		uploadFile(fileUpload.files[i], replace);
+	}
+	fileUpload.value = "";
+}
+
+/**
+ * called when a file has been dropped into the importer
+ */
+function fileDropped(e:DragEvent) {
+	const files = e.dataTransfer.files;
+	for (let i = 0; i < files.length; i++) {
+		uploadFile(files[i]);
+	}
+}
+
+/**
+ * called when a file has been pasted into the importer
+ * only has limited support due to an issue with old chromium
+ * @param e event
+ */
+function filePasted(e:ClipboardEvent) {
+	const files = e.clipboardData.files;
+	for (let i = 0; i < files.length; i++) {
+		uploadFile(files[i]);
+	}
+}
+
+/**
  * called when an image is selected,
  * uploads image to api server
  */
-async function wmInput_input(replaceMode?:boolean) {
-	const image = replaceMode ?
-		wmReplaceInput.value.files[0] :
-		wmInput.value.files[0];
+async function uploadFile(file:File, replaceMode?:boolean) {
 	const id = pendingReplaceId.value;
-
 	const body = new FormData();
-	body.append("image", image);
+	body.append("image", file);
 	if (replaceMode) {
 		body.append("id", id);
 	}
@@ -162,9 +199,24 @@ async function wmInput_input(replaceMode?:boolean) {
 	}
 	const json = await res.json();
 	if (replaceMode) {
+		const newId = json.id;
+		const thumbPath = json.thumbnail;
+		if (id != newId) {
+			const i = watermarks.value.findIndex((w) => w.id == id);
+			watermarks.value[i].id = newId;
+			watermarks.value[i].thumbnail = thumbPath;
+			if (defaultWm.value == id) {
+				appSettings.quietSet("defaultWatermark", newId);
+				defaultWm.value = newId;
+			}
+		}
 		const wmImage:HTMLImageElement = container.value.querySelector(`[src*="${id}"]`);
-		await fetch(wmImage.src);
-		wmImage.src = wmImage.src;
+		await fetch(thumbPath);
+		wmImage.src = thumbPath;
+		if (wmImage.tagName == "OBJECT") {
+			const movie:HTMLParamElement = wmImage.querySelector("param[name='movie']");
+			movie.value = thumbPath;
+		}
 		return;
 	}
 	watermarks.value.unshift(json);
@@ -187,6 +239,7 @@ async function wm_click(id:string) {
 		body
 	});
 	if (res.ok) {
+		appSettings.quietSet("defaultWatermark", id);
 		defaultWm.value = id;
 	}
 }
@@ -225,7 +278,11 @@ onMounted(loadWatermarks);
 </script>
 
 <template>
-	<div class="wm_manager">
+	<div
+		class="wm_manager"
+		@dragover.prevent.stop=""
+		@drop.prevent.stop="fileDropped"
+		@paste="filePasted">
 		<div class="app_setting">
 			<div>
 				<h3>Manage watermarks</h3>
@@ -243,7 +300,7 @@ onMounted(loadWatermarks);
 			}" @click="wm_click('0vTLbQy9hG7k')">
 				<img class="thumbnail" src="/img/logo.svg"/>
 			</div>
-			<div v-for="wm in watermarks" :class="{
+			<div v-for="wm in watermarks" :key="wm.id" :class="{
 				watermark: true,
 				checked: defaultWm == wm.id
 			}" @click="wm_click(wm.id)">
@@ -255,14 +312,17 @@ onMounted(loadWatermarks);
 						<i class="ico trash"></i>
 					</Button>
 				</div>
-				<img
+				<object v-if="wm.thumbnail.endsWith('.swf')"
 					class="thumbnail"
-					:src="wm.thumbnail.endsWith('.swf') ?
-						'/img/importer/flash.svg' :
-						wm.thumbnail"/>
+					type="application/x-shockwave-flash"
+					:src="wm.thumbnail">
+					<param name="movie" :value="wm.thumbnail"/>
+					<param name="wmode" value="transparent"/>
+				</object>
+				<img v-else class="thumbnail" :src="wm.thumbnail"/>
 			</div>
 		</div>
-		<input type="file" ref="wm-input" accept=".gif,.jpeg,.jpg,.png,.swf,.tiff,.tif,.webp" @input="wmInput_input()"/>
-		<input type="file" ref="wm-replace-input" accept=".png" @input="wmInput_input(true)"/>
+		<input type="file" ref="wm-input" accept=".gif,.jpeg,.jpg,.png,.swf,.tiff,.tif,.webp" @input="filesAdded($event as InputEvent)"/>
+		<input type="file" ref="wm-replace-input" accept=".gif,.jpeg,.jpg,.png,.swf,.tiff,.tif,.webp" @input="filesAdded($event as InputEvent, true)"/>
 	</div>
 </template>
