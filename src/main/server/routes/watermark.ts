@@ -1,25 +1,21 @@
-import { createReadStream, ReadStream } from "fs";
+import { unlinkSync } from "fs";
 import Database from "../../storage/database.js";
 import fileTypes from "../data/allowed_file_types.json";
 import { extensions, FileExtension, fromFile, mimeTypes } from "file-type";
 import { Group } from "@octanuary/httpz";
 import MovieModel from "../models/movie.js";
 import Settings from "../../storage/settings.js";
-import sharp from "sharp";
 import WatermarkModel from "../models/watermark.js";
+import tempfile from "tempfile";
+import { spawn } from "child_process";
+import ffmpegPath from "ffmpeg-static";
+import { once } from "events";
 
-type S = ReadStream | sharp.Sharp;
-
+const APP_WATERMARK_ID = "0vTLbQy9hG7k";
+const NO_WATERMARK_ID = "0dhteqDBt5nY";
 const url = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const XML_HEADER = process.env.XML_HEADER;
 const group = new Group();
-
-/*
-just some helpful information
-==========
-app watermark: 0vTLbQy9hG7k
-no watermark: 0dhteqDBt5nY
-*/
 
 /*
 assign
@@ -28,9 +24,9 @@ group.route("POST", /\/goapi\/assignwatermark\/movie\/([\S]+)\/([\S]+)/, (req, r
 	const mId = req.matches[1];
 	let wId = req.matches[2];
 
-	if (wId == "0dhteqDBt5nY") { // reset the wm if it's the none id
+	if (wId == NO_WATERMARK_ID) { // reset the wm if it's the none id
 		wId = undefined;
-	} else if (wId != "0vTLbQy9hG7k" && !WatermarkModel.exists(wId)) {
+	} else if (wId != APP_WATERMARK_ID && !WatermarkModel.exists(wId)) {
 		return res.status(404).end("1Watermark does not exist");
 	}
 
@@ -46,7 +42,7 @@ group.route("POST", "/api/watermark/set_default", (req, res) => {
 
 	if (typeof id == "undefined") {
 		id = "none";
-	} else if (id != "0vTLbQy9hG7k" && !WatermarkModel.exists(id)) {
+	} else if (id != APP_WATERMARK_ID && !WatermarkModel.exists(id)) {
 		return res.status(404).json({ msg:"watermark not exist!" });
 	}
 
@@ -125,7 +121,7 @@ group.route("POST", "/goapi/getMovieInfo/", (req, res) => {
 	res.end(`${XML_HEADER}<watermarks>${
 		typeof wId == "undefined" ?
 			// no watermark
-			`<watermark style="octanuary"/>` : wId == "0vTLbQy9hG7k" ?
+			`<watermark style="octanuary"/>` : wId == APP_WATERMARK_ID ?
 				// default watermark
 				"" :
 				// custom watermark
@@ -138,36 +134,53 @@ save
 */
 group.route("POST", "/api/watermark/save", async (req, res) => {
 	if (WatermarkModel.list().length >= 20) {
-		return res.status(400).json({msg:"Maximum # of watermarks reached"});
+		return res.status(400).json({ msg:"Maximum # of watermarks reached" });
 	}
 
 	const file = req.files.image;
 	if (typeof file === "undefined") {
-		return res.status(400).json({msg:"Missing required parameters"});
+		return res.status(400).json({ msg:"Missing required parameters" });
 	}
 
 	let id = req.body.id;
 	const { filepath } = file;
-	let ext = (await fromFile(filepath))?.ext;
+	const ext = (await fromFile(filepath))?.ext;
 	if (typeof ext === "undefined") {
-		// filetype couldn't be determined
-		return res.status(400).json({msg:"File type could not be determined"});
+		return res.status(400).json({ msg:"File type could not be determined" });
 	}
 
-	if (fileTypes["watermark"].indexOf(ext) < 0) {
-		return res.status(400).json({msg:"Invalid file type"});
+	if (fileTypes.image.indexOf(ext) < 0) {
+		return res.status(400).json({ msg:"Invalid file type" });
 	}
 
-	let stream:S;
-	if (ext == "webp" || ext == "tif" || ext == "avif") {
-		ext = "png";
-		stream = sharp(filepath).toFormat("png");
+	if (ext == "swf") {
+		id = await WatermarkModel.save(filepath, ext, id);
 	} else {
-		stream = createReadStream(filepath);
-	}
-	stream.pause();
+		let toExt = "png";
+		if (ext == "gif") {
+			toExt = "swf";
+		}
 
-	id = await WatermarkModel.save(stream, ext, id);
+		const args = ["-v", "error", "-i", filepath];
+		const tempPath = tempfile("." + toExt);
+		args.push(tempPath);
+
+		const ffmpeg = spawn(ffmpegPath, args);
+		let data = "";
+		ffmpeg.stdout.on("data", (c) => {
+			data += c;
+		});
+		await once(ffmpeg, "exit");
+		if (data.length > 0) {
+			console.log("Error occurred during video conversion:", data);
+			throw data;
+		}
+
+		id = await WatermarkModel.save(tempPath, toExt, id);
+		unlinkSync(tempPath);
+	}
+
+	res.log("Saved watermark #" + id);
 	res.json({
 		id,
 		thumbnail: `${url}/watermarks/${id}`

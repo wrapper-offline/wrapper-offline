@@ -1,21 +1,5 @@
 {
-	"bg": [
-		"gif",
-		"jpg",
-		"png",
-		"swf",
-		"tif",
-		"webp"
-	],
-	"watermark": [
-		"gif",
-		"jpg",
-		"png",
-		"swf",
-		"tif",
-		"webp"
-	],
-	"prop": [
+	"image": [
 		"gif",
 		"jpg",
 		"png",
@@ -30,15 +14,7 @@
 		"m4a",
 		"mp3",
 		"wav",
-		"wma",
-
-		"asf",
-		"avi",
-		"mkv",
-		"mov",
-		"mp4",
-		"webm",
-		"wmv"
+		"wma"
 	],
 	"video": [
 		"asf",

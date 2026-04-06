@@ -305,14 +305,13 @@ function uploadComplete(responseJson:any): void {
 
 	const importType = assetType[1] == "video" ? "video" : assetType[0];
 	switch (importType) {
-		case "prop": {
+		case "prop":
 			lvmObject.ptype = assetType[2];
-		}
 		case "bg": {
-			if (props.file.ext != "swf") {
-				thumbUrl.value = `${apiServer}/assets/${assetId}`;
-			} else {
+			if (assetId.endsWith("swf")) {
 				thumbUrl.value = "/img/importer/flash.svg";
+			} else {
+				thumbUrl.value = `${apiServer}/assets/${assetId}`;
 			}
 			break;
 		}

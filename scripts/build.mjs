@@ -16,7 +16,6 @@ const BASE_OPTIONS = {
 		"es6-promise",
 		"ffmpeg-static",
 		"formidable",
-		"sharp"
 	],
 	platform: "node",
 	target: "node14",
@@ -118,7 +117,6 @@ if (process.argv.includes("--dev")) {
 				"@derhuerst/ffprobe-static",
 				"ffmpeg-static",
 				"formidable",
-				"sharp",
 			].indexOf(a[0]) != -1;
 		})),
 		scripts: {

@@ -4,7 +4,7 @@
 const fs = require("fs");
 const { join } = require("path");
 
-const searchDirs = ["@img/colour", "@noble/hashes", "formidable", "sharp"];
+const searchDirs = ["@noble/hashes", "formidable"];
 
 searchDirs.forEach((dir) => {
 	const path = join(__dirname, "../node_modules", dir);

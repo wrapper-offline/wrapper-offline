@@ -43,7 +43,7 @@ export default {
 								if (r.statusCode != 200) {
 									return reject("CereProc error occurred");
 								}
-								resolve(await fileUtil.convertToMp3(r, "wav") as Readable);
+								resolve(await fileUtil.convertToMp3(r, "wav", "-") as Readable);
 							} catch (e) {
 								reject(e);
 							}

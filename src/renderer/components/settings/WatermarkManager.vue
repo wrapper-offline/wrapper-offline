@@ -262,7 +262,7 @@ onMounted(loadWatermarks);
 						wm.thumbnail"/>
 			</div>
 		</div>
-		<input type="file" ref="wm-input" accept=".png" @input="wmInput_input()"/>
+		<input type="file" ref="wm-input" accept=".gif,.jpeg,.jpg,.png,.swf,.tiff,.tif,.webp" @input="wmInput_input()"/>
 		<input type="file" ref="wm-replace-input" accept=".png" @input="wmInput_input(true)"/>
 	</div>
 </template>

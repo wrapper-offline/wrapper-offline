@@ -4,22 +4,21 @@ feel so clean like a money machine
 
 import type { Asset } from "../models/asset";
 import AssetModel from "../models/asset";
-import { extensions, FileExtension, fromFile, mimeTypes } from "file-type";
-import Ffmpeg, { FfprobeData, ffprobe } from "fluent-ffmpeg";
+import { extensions, FileExtension, fromBuffer, fromFile, mimeTypes } from "file-type";
 import ffmpegPath from "ffmpeg-static";
 import ffprobePath from "@derhuerst/ffprobe-static";
+import { File } from "formidable";
 import fileTypes from "../data/allowed_file_types.json";
 import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import MovieModel, { Starter } from "../models/movie";
+import { once } from "events";
 import path from "path";
-import { promisify } from "util";
-import sharp from "sharp";
+import { Readable } from "stream";
+import { spawn } from "child_process";
 import tempfile from "tempfile";
 
-Ffmpeg.setFfmpegPath(ffmpegPath);
-Ffmpeg.setFfprobePath(ffprobePath);
 const group = new httpz.Group();
 
 /*
@@ -220,181 +219,220 @@ save
 */
 group.route("POST", "/api/asset/upload", async (req, res) => {
 	const file = req.files.import;
-	if (typeof file === "undefined" || !req.body.type || !req.body.subtype) {
-		return res.status(400).json({msg:"Missing required parameters."});
+	if (
+		typeof file == "undefined" ||
+		typeof req.body.type == "undefined" ||
+		typeof req.body.subtype == "undefined"
+	) {
+		return res.status(400).json({ msg:"Missing required parameters" });
 	}
 
-	// get the filename and extension
 	const { filepath } = file;
 	const filename = path.parse(file.originalFilename).name;
 	const ext = (await fromFile(filepath))?.ext;
 	if (typeof ext === "undefined") {
-		// filetype couldn't be determined
-		return res.status(400).json({msg:"File type could not be determined."});
+		return res.status(400).json({ msg:"File type could not be determined" });
 	}
 
-	let info:Partial<Asset> = {
+	const asset:Partial<Asset> = {
 		type: req.body.type,
 		title: req.body.name || filename
-	}, stream;
-
-	// validate the file type
-	const ok = req.body.subtype == "video" ? "video" : info.type;
-	if ((fileTypes[ok] || []).indexOf(ext) < 0) {
-		return res.status(400).json({msg:"Invalid file type."});
-	}
+	};
 
 	try {
-		switch (info.type) {
-			// these two are very similar so they can be merged
-			case "bg": {
-				if (info.type == "bg" && ext != "swf") {
-					stream = sharp(filepath)
-						.resize(550, 354, { fit: "fill" })
-						.toFormat("png");
-					// i dont kown
-				} else {
-					stream = fs.createReadStream(filepath);
-				}
-				stream.pause();
-	
-				// save asset
-				info.id = await AssetModel.save(stream, ext == "swf" ? ext : "png", info);
-				break;
+		if (
+			asset.type == "prop" &&
+			(asset.subtype = req.body.subtype) == "video"
+		) {
+			if (fileTypes.video.indexOf(ext) < 0) {
+				throw 1;
 			}
-			case "sound": {
-				info.subtype = req.body.subtype;
-				if (ext != "mp3") {
-					stream = await fileUtil.convertToMp3(filepath, ext);
-				} else {
-					stream = fs.createReadStream(filepath);
+
+			const ffprobe = spawn(
+				ffprobePath,
+				[
+					"-v", "quiet",
+					"-print_format", "json",
+					"-show_streams",
+					filepath
+				]
+			);
+			let data = "";
+			ffprobe.stdout.on("data", (c) => {
+				data += c;
+			});
+			ffprobe.stderr.on("data", (c) => {
+				console.log("Error occurred using FFprobe:", c.toString());
+				throw c.toString();
+			});
+			await once(ffprobe, "close");
+			const fileInfo = JSON.parse(data);
+
+			for (const stream of fileInfo.streams) {
+				if (stream.width) {
+					asset.width = stream.width;
 				}
-				// save it to a tempfile so we can get the mp3 duration
-				const temppath = tempfile(".mp3");
-				const writeStream = fs.createWriteStream(temppath);
-				await new Promise(async (resolve, reject) => {
-					const id = setTimeout(() => {
-						writeStream.close();
-						fs.unlinkSync(temppath);
-						return reject("read stream timed out");
-					}, 1.2e+6);
-					stream.on("end", () => {
-						clearTimeout(id);
-						resolve(null);
-					}).pipe(writeStream);
+				if (stream.height) {
+					asset.height = stream.height;
+				}
+				if (asset.width && asset.height) {
+					break;
+				}
+			}
+
+			const tempVidPath = tempfile(".flv");
+			const tempThumbPath = tempfile(".png");
+			const ffmpeg = spawn(
+				ffmpegPath,
+				[
+					"-v", "error",
+					"-i", filepath,
+					tempVidPath,
+					"-update", "true",
+					"-frames:v", "1",
+					"-vf", "scale=300:300:force_original_aspect_ratio=increase",
+					tempThumbPath
+				]
+			);
+			data = "";
+			ffmpeg.stdout.on("data", (c) => {
+				data += c;
+			});
+			await once(ffmpeg, "exit");
+			if (data.length > 0) {
+				console.log("Error occurred during video conversion:", data);
+				throw data;
+			}
+
+			asset.id = await AssetModel.save(tempVidPath, "flv", asset);
+			await AssetModel.saveThumb(tempThumbPath, asset.id, "png");
+
+			fs.unlinkSync(tempVidPath);
+			fs.unlinkSync(tempThumbPath);
+		} else if (asset.type == "prop" || asset.type == "bg") {
+			if (fileTypes.image.indexOf(ext) < 0) {
+				throw 1;
+			}
+
+			if (asset.type == "prop") {
+				const { ptype } = req.body;
+				switch (ptype) {
+					case "placeable":
+					case "wearable":
+					case "holdable":
+						asset.ptype = ptype;
+					default:
+						asset.ptype = "placeable";
+				}
+			}
+
+			if (ext == "swf") {
+				asset.id = await AssetModel.save(filepath, ext, asset);
+			} else {
+				let toExt = "png";
+				if (ext == "gif") {
+					toExt = "swf";
+				}
+
+				const args = ["-v", "error", "-i", filepath];
+				if (asset.type == "bg") {
+					args.push("-vf", "scale=550:354:force_original_aspect_ratio=increase,crop=550:354");
+				}
+				const tempPath = tempfile("." + toExt);
+				args.push(tempPath);
+
+				const ffmpeg = spawn(ffmpegPath, args);
+				let data = "";
+				ffmpeg.stdout.on("data", (c) => {
+					data += c;
 				});
-				info.duration = await fileUtil.mediaDuration(temppath) * 1e3;
-				info.id = await AssetModel.save(temppath, "mp3", info);
-				fs.unlinkSync(temppath);
-				break;
-			}
-			case "prop": {
-				info.subtype = req.body.subtype;
-				if (info.subtype == "video") {
-					// get the height and width from the original video
-					const asyncFfprobe = promisify(ffprobe);
-					const data = await asyncFfprobe(filepath) as FfprobeData;
-					info.width = data.streams[0].width || data.streams[1].width;
-					info.height = data.streams[0].height || data.streams[1].width;
-
-					const temppath = tempfile(".flv");
-					// convert the video to an flv
-					// ffmpeg will infer the flv file type from the temppath
-					await new Promise(async (resolve, rej) => {	
-						Ffmpeg(filepath)
-							.output(temppath)
-							.on("end", resolve)
-							.on("error", rej)
-							.run();
-					});
-					info.id = await AssetModel.save(temppath, "flv", info);
-
-					// AssetModel.save doesn't have thumbnail support so we'll save it here while we're at it
-					//
-					// define the command outside the promise because for whatever reason
-					// typescript does not like it when i use discriminated unions in callbacks
-					const command = Ffmpeg(filepath)
-						.seek("0:00")
-						.output(path.join(AssetModel.folder, info.id.slice(0, -3) + "png"))
-						.outputOptions("-frames", "1");
-					await new Promise(async (resolve, rej) => {
-						command
-							.on("end", resolve)
-							.on("error", rej)
-							.run();
-					});
-				} else if (info.subtype == "0") {
-					let { ptype } = req.body;
-					// verify the prop type
-					switch (ptype) {
-						case "placeable":
-						case "wearable":
-						case "holdable":
-							info.ptype = ptype;
-							break;
-						default:
-							info.ptype = "placeable";
-					}
-					if (ext == "webp" || ext == "tif" || ext == "avif") {
-						stream = sharp(filepath).toFormat("png");
-					} else {
-						stream = fs.createReadStream(filepath);
-					}
-					stream.pause();
-					info.id = await AssetModel.save(stream, ext, info);
+				await once(ffmpeg, "exit");
+				if (data.length > 0) {
+					console.log("Error occurred during video conversion:", data);
+					throw data;
 				}
-				break;
+
+				asset.id = await AssetModel.save(tempPath, toExt, asset);
+				fs.unlinkSync(tempPath);
 			}
-			default: {
-				return res.status(400).json({msg:"Invalid asset type."});
+		} else if (asset.type == "sound") {
+			if (
+				fileTypes.sound.indexOf(ext) < 0 &&
+				fileTypes.video.indexOf(ext) < 0
+			) {
+				throw 1;
 			}
-		}
-		res.json(info);
+
+			asset.subtype = req.body.subtype;
+			if (ext != "mp3") {
+				const temppath = tempfile(".mp3");
+				await fileUtil.convertToMp3(filepath, ext, temppath);
+				asset.duration = await fileUtil.mediaDuration(temppath) * 1e3;
+				asset.id = await AssetModel.save(temppath, "mp3", asset);
+				fs.unlinkSync(temppath);
+			} else {
+				asset.duration = await fileUtil.mediaDuration(filepath) * 1e3;
+				asset.id = await AssetModel.save(filepath, "mp3", asset);
+			}	
+		}		
+		res.json(asset);
 	} catch (e) {
+		if (e == 1) {
+			return res.status(400).json({ msg:"Invalid file type" });
+		}
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status:"error"});
-		return;
+		res.status(500).json({ status:"error" });
 	}
 })
 group.route("POST", "/goapi/saveSound/", async (req, res) => {
-	let isRecord = req.body.bytes ? true : false;
+	const bytes = req.body.bytes;
+	if (
+		(typeof bytes == "undefined" &&
+			typeof req.files.Filedata == "undefined") ||
+		typeof req.body.subtype == "undefined"
+	) {
+		return res.status(400).json({ msg:"Missing required parameters" });
+	}
 
-	let filepath, ext, stream;
-	if (isRecord) {
-		filepath = tempfile(".ogg");
-		ext = "ogg";
-		const buffer = Buffer.from(req.body.bytes, "base64");
-		fs.writeFileSync(filepath, buffer);
+	let input:Buffer | string,
+		ext:FileExtension;
+	if (bytes) {
+		input = Buffer.from(bytes, "base64");
+		ext = (await fromBuffer(input))?.ext;
 	} else {
-		// read the file
-		filepath = req.files.Filedata.filepath;
-		ext = (await fromFile(filepath))?.ext;
-		if (!ext) {
-			return res.status(400).json({msg:"File type could not be determined."});
+		input = (req.files.Filedata as File).filepath;
+		ext = (await fromFile(input))?.ext;
+		if (typeof ext === "undefined") {
+			return res.status(400).json({ msg:"File type could not be determined" });
 		}
 	}
 
-	let info:Partial<Asset> = {
+	const asset:Partial<Asset> = {
 		type: "sound",
 		subtype: req.body.subtype,
 		title: req.body.title
 	};
 
 	try {
+		const ffInput = typeof input != "string" ?
+			Readable.from(input) : input;
+		let id: string;
 		if (ext != "mp3") {
-			stream = await fileUtil.convertToMp3(filepath, ext);
-			filepath = tempfile(".mp3");
-			const writeStream = fs.createWriteStream(filepath);
-			await new Promise((resolve) => stream.pipe(writeStream).on("end", resolve));
+			const temppath = tempfile(".mp3");
+			await fileUtil.convertToMp3(ffInput, ext, temppath);
+			asset.duration = await fileUtil.mediaDuration(temppath) * 1e3;
+			id = await AssetModel.save(temppath, "mp3", asset);
+			fs.unlinkSync(temppath);
+		} else {
+			asset.duration = await fileUtil.mediaDuration(ffInput) * 1e3;
+			id = await AssetModel.save(input, "mp3", asset);
 		}
-		info.duration = await fileUtil.mediaDuration(filepath) * 1e3;
-		const id = await AssetModel.save(filepath, "mp3", info as Asset);
 		res.end(
-			`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>${info.subtype}</subtype><title>${info.title}</title><published>0</published><tags></tags><duration>${info.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`
+			`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>${asset.subtype}</subtype><title>${asset.title}</title><published>0</published><tags></tags><duration>${asset.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`
 		);
 	} catch (e) {
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status:"error"});
+		res.status(500).json({ status:"error" });
 		return;
 	}
 });

@@ -239,4 +239,30 @@ export default class AssetModel {
 			}
 		});
 	};
+
+	/**
+	 * saves the thumbnail of an asset
+	 * @param thumbPath thumbnail path
+	 * @param id asset id
+	 * @param ext thumbnail file extension
+	 */
+	static saveThumb(thumbPath:string, id:string, ext:string): Promise<void> {
+		return new Promise((res, rej) => {
+			if (id.indexOf(".") > -1) {
+				id = id.split(".")[0];
+			}
+			const newPath = path.join(this.folder, `${id}.${ext}`);
+			const writeStream = fs.createWriteStream(newPath);
+			const readStream = fs.createReadStream(thumbPath);
+			readStream.pipe(writeStream);
+			readStream.on("end", () => {
+				readStream.destroy();
+				res();
+			});
+			readStream.on("error", (e) => {
+				console.error("Error reading", thumbPath, e);
+				rej(e);
+			});
+		});
+	}
 };

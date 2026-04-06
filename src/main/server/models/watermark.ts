@@ -1,10 +1,9 @@
+import { Readable } from "stream";
 import Database, { generateId } from "../../storage/database";
 import Directories from "../../storage/directories";
 import fs from "fs";
 import path from "path";
-import { Sharp } from "sharp";
 
-type S = fs.ReadStream | Sharp;
 export type Watermark = {
 	id: string,
 };
@@ -47,20 +46,21 @@ export default class WatermarkModel {
 
 	/**
 	 * Saves the watermark to the `Directories.saved` folder.
-	 * @param data watermark data as a stream
+	 * @param input file path
 	 * @param id watermark id, if replacing a watermark
 	 * @returns id
 	 */
-	static save(data:S, ext:string, id:string): Promise<string> {
+	static save(input:string, ext:string, id:string): Promise<string> {
 		if (typeof id == "undefined") {
 			id = `${generateId()}.${ext}`;
 		}
 		return new Promise((res, rej) => {
 			const filepath = path.join(this.folder, id);
-			const readStream = fs.createWriteStream(filepath);
-			data.pipe(readStream);
-			data.on("end", () => {
-				readStream.close();
+			const write = fs.createWriteStream(filepath);
+			const read = fs.createReadStream(input);
+			read.pipe(write);
+			read.on("end", () => {
+				write.close();
 				if (!Database.get("watermarks", id)) {
 					Database.insert("watermarks", {
 						id
@@ -68,7 +68,7 @@ export default class WatermarkModel {
 				}
 				res(id);
 			});
-			data.on("error", () => {
+			read.on("error", () => {
 				rej();
 			});
 		});

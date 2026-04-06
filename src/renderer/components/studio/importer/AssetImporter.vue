@@ -298,7 +298,7 @@ function onUploadSuccess(
 					<details>
 						<summary>Backgrounds and props:</summary>
 						<ul>
-							<li>GIF (will not animate)</li>
+							<li>GIF</li>
 							<li>JPEG/JPG</li>
 							<li>PNG</li>
 							<li>SWF</li>
