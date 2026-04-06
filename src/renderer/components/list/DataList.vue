@@ -572,8 +572,10 @@ function folder_click(folderId:string) {
  */
 function entry_delete(ids:string[]) {
 	for (const id of ids) {
-		const index = props.data.entries.findIndex((v) => v.id == id);
-		props.data.entries.splice(index, 1);
+		const entryI = props.data.entries.findIndex((v) => v.id == id);
+		props.data.entries.splice(entryI, 1);
+		const selI = selection.value.entries.findIndex((v) => v == id);
+		selection.value.entries.splice(selI, 1);
 	}
 }
 
