@@ -47,14 +47,7 @@ const routes:RouteRecordRaw[] = [
 	},
 	{
 		path: "/characters/create/:themeId?/:bs?",
-		component: DefaultLayout,
-		children: [
-			{
-				name: "cc",
-				path: "",
-				component: CCView
-			},
-		],
+		component: CCView,
 		meta: {
 			title: "Character Creator"
 		},

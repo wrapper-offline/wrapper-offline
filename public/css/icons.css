@@ -94,6 +94,9 @@ i.ico.save::before {
 i.ico.speech::before {
 	content: '\E310';
 }
+i.ico.squarrows::before {
+	content: '\E081';
+}
 i.ico.trash::before {
 	content: '\E017';
 }

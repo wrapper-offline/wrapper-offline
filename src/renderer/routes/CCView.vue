@@ -1,24 +1,10 @@
 <style>
-#cc_object[src*="cc_browser.swf"] {
-	display: block;
-	margin: auto;
-	width: 980px;
-	height: 1200px;
-}
-#cc_object[src*="cc.swf"] {
-	display: block;
-	margin: auto;
-	margin-top: 15px;
-	width: 980px;
-	height: 600px;
-}
-
-.cc_hotbar {
-	background: hsl(252deg 16% 94%);
-	border-bottom: 1px solid hsl(240 12% 76% / 1);
+#full_page_container {
 	display: flex;
-	justify-content: space-between;
-	height: 35px;
+	flex-direction: column;
+	padding: 0;
+	width: 100%;
+	height: 100%;
 }
 </style>
 
@@ -114,7 +100,7 @@ if (themeId) {
 </script>
 
 <template>
-	<div>
+	<div id="full_page_container">
 		<Navbar
 			:supported="{ download:showDlButton, save:true }"
 			state="cc"

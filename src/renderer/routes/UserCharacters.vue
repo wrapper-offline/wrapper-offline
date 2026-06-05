@@ -13,14 +13,6 @@
 	height: 600px;
 }
 
-.cc_hotbar {
-	background: hsl(252deg 16% 94%);
-	border-bottom: 1px solid hsl(240 12% 76% / 1);
-	display: flex;
-	justify-content: space-between;
-	height: 35px;
-}
-
 .dropdown.theme_filter .dropdown_item {
 	line-height: 28px;
 	padding: 4px 24px 4px 12px;

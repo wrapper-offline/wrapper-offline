@@ -114,24 +114,28 @@
 		<choice>0x428247</choice>
 		<choice>0x43C2E7</choice>
 		<choice>0x0B3573</choice>
+		<choice>0x333333</choice>
 	</color>
 	<color r="ccUpperMinor" oc="0xE5E5E5" component_type="upper_body" enable="Y">
 		<choice>0xF3F01E</choice>
 		<choice>0xF39B1E</choice>
 		<choice>0xF31E1E</choice>
 		<choice>0xCD1EF3</choice>
+		<choice>0xF2F1D9</choice>
 	</color>
 	<color r="ccLowerMain" oc="0xCCBC9A" component_type="lower_body" enable="Y">
 		<choice>0xFFFFFF</choice>
 		<choice>0x428247</choice>
 		<choice>0x43C2E7</choice>
 		<choice>0x0B3573</choice>
+		<choice>0x333333</choice>
 	</color>
 	<color r="ccLowerMinor" oc="0xEEEEEE" component_type="lower_body" enable="Y">
 		<choice>0xF1E41C</choice>
 		<choice>0x7B6B15</choice>
 		<choice>0x2D5F0C</choice>
 		<choice>0x116BA4</choice>
+		<choice>0xCC0000</choice>
 	</color>
 	<color r="ccDecMajor" component_type="facedecoration" enable="Y">
 		<choice>0xFFFFFF</choice>
