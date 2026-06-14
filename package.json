@@ -43,15 +43,15 @@
 		"@types/node": "^20.11.13",
 		"@types/node-static": "^0.7.11",
 		"@types/xmldoc": "^1.1.9",
-		"@vitejs/plugin-vue": "^5.2.1",
+		"@vitejs/plugin-vue": "^6.0.7",
 		"concurrently": "^9.1.2",
 		"electron": "^11.5.0",
 		"electron-packager": "^15.5.1",
-		"esbuild": "^0.27.0",
+		"esbuild": "^0.28.1",
 		"js-base64": "^3.7.2",
 		"mocha": "^10.0.0",
 		"supertest": "^7.2.2",
-		"vite": "^6.4.1"
+		"vite": "^8.0.16"
 	},
 	"repository": {
 		"type": "git",
