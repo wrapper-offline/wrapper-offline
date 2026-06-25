@@ -10,6 +10,9 @@ i.ico {
 	font-style: normal;
 	display: inline-block;
 }
+i.ico.arr_in::before {
+	content: '\E215';
+}
 i.ico.arr_r::before {
 	content: '\E369';
 }

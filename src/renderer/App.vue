@@ -123,7 +123,10 @@ if (params.get("redirect")) {
 }
 
 onMounted(() => {
-	document.getElementById("noscript").remove();
+	const noscript = document.getElementById("noscript");
+	if (noscript) {
+		noscript.remove();
+	}
 });
 
 </script>

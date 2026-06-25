@@ -32,10 +32,11 @@ import {
 	toAttrString
 } from "../utils/AppInit";
 import { ref } from "vue";
-import useAppSettings from "../composables/useAppSettings";
 import { useRoute } from "vue-router";
+import { useStorage } from "@vueuse/core";
 
-const appSettings = useAppSettings();
+const widescreen = useStorage("widescreen", true);
+
 let params:Params = {
 	flashvars: {
 		appCode: "go",
@@ -44,7 +45,7 @@ let params:Params = {
 		ctc: "go",
 		goteam_draft_only: "1",
 		isLogin: "Y",
-		isWide: appSettings.get("isWide") ? "1" : "0",
+		isWide: widescreen.value ? "1" : "0",
 		lid: "0",
 		nextUrl: "/",
 		page: "",

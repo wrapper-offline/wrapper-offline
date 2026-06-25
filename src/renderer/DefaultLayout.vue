@@ -1,5 +1,6 @@
 <style lang="css">
 #right_page_container {
+	flex-grow: 1;
 	background: #1c1c27;
 	user-select: none;
 	overflow: hidden;
@@ -18,26 +19,49 @@ html.dark #right_page_container {
 html.dark .page_contents {
 	background: hsl(250 9% 16% / 1);
 }
-
-/* html.dark #app_right {
-	background: linear-gradient(hsl(246 11% 9% / 1) 20px, hsl(246 11% 15% / 1) 20px);
-	width: 100%;
-} */
 </style>
 
 <script setup lang="ts">
+import { usePreferredDark, useStorage } from "@vueuse/core";
 import Sidebar from "./components/Sidebar.vue";
-import useLocalSettings from "./composables/useLocalSettings";
-import { useTemplateRef } from "vue";
+import { onMounted, Ref, watch, WatchHandle } from "vue";
 
-type SidebarType = InstanceType<typeof Sidebar>;
+const theme = useStorage("theme", "auto");
+let isSystemDark:Ref<boolean> | null = null;
+let systemThemeWatcher:WatchHandle | null = null;
 
-const localSettings = useLocalSettings();
-const sidebar = useTemplateRef<SidebarType>("sidebar");
-
-if (localSettings.darkMode == true) {
-	document.documentElement.classList.add("dark");
+function updateDarkClass(value:boolean) {
+	if (value) {
+		document.documentElement.classList.add("dark");
+	} else {
+		document.documentElement.classList.remove("dark");
+	}
 }
+
+function refreshTheme(newValue:string, oldValue?:string) {
+	if (newValue == "auto") {
+		isSystemDark = usePreferredDark();
+		systemThemeWatcher = watch(isSystemDark, refreshSystemTheme);
+		refreshSystemTheme();
+	} else {
+		updateDarkClass(newValue == "dark");
+	}
+	if (oldValue == "auto") {
+		isSystemDark = null;
+		systemThemeWatcher = null;
+	}
+}
+
+function refreshSystemTheme() {
+	if (isSystemDark === null) return;
+	updateDarkClass(isSystemDark.value);
+}
+
+watch(theme, refreshTheme);
+
+onMounted(() => {
+	refreshTheme(theme.value);
+});
 </script>
 
 <template>
@@ -46,7 +70,5 @@ if (localSettings.darkMode == true) {
 			<slot name="hi"></slot>
 		</template>
 	</Sidebar>
-	<RouterView id="right_page_container" :style="{
-		width: `calc(100% - ${sidebar?.width + sidebar?.slideMode.margin}px)`
-	}"/>
+	<RouterView id="right_page_container"/>
 </template>

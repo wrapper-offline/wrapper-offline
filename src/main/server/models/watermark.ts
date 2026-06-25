@@ -76,7 +76,7 @@ export default class WatermarkModel {
 				res(id);
 			});
 			read.on("error", () => {
-				rej();
+				rej(new Error("Could not read input"));
 			});
 		});
 	}

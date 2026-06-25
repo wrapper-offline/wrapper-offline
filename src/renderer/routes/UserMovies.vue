@@ -20,13 +20,14 @@ import {
 } from "vue";
 import useListStore from "../composables/useListStore";
 import { useRoute } from "vue-router";
+import unwrapJson from "../utils/unwrapJson";
 
 const listTree = useTemplateRef("list-tree");
 const { pendingRefresh, zoomLevel } = useListStore();
 const route = useRoute();
 
 /** id of the folder whose contents are currently being listed */
-const currentFolder = ref<string>();
+const currentFolder = ref<string>("");
 /** is the movie list currently being loaded */
 const isLoading = ref(false);
 /** movie or starters page being used */
@@ -35,10 +36,15 @@ let listPage:"movie"|"starter";
 const movieList = ref<{
 	folders: [],
 	entries: Movie[]
-}>();
+}>({
+	folders: [],
+	entries: [],
+});
 
-let columnWidths = JSON.parse(localStorage.getItem("movie_list-columnWidths")) ??
-	{ "title":250, "id":100, "duration":100, "date":180 };
+let columnWidths = unwrapJson(
+	localStorage.getItem("movie_list-columnWidths"),
+	{ "title":250, "id":100, "duration":100, "date":180 }
+);
 let columns:ListFieldColumn<Movie>[] = [
 	{
 		id: "title",
@@ -60,11 +66,10 @@ let columns:ListFieldColumn<Movie>[] = [
 
 /** list sort option that is currently selected */
 const selectedSort = ref<SelectedListSort<Movie>>(
-	JSON.parse(localStorage.getItem("movie_list-selectedSort")) ??
-		{
-			id: "title",
-			descending: true
-		}
+	unwrapJson(localStorage.getItem("movie_list-selectedSort"), {
+		id: "title",
+		descending: true
+	})
 );
 
 /**
@@ -87,8 +92,9 @@ function timestampToSeconds(time:string) {
 		if (index == (nums.length - 1).toString()) {
 			return nums[index];
 		}
-		nums[index + 1] += nums[index] * 60;
+		nums[Number(index) + 1] += nums[index] * 60;
 	}
+	return 0;
 }
 
 /**
@@ -97,23 +103,26 @@ function timestampToSeconds(time:string) {
  * @param movie2 movie 2
  */
 function movieSort(movie1:Movie, movie2:Movie): number {
-	let mul = selectedSort.value.descending ? 1 : -1;
+	const co = selectedSort.value.descending ? 1 : -1;
 	const sortOption = selectedSort.value.id;
 	switch (sortOption) {
 		case "id":
 		case "title": {
-			return movie1[sortOption].localeCompare(movie2[sortOption]) * mul;
+			return co * movie1[sortOption].localeCompare(movie2[sortOption]);
 		}
 		case "duration": {
 			// hehehehehe sex
 			const secs1 = timestampToSeconds(movie1.duration);
 			const secs2 = timestampToSeconds(movie2.duration);
-			return (secs2 - secs1) * mul;
+			return co * (secs2 - secs1);
 		}
 		case "date": {
 			const date1 = new Date(movie1.date);
 			const date2 = new Date(movie2.date);
-			return (+date1 - +date2) * mul;
+			return co * (+date1 - +date2);
+		}
+		default: {
+			return 0;
 		}
 	}
 }
@@ -177,10 +186,10 @@ function getMovieTree(filter:"movie"|"starter", folderId?:string) {
 			// let parentFolderEntries:NavbarEntry[] | void;
 			let parentFolderEntries:void;
 			if (filter == "movie") {
-				parentFolderEntries = responseJson.folder_path.map(v => ({
-					path: "/movies/" + v.id,
-					title: v.title
-				}));
+				// parentFolderEntries = responseJson.folder_path.map(v => ({
+				// 	path: "/movies/" + v.id,
+				// 	title: v.title
+				// }));
 			}
 			res({
 				navbar_parent_folders: parentFolderEntries,
@@ -203,6 +212,9 @@ function getMovieTree(filter:"movie"|"starter", folderId?:string) {
  * called when the route updates, gathers information before reloading the list
  */
 async function routeUpdated() {
+	if (!listTree.value) {
+		return;
+	}
 	listTree.value.resetSelection();
 	initList();
 	listPage = route.name == "movie_list" ? "movie" : "starter";
@@ -218,7 +230,7 @@ async function routeUpdated() {
  */
 async function loadMovieList() {
 	if (listPage == "movie") {
-		const response = await getMovieTree(listPage, toValue(currentFolder));
+		const response = await getMovieTree(listPage, currentFolder.value);
 		// navbarEntries.value = [
 		// 	{
 		// 		path: "/movies",

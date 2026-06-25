@@ -11,7 +11,7 @@ export default {
 			"video": "Video prop",
 			"placeable": "Placeable prop",
 			"holdable": "Handheld prop",
-			"wearable": "Head gear",
+			"wearable": "Head gear"
 		}
 	},
 	"list": {
@@ -21,12 +21,12 @@ export default {
 			"title": "Name",
 			"type": "Type",
 			"duration": "Duration",
-			"date": "Modified",
+			"date": "Modified"
 		},
 		"actions": {
 			"movie_delete_confirm": {
 				"sing": "Are you sure you want to delete this movie? It cannot be recovered.",
-				"plr": "Are you sure you want to delete these movies? They cannot be recovered.",
+				"plr": "Are you sure you want to delete these movies? They cannot be recovered."
 			}
 		}
 	}

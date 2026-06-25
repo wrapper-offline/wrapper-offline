@@ -2,7 +2,7 @@
 feel so clean like a money machine
 */
 
-import type { Asset } from "../models/asset";
+import type { Asset, Prop } from "../models/asset";
 import AssetModel from "../models/asset";
 import { extensions, FileExtension, fromBuffer, fromFile, mimeTypes } from "file-type";
 import ffmpegPath from "ffmpeg-static";
@@ -218,6 +218,10 @@ group.route("POST", "/api_v2/asset/update/", (req, res) => {
 save
 */
 group.route("POST", "/api/asset/upload", async (req, res) => {
+	if (ffprobePath === null || ffmpegPath === null) {
+		return res.status(500).json({ msg:"FFmpeg could not be found" })
+	}
+
 	const file = req.files.import;
 	if (
 		typeof file == "undefined" ||
@@ -227,8 +231,8 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 		return res.status(400).json({ msg:"Missing required parameters" });
 	}
 
-	const { filepath } = file;
-	const filename = path.parse(file.originalFilename).name;
+	const { filepath, originalFilename } = file;
+	const filename = originalFilename ? path.parse(originalFilename).name : "Untitled";
 	const ext = (await fromFile(filepath))?.ext;
 	if (typeof ext === "undefined") {
 		return res.status(400).json({ msg:"File type could not be determined" });
@@ -320,21 +324,25 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 					case "placeable":
 					case "wearable":
 					case "holdable":
-						asset.ptype = ptype;
+						(asset as Prop).ptype = ptype;
 					default:
-						asset.ptype = "placeable";
+						(asset as Prop).ptype = "placeable";
 				}
 			}
 
 			if (ext == "swf") {
 				asset.id = await AssetModel.save(filepath, ext, asset);
 			} else {
+				const args = ["-v", "error"];
+
 				let toExt = "png";
 				if (ext == "gif") {
 					toExt = "swf";
+				} else {
+					args.push("-f", "image2");
 				}
 
-				const args = ["-v", "error", "-i", filepath];
+				args.push("-i", filepath);
 				if (asset.type == "bg") {
 					args.push("-vf", "scale=550:354:force_original_aspect_ratio=increase,crop=550:354");
 				}
@@ -348,7 +356,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 				});
 				await once(ffmpeg, "exit");
 				if (data.length > 0) {
-					console.log("Error occurred during video conversion:", data);
+					console.log("Error occurred during image conversion:", data);
 					throw data;
 				}
 
@@ -395,16 +403,16 @@ group.route("POST", "/goapi/saveSound/", async (req, res) => {
 	}
 
 	let input:Buffer | string,
-		ext:FileExtension;
+		ext:FileExtension | undefined;
 	if (bytes) {
 		input = Buffer.from(bytes, "base64");
 		ext = (await fromBuffer(input))?.ext;
 	} else {
 		input = (req.files.Filedata as File).filepath;
 		ext = (await fromFile(input))?.ext;
-		if (typeof ext === "undefined") {
-			return res.status(400).json({ msg:"File type could not be determined" });
-		}
+	}
+	if (typeof ext === "undefined") {
+		return res.status(400).json({ msg:"File type could not be determined" });
 	}
 
 	const asset:Partial<Asset> = {

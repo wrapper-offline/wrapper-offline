@@ -44,13 +44,12 @@ import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from "vue";
 import MoviePreviewModal from "../components/studio/MoviePreviewModal.vue";
 import StudioObject from "../interfaces/StudioObject";
 import ThemeSelector from "../components/ThemeSelector.vue";
-import useAppSettings from "../composables/useAppSettings";
 import { useRoute, useRouter } from "vue-router";
+import { useStorage } from "@vueuse/core";
 
 type CCModalType = InstanceType<typeof CCModal>;
 type MoviePreviewModalType = InstanceType<typeof MoviePreviewModal>;
 
-const appSettings = useAppSettings();
 const ccModal = useTemplateRef<CCModalType>("ccModal");
 const previewModal = useTemplateRef<MoviePreviewModalType>("previewModal");
 const router = useRouter();
@@ -59,10 +58,9 @@ const studio = useTemplateRef<StudioObject>("studio-object");
 const showCCModal = ref(false);
 const showImporter = ref(false);
 const showPreviewer = ref(false);
-/** show studio object */
 const showObject = ref(false);
-/** show theme selector */
 const showSelector = ref(false);
+const widescreen = useStorage("widescreen", true);
 let swfUrl:string;
 
 let params:Params = {
@@ -72,7 +70,7 @@ let params:Params = {
 		ctc: "go",
 		goteam_draft_only: "1",
 		isLogin: "Y",
-		isWide: appSettings.get("isWide") ? "1" : "0",
+		isWide: widescreen.value ? "1" : "0",
 		lid: "0",
 		page: "",
 		retut: "1",
@@ -92,6 +90,9 @@ function exitCCModal() {
 	showCCModal.value = false;
 }
 function charSaved(id:string) {
+	if (!studio.value) {
+		return;
+	}
 	studio.value.loadCharacterById(id);
 }
 
@@ -99,6 +100,9 @@ function charSaved(id:string) {
 
 function exitImporter() {
 	showImporter.value = false;
+	if (!studio.value) {
+		return;
+	}
 	studio.value.importerStatus("clear");
 }
 
@@ -107,6 +111,9 @@ function exitImporter() {
  * this would update the cloud icon in the LVM
  */
 function onImportStatusUpdate(status:AssetStatus) {
+	if (!studio.value) {
+		return;
+	}
 	switch (status) {
 		case "uploading": {
 			studio.value.importerStatus("processing");
@@ -130,6 +137,9 @@ function onImporterUploadSuccess(
 	assetId: string,
 	lvmObject: Record<string, string>
 ) {
+	if (!studio.value) {
+		return;
+	}
 	studio.value.importerUploadComplete(assetType, assetId, lvmObject);
 }
 
@@ -137,6 +147,9 @@ function onImporterUploadSuccess(
  * called when a user clicks the 'add to scene' button on an uploaded asset
  */
 function onImportAddToScene(assetType:string, assetId:string) {
+	if (!studio.value) {
+		return;
+	}
 	studio.value.importerAddAsset(assetType, assetId);
 }
 
@@ -146,6 +159,9 @@ function exitPreviewer() {
 	showPreviewer.value = false;
 }
 function showSavePopup() {
+	if (!studio.value) {
+		return;
+	}
 	studio.value.onExternalPreviewPlayerPublish();
 }
 
@@ -193,19 +209,28 @@ onMounted(() => {
 		showPreviewer.value = true;
 		showImporter.value = false;
 		setTimeout(() => {
+			if (!previewModal.value) {
+				return;
+			}
 			previewModal.value.displayPlayer(movieXml, startFrame);
 		}, 55);
 	};
 	//@ts-ignore
-	window.createCharacter = function (themeId:string) {
+	window.createCharacter = function (themeId:string) {	
 		showCCModal.value = true;
 		showImporter.value = false;
+		if (!ccModal.value) {
+			return;
+		}
 		ccModal.value.displayBrowser(themeId);
 	}
 	//@ts-ignore
 	window.copyCharacter = function (themeId:string, assetId:string) {
 		showCCModal.value = true;
 		showImporter.value = false;
+		if (!ccModal.value) {
+			return;
+		}
 		ccModal.value.copyCharacter(themeId, assetId);
 	}
 	//@ts-ignore

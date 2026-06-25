@@ -5,7 +5,7 @@ import Database, { generateId } from "../../storage/database";
 import type { Starter } from "./movie";
 import path from "path";
 
-type Sound = {
+export interface Sound {
 	type: "sound",
 	subtype: "bgmusic" | "soundeffect" | "voiceover" | "tts",
 	tags?: string,
@@ -13,13 +13,13 @@ type Sound = {
 	duration: number,
 	id: string,
 };
-type Background = {
+export interface Background {
 	type: "bg",
 	tags?: string,
 	title: string,
 	id: string,
 };
-type Prop = {
+export interface Prop {
 	type: "prop",
 	subtype: "0",
 	ptype: "placeable" | "headable" | "holdable" | "wearable",
@@ -27,7 +27,7 @@ type Prop = {
 	title: string,
 	id: string,
 };
-type Video = {
+export interface Video {
 	type: "prop",
 	subtype: "video",
 	tags?: string,
@@ -219,13 +219,14 @@ export default class AssetModel {
 			} else {
 				info.id = `${generateId()}.${idOrExt}`;
 			}
-			Database.insert("assets", info as Asset)
+			const asset = info as Asset;
+			Database.insert("assets", asset)
 
-			let writeStream = fs.createWriteStream(path.join(this.folder, info.id));
+			let writeStream = fs.createWriteStream(path.join(this.folder, asset.id));
 			if (Buffer.isBuffer(data)) { // 
 				writeStream.write(data, (e) => {
 					if (e && e != null) return rej(e);
-					res(info.id);
+					res(asset.id);
 				});
 			} else { // stream
 				if (typeof data == "string") { // file path
@@ -235,7 +236,7 @@ export default class AssetModel {
 				data.resume();
 				data.pipe(writeStream);
 				// wait for the stream to end
-				data.on("end", () => res(info.id));
+				data.on("end", () => res(asset.id));
 			}
 		});
 	};

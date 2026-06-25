@@ -31,7 +31,7 @@ type DBJsonArrayProp<K extends DBJsonArrayKey> = DatabaseJson[K][number];
 export class Database {
 	private path = join(directories.saved, "database.json");
 	private json:DatabaseJson = {
-		version: process.env.WRAPPER_VER,
+		version: process.env.WRAPPER_VER as string,
 		assets: [],
 		movies: [],
 		movie_folders: [],
@@ -134,7 +134,7 @@ export class Database {
 		this.refresh();
 
 		const category = this.json[from];
-		let index:number;
+		let index:number = 0;
 		const object = category.find((i, ind) => {
 			if (i.id == id) {
 				index = ind;
@@ -169,7 +169,7 @@ export class Database {
 	 */
 	select<K extends DBJsonArrayKey>(
 		from:K,
-		where?:Record<string, string | string[]>
+		where?:Record<string, any> | null
 	):DBJsonArrayProp<K>[] {
 		this.refresh();
 

@@ -418,9 +418,9 @@ interface ListData {
 
 const emit = defineEmits<{
 	/** emitted when a column has been resized. [id, new width] */
-	columnResize: [string, number],
+	columnResize: [FieldId<Entry>, number],
 	/** id of the new entry field to sort by */
-	sortChange: [string],
+	sortChange: [FieldId<Entry>],
 }>();
 const props = defineProps<{
 	/** list of entries and folders */
@@ -481,6 +481,10 @@ function dataFilterFunc(v:Folder|Entry, shouldContain:string, resultArray:string
  * syncs the select all box state with the current selection
  */
 function syncSelectAllBox() {
+	if (!selectAllBox.value) {
+		return;
+	}
+
 	const allSelected = selection.value.entries.length ==
 		props.data.entries.length;
 	selectAllBox.value.checked = allSelected;
@@ -511,7 +515,7 @@ function updateFilter(newFiltered: {
  * emits an event requesting the parent to resort the list
  * @param fieldId id of the entry field to sort by
  */
-function sortOption_click(fieldId:string) {
+function sortOption_click(fieldId:FieldId<Entry>) {
 	emit("sortChange", fieldId);
 }
 
@@ -523,8 +527,12 @@ function sortOption_click(fieldId:string) {
 function dragger_down(id:FieldId<Entry>, e:MouseEvent) {
 	document.body.classList.add("col_resize");
 	const option = props.columns.find(v => v.id == id);
+	if (!option) {
+		// this shouldn't even be possible but ts nags me if i don't check
+		return;
+	}
 	const startX = e.clientX;
-	const startWidth = toValue(option.width);
+	const startWidth = option.width.value;
 	const moveCb = (moveE2:MouseEvent) => {
 		let dx = moveE2.clientX - startX;
 		if (screenWidth.value > 1200) {
@@ -539,7 +547,7 @@ function dragger_down(id:FieldId<Entry>, e:MouseEvent) {
 	window.addEventListener("mouseup", () => {
 		window.removeEventListener("mousemove", moveCb);
 		document.body.classList.remove("col_resize");
-		emit("columnResize", id.toString(), option.width.value);
+		emit("columnResize", id, option.width.value);
 	});
 }
 
@@ -585,8 +593,8 @@ function entry_delete(ids:string[]) {
  * @param id entry id
  */
 function entry_click(id:string) {
-	selection.value.entries = [id];
 	selection.value.anchor = 0;
+	selection.value.entries = [id];
 	syncSelectAllBox();
 }
 
@@ -624,6 +632,10 @@ function entry_dblClick() {
  * @param id entry id
  */
 function entry_shiftClick(id:string) {
+	if (!listRows.value) {
+		return;
+	}
+
 	const anchoredId = selection.value.entries[selection.value.anchor];
 	if (typeof anchoredId == "undefined") { // nothing is selected
 		selection.value.entries = [id];
@@ -633,13 +645,29 @@ function entry_shiftClick(id:string) {
 	}
 	selection.value.entries = [anchoredId];
 	selection.value.anchor = 0;
-	const indicies = [
-		listRows.value.findIndex(e => e.id == anchoredId),
-		listRows.value.findIndex(e => e.id == id)
-	].sort((a, b) => a - b);
-	for (let i = indicies[0]; i <= indicies[1]; i++) {
-		const id = listRows.value[i].id;
-		if (id == anchoredId) continue;
+	const indices:number[] = [];
+	for (const i in listRows.value) {
+		const elem = listRows.value[i];
+		if (!elem) {
+			continue;
+		}
+		if (elem.id == anchoredId) {
+			indices[0] = Number(i);
+		}
+		if (elem.id == id) {
+			indices[1] = Number(i);
+		}
+	}
+	if (!indices[0]) {
+		return;
+	}
+	if (!indices[1]) {
+		return;
+	}
+	indices.sort((a, b) => a - b);
+	for (let i = indices[0]; i <= indices[1]; i++) {
+		const id = listRows.value[i]?.id;
+		if (typeof id == "undefined" || id == anchoredId) continue;
 		selection.value.entries.push(id);
 	}
 	syncSelectAllBox();
@@ -654,9 +682,18 @@ function ctrlADown(e:KeyboardEvent) {
 	if (!e.ctrlKey || e.key != "a") {
 		return;
 	}
+	if (!listRows.value) {
+		return;
+	}
 	e.preventDefault();
 	e.stopPropagation();
-	selection.value.entries = listRows.value.map(e => e.id);
+	selection.value.entries = [];
+	for (const elem of listRows.value) {
+		if (!elem) {
+			return;
+		}
+		selection.value.entries.push(elem.id);
+	}
 	selection.value.anchor = 0;
 	syncSelectAllBox();
 }
@@ -672,8 +709,8 @@ watch(() => search.value, (newSearch:string) => {
 	resetSelection();
 	filteredEntryIds.entries = [];
 	filteredEntryIds.folders = [];
-	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries));
-	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders));
+	props.data.entries.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.entries || []));
+	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders || []));
 });
 onMounted(() => {
 	document.addEventListener("keydown", ctrlADown);
@@ -727,9 +764,10 @@ defineExpose({ resetSelection, updateFilter });
 									field.width.value) + 'px' : 
 								'150px'
 						}"
-						@click.self="sortOption_click(field.id.toString())">
-						{{ locale.list.column_name?.[field.id.toString()] ?? field.id }}
-						<div v-if="mode() == ViewMode.List"
+						@click.self="sortOption_click(field.id)">
+						{{ locale.list.column_name?.[field.id as keyof typeof locale.list.column_name] ?? field.id }}
+						<div
+							v-if="mode() == ViewMode.List"
 							class="dragger"
 							:style="{marginLeft: (screenWidth > 1200 ? 
 									field.width.value * screenWidth / 1000 : 

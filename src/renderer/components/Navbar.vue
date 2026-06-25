@@ -124,7 +124,7 @@ html.dark header .search_box:focus {
 </style>
 
 <script setup lang="ts">
-import Dropdown from "./controls/Dropdown.vue";
+import Dropdown from "./controls/DropdownMenu.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import useListStore from "../composables/useListStore";

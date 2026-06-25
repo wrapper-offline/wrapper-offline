@@ -10,7 +10,7 @@ export default {
 };
 </script>
 
-<script setup lang="ts" generic="MovieEntry extends Movie">
+<script setup lang="ts">
 import { apiServer } from "../../../utils/AppInit";
 import { ViewMode, type FieldId } from "../../../interfaces/DataList";
 import { genericColumnIdKey, modeKey } from "../../../keys/listTreeKeys";
@@ -18,8 +18,8 @@ import { inject } from "vue";
 import type { Movie } from "../../../interfaces/Movie";
 import MovieListOptions from "../options/MovieListOptions.vue";
 import openPlayerWindow from "../../../utils/openPlayerWindow";
-import useLocalSettings from "../../../composables/useLocalSettings";
 import { useRouter } from "vue-router";
+import { useStorage } from "@vueuse/core";
 
 const emit = defineEmits<{
 	entryDelete: [],
@@ -30,12 +30,12 @@ const emit = defineEmits<{
 }>();
 const props = defineProps<{
 	checked: boolean,
-	entry: MovieEntry
+	entry: Movie
 }>();
 defineExpose({ id:props.entry.id });
 
-const columns = inject(genericColumnIdKey<MovieEntry>(), []);
-const localSettings = useLocalSettings();
+const columns = inject(genericColumnIdKey<Movie>(), []);
+const onMovieDblclick = useStorage("onMovieDblclick", "play");
 const router = useRouter();
 
 /**
@@ -58,7 +58,7 @@ function entryElem_ctrlClick() {
  * does user action and emits event
  */
 function entryElem_dblClick() {
-	switch (localSettings.onMovieDclick) {
+	switch (onMovieDblclick.value) {
 		case "edit": {
 			router.push(`/movies/edit/${props.entry.id}`);
 			break;
@@ -93,7 +93,7 @@ function deleteBtn_click() {
  * returns a fixed date string for a movie
  * @param entry movie object
  */
-function movieInfo(field:FieldId<MovieEntry>): string {
+function movieInfo(field:FieldId<Movie>) {
 	switch (field) {
 		case "index": {}
 		case "date": {
@@ -102,11 +102,14 @@ function movieInfo(field:FieldId<MovieEntry>): string {
 			const time = split[1].substring(0, 8);
 			return `${date}, ${time}`;
 		}
-		default: return props.entry[field].toString();
+		default: return props.entry[field];
 	}
 }
 
 const mode = inject(modeKey);
+if (!mode) {
+	throw "ummmmm";
+}
 </script>
 
 <template>

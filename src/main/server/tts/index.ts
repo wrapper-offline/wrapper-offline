@@ -7,12 +7,12 @@ import nuance from "./nuance";
 import streamlabs from "./streamlabs";
 import tiktok from "./tiktok";
 import vocalware from "./vocalware";
-import { Voice } from "../interfaces/tts";
+import { Engine, Voice } from "../interfaces/tts";
 import readloud from "./readloud";
 import settings from "../../storage/settings";
 
 export let JOEY_ID:string;
-export let engines = [];
+export let engines:Engine[] = [];
 export let voiceList:string;
 
 settings.addListener("pollyService", () => {
@@ -65,7 +65,7 @@ function generateListXml() {
 			voices.push(voice);
 		}
 	}
-	const dupes = {};
+	const dupes:Record<string, boolean> = {};
 	for (const voice of voices) {
 		dupes[voice.name] = typeof dupes[voice.name] == "undefined" ? false : true;
 	}

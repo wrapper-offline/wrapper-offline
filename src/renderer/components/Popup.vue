@@ -1,7 +1,7 @@
 <style lang="css">
 .popup_container {
-	background: #0e0e109d;
-	backdrop-filter: blur(2px);
+	background: hsl(245 12% 6% / 0.62);
+	backdrop-filter: blur(1px);
 	animation: 0.1s popup_container_fade forwards ease-out;
 	z-index: 9;
 	display: flex;
@@ -15,7 +15,7 @@
 .popup {
 	border-radius: 3px;
 	box-shadow: 0 2px 5px #0004;
-	animation: 0.145s popup_flyDown forwards cubic-bezier(0, 1.1, 0.4, 0.96);
+	animation: 0.2s popup_flyDown forwards cubic-bezier(0, 1.1, 0.4, 0.96);
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -25,7 +25,6 @@
 }
 .popup .popup_head {
 	background: #dbd9e4;
-	/* border-bottom: 1px solid #c1bfce; */
 	user-select: none;
 	font-size: 20px;
 	font-weight: 700;
@@ -117,9 +116,17 @@ popup animations
 		opacity: 1;
 	}
 }
-@keyframes popup_flyDown {
+/* @keyframes popup_flyDown {
 	0% {
 		transform: scale(0.85) translateY(-150px);
+	}
+	100% {
+		transform: none;
+	}
+} */
+@keyframes popup_flyDown {
+	0% {
+		transform: scaleY(0.25);
 	}
 	100% {
 		transform: none;
@@ -128,6 +135,9 @@ popup animations
 </style>
 
 <script setup lang="ts">
+const emit = defineEmits<{
+	clickOutside: []
+}>();
 const { class: classList, show = true } = defineProps<{
 	class?: string,
 	show?: boolean
@@ -140,7 +150,8 @@ const { class: classList, show = true } = defineProps<{
 			<div
 				class="popup_container"
 				:class="classList"
-				v-show="typeof show != undefined ? show !== false : true">
+				v-show="typeof show != undefined ? show !== false : true"
+				@click.self="emit('clickOutside')">
 				<div class="popup">
 					<div class="popup_head">
 						<div class="head_left"><slot name="head-left"></slot></div>

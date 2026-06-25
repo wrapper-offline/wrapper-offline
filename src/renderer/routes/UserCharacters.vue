@@ -74,7 +74,7 @@ import DataList from "../components/list/DataList.vue";
 import CharListRow from "../components/list/rows/CharListRow.vue";
 import { DataListRow2, FieldId, ListFieldColumn, SelectedListSort, ViewMode } from "../interfaces/DataList";
 import { useNavbar } from "../composables/useNavbar";
-import Dropdown from "../components/controls/Dropdown.vue";
+import Dropdown from "../components/controls/DropdownMenu.vue";
 import DropdownItem from "../components/controls/DropdownItem.vue";
 import { Theme, useThemeList } from "../composables/useThemeList";
 import CharRenderer from "../components/CharRenderer.vue";

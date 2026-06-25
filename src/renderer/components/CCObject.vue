@@ -28,6 +28,15 @@ html.dark .cc_hotbar {
 	display: flex;
 }
 
+.cc_hotbar>div:first-of-type {
+	flex: 1;
+}
+
+.cc_hotbar>div:last-of-type {
+	flex: 1;
+	justify-content: flex-end;
+}
+
 .cc_hotbar .nav_btn {
 	border: 1px solid #0000;
 	color: hsl(211 4% 32% / 1);
@@ -60,10 +69,10 @@ import {
 } from "../utils/AppInit";
 import extractCharThemeId from "../utils/extractCharThemeId";
 import { onMounted, onUnmounted, ref, useTemplateRef } from "vue";
-import Button from "./controls/Button.vue";
-import useLocalSettings from "../composables/useLocalSettings";
 import ColorPicker from "./controls/ColorPicker.vue";
 import { HSVtoRGB, RGBtoHex } from "../utils/colorUtil";
+import Dropdown from "./controls/DropdownMenu.vue";
+import DropdownItem from "./controls/DropdownItem.vue";
 
 const emit = defineEmits<{
 	/** emitted when the object switches to the cc */
@@ -76,7 +85,6 @@ const props = defineProps<{
 
 const ccContainer = useTemplateRef("cc-container");
 const ccObject = useTemplateRef("cc-object");
-const settings = useLocalSettings();
 const showObject = ref(false);
 let swfUrl:string;
 let params:Params = {
@@ -236,7 +244,7 @@ onMounted(() => {
 	};
 	//@ts-ignore
 	window.getDarkMode = function () {
-		return settings.darkMode;
+		return document.documentElement.classList.contains("dark");
 	};
 });
 
@@ -258,10 +266,19 @@ defineExpose({
 			<div>
 				<div class="nav_btn" v-tooltip="'Undo'" @click="cmdBtn_click('undo')"><i class="ico undo"></i></div>
 				<div class="nav_btn" v-tooltip="'Redo'" @click="cmdBtn_click('redo')"><i class="ico redo"></i></div>
-				(reset, random, bodytype)
+				<Dropdown>
+					<template #toggle>
+						<div class="nav_btn"><i class="ico redo"></i></div>
+					</template>
+					<DropdownItem to="/characters/create" class="dropdown_item">Reset character</DropdownItem>
+					<DropdownItem to="/characters/create" class="dropdown_item">Randomize character</DropdownItem>
+					<DropdownItem to="/characters/create" class="dropdown_item">Scaling tool</DropdownItem>
+					<DropdownItem to="/characters/create" class="dropdown_item">Switch body shape</DropdownItem>
+				</Dropdown>
 			</div>
 			<div>
-				preview zoom, fit
+				zoom slider
+				<div class="nav_btn" v-tooltip="'Fit preview'" @click="cmdBtn_click('fit')"><i class="ico arr_in"></i></div>
 				<div class="nav_btn" v-tooltip="'Flip preview'" @click="cmdBtn_click('flip')"><i class="ico squarrows"></i></div>
 				<ColorPicker tooltip="Background color" @input="bgColor_input"/>
 			</div>

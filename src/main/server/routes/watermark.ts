@@ -21,8 +21,8 @@ const group = new Group();
 assign
 */
 group.route("POST", /\/goapi\/assignwatermark\/movie\/([\S]+)\/([\S]+)/, (req, res) => {
-	const mId = req.matches[1];
-	let wId = req.matches[2];
+	const mId:string = req.matches[1];
+	let wId:string | undefined = req.matches[2];
 
 	if (wId == NO_WATERMARK_ID) { // reset the wm if it's the none id
 		wId = undefined;
@@ -60,6 +60,9 @@ group.route("GET", "/api/watermark/list", (req, res) => {
 		return w;
 	});
 	res.json(list);
+});
+group.route("GET", "/api/watermark/get_default", (req, res) => {
+	res.end(Settings.defaultWatermark);
 });
 group.route("POST", "/goapi/getUserWatermarks/", (req, res) => {
 	let wId = null;
@@ -133,6 +136,10 @@ group.route("POST", "/goapi/getMovieInfo/", (req, res) => {
 save
 */
 group.route("POST", "/api/watermark/save", async (req, res) => {
+	if (ffmpegPath === null) {
+		return res.status(500).json({ msg:"FFmpeg could not be found" })
+	}
+
 	if (WatermarkModel.list().length >= 20) {
 		return res.status(400).json({ msg:"Maximum # of watermarks reached" });
 	}
@@ -143,6 +150,10 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 	}
 
 	let id = req.body.id;
+	if (id && !WatermarkModel.exists(id)) {
+		return res.status(400).json({ msg:"Watermark does not exist" })
+	}
+
 	const { filepath } = file;
 	const ext = (await fromFile(filepath))?.ext;
 	if (typeof ext === "undefined") {
@@ -156,12 +167,16 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 	if (ext == "swf") {
 		id = await WatermarkModel.save(filepath, ext, id);
 	} else {
+		const args = ["-v", "error"];
+
 		let toExt = "png";
 		if (ext == "gif") {
 			toExt = "swf";
+		} else {
+			args.push("-f", "image2");
 		}
 
-		const args = ["-v", "error", "-i", filepath];
+		args.push("-i", filepath);
 		const tempPath = tempfile("." + toExt);
 		args.push(tempPath);
 
@@ -172,7 +187,7 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 		});
 		await once(ffmpeg, "exit");
 		if (data.length > 0) {
-			console.log("Error occurred during video conversion:", data);
+			console.log("Error occurred during image conversion:", data);
 			throw data;
 		}
 

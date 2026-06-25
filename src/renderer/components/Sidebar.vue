@@ -270,7 +270,7 @@ html.dark .app_sidebar .link.sel::after {
 }
 /* create button */
 html.dark .app_sidebar .link.create {
-	background: hsl(342deg 55% 48%);
+	background: hsl(342deg 58% 54%);
 	border-bottom-color: #732137;
 }
 html.dark .app_sidebar .link.create button,
@@ -278,7 +278,7 @@ html.dark .app_sidebar .link.create i {
 	color: #eee;
 }
 html.dark .app_sidebar .link.create::after {
-	background: linear-gradient(90deg, #0000 0, hsl(342deg 55% 48%) 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(342deg 58% 54%) 10px);
 }
 html.dark .app_sidebar .user_custom .link>button:hover {
 	background: #573344;
@@ -341,42 +341,27 @@ resize state
 .app_sidebar.resize .dragger {
 	background: #5298d6;
 }
-
-/**
-cc + small window
-**/
-.app_sidebar.slide_mode {
-	transition: transform 0.2s var(--slide-anim), filter 0.2s var(--slide-anim);
-	filter: brightness(0.92);
-}
-.app_sidebar.slide_mode:hover {
-	box-shadow: 2px 0 10px #0003;
-	filter: none;
-	position: relative;
-	transform: translateX(v-bind("-slideMode.margin + 'px'"))
-}
 </style>
 
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
 import AppInfoModal from "./AppInfoModal.vue";
-import Dropdown from "./controls/Dropdown.vue";
+import Dropdown from "./controls/DropdownMenu.vue";
 import DropdownItem from "./controls/DropdownItem.vue";
 import DropdownSeparator from "./controls/DropdownSeparator.vue";
 import extractCharThemeId from "../utils/extractCharThemeId";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import openPlayerWindow from "../utils/openPlayerWindow";
 import { ref, toValue, useTemplateRef } from "vue";
-import SettingsModal from "./settings/SettingsModal.vue";
+import SettingsModal from "./SettingsModal.vue";
 import useListStore from "../composables/useListStore";
-import useLocalSettings from "../composables/useLocalSettings";
-import { onStateUpdate, useSidebar } from "../composables/useSidebar";
+import { useSidebar } from "../composables/useSidebar";
 import useTempStorage from "../composables/useTempStorage";
 import { wrapperVer } from "../utils/AppInit";
+import { useStorage } from "@vueuse/core";
 
 const charInput = useTemplateRef("char-input");
 const movieInput = useTemplateRef("movie-input");
-const localSettings = useLocalSettings();
 const { pendingRefresh } = useListStore();
 const router = useRouter();
 const sidebar = useSidebar();
@@ -387,11 +372,8 @@ const displayAppInfo = ref(false);
 const displaySettings = ref(false);
 const inResize = ref(false);
 const logoCollapsed = ref(false);
-const movieUploadType = ref("starter")
-const slideMode = ref({
-	margin: 0,
-	enabled: false,
-});
+const movieUploadType = ref("starter");
+const onMovieUpload = useStorage("onMovieUpload", "edit");
 const width = ref(250);
 
 /**
@@ -412,25 +394,15 @@ function setWidth(newWidth:number) {
 	logoCollapsed.value = toValue(width) <= 200;
 }
 
-/*
-set a minimum page width for cc paths
-*/
-function watchWidth() {
-	slideMode.value.margin = Math.min(
-		0,
-		-toValue(width) + Math.max(
-			56,
-			document.body.clientWidth - 1000
-		)
-	);
-}
-
 /**
  * called when a character xml has been selected
  * @param e input event
  */
-async function charInput_input(e:InputEvent) {
+async function charInput_input(e:Event) {
 	const target = e.currentTarget as HTMLInputElement;
+	if (!target.files) {
+		return;
+	}
 	const xmlData = await target.files[0].text();
 	tempStorage.store("charXmlData", xmlData);
 	const themeId = extractCharThemeId(xmlData);
@@ -442,8 +414,11 @@ async function charInput_input(e:InputEvent) {
  * called when a movie zip has been selected
  * @param e input event
  */
-async function movieInput_input(e:InputEvent) {
+async function movieInput_input(e:Event) {
 	const target = e.currentTarget as HTMLInputElement;
+	if (!target.files) {
+		return;
+	}
 	const zipFile = target.files[0];
 	const isStarter = movieUploadType.value == "starter";
 	const body = new FormData();
@@ -456,7 +431,7 @@ async function movieInput_input(e:InputEvent) {
 		body
 	});
 	const json = await res.json();
-	switch (localSettings.onMovieUpload) {
+	switch (onMovieUpload.value) {
 		case "edit":
 			router.push("/movies/edit/" + json.id);
 			break;
@@ -470,9 +445,22 @@ async function movieInput_input(e:InputEvent) {
 }
 
 /**
+ * called when char upload button is clicked
+ */
+function charUpload_click() {
+	if (!charInput.value) {
+		return;
+	}
+	charInput.value.click();
+}
+
+/**
  * called when movie upload button is clicked
  */
 function movieUpload_click() {
+	if (!movieInput.value) {
+		return;
+	}
 	movieUploadType.value = "movie";
 	movieInput.value.click();
 }
@@ -481,6 +469,9 @@ function movieUpload_click() {
  * called when starter upload button is clicked
  */
 function starterUpload_click() {
+	if (!movieInput.value) {
+		return;
+	}
 	movieUploadType.value = "starter";
 	movieInput.value.click();
 }
@@ -526,35 +517,19 @@ function draggerDown(e:MouseEvent) {
 	});
 }
 
-onStateUpdate((to, from) => {
-	if (to.slideMode != from.slideMode) {
-		if (to.slideMode) {
-			window.addEventListener("resize", watchWidth);
-			watchWidth();
-			slideMode.value.enabled = true;
-		} else {
-			window.removeEventListener("resize", watchWidth);
-			slideMode.value.margin = 0;
-			slideMode.value.enabled = false;
-		}
-	}
-
-});
 onBeforeRouteLeave(() => {
 	sidebar.resetState();
 });
 
-defineExpose({ slideMode, width });
+defineExpose({ width });
 </script>
 
 <template>
 	<div class="app_sidebar" :class="{
 		collapsed,
 		logo_collapsed: logoCollapsed,
-		slide_mode: slideMode.enabled,
 		resize: inResize
 	}" :style="{
-		marginLeft: slideMode.margin + 'px',
 		width: width + 'px'
 	}">
 		<div id="logo_container" :style="{width:width + 'px'}">
@@ -576,7 +551,7 @@ defineExpose({ slideMode, width });
 				<RouterLink to="/characters/create" class="dropdown_item">Create a character</RouterLink>
 				<RouterLink to="/movies/create" class="dropdown_item">Create a video</RouterLink>
 				<DropdownSeparator/>
-				<DropdownItem @click="charInput.click()">Upload a character</DropdownItem>
+				<DropdownItem @click="charUpload_click()">Upload a character</DropdownItem>
 				<DropdownItem @click="movieUpload_click()">Upload a video</DropdownItem>
 				<DropdownItem @click="starterUpload_click()">Upload a starter</DropdownItem>
 			</Dropdown>
@@ -726,12 +701,11 @@ defineExpose({ slideMode, width });
 			<span id="wrapper_ver">{{ wrapperVer }}</span>
 		</ul>
 		<div
-			v-if="!slideMode.enabled"
 			class="dragger"
-			:style="{left: width - 3 + 'px'}"
+			:style="{ left:width - 3 + 'px' }"
 			@mousedown="draggerDown"></div>
-		<SettingsModal v-if="displaySettings" @user-close="closeSettings"/>
 		<AppInfoModal v-if="displayAppInfo" @user-close="closeAppInfo"/>
+		<SettingsModal v-if="displaySettings" @user-close="closeSettings"/>
 		<input type="file" ref="char-input" accept=".xml" @input="charInput_input"/>
 		<input type="file" ref="movie-input" accept=".zip" @input="movieInput_input"/>
 	</div>
