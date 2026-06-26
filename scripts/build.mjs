@@ -12,6 +12,25 @@ const BASE_OPTIONS = {
 	bundle: true,
 	external: [
 		"@derhuerst/ffprobe-static",
+		"@napi-rs/keyring",
+		"@napi-rs/keyring-android-arm64",
+		"@napi-rs/keyring-android-arm-eabi",
+		"@napi-rs/keyring-win32-x64-msvc",
+		"@napi-rs/keyring-win32-ia32-msvc",
+		"@napi-rs/keyring-win32-arm64-msvc",
+		"@napi-rs/keyring-darwin-universal",
+		"@napi-rs/keyring-darwin-x64",
+		"@napi-rs/keyring-darwin-arm64",
+		"@napi-rs/keyring-linux-x64-musl",
+		"@napi-rs/keyring-linux-x64-gnu",
+		"@napi-rs/keyring-linux-arm64-musl",
+		"@napi-rs/keyring-linux-arm64-gnu",
+		"@napi-rs/keyring-linux-arm-musleabihf",
+		"@napi-rs/keyring-linux-arm-gnueabihf",
+		"@napi-rs/keyring-linux-riscv64-musl",
+		"@napi-rs/keyring-linux-riscv64-gnu",
+		"@napi-rs/keyring-linux-ppc64-gnu",
+		"@napi-rs/keyring-linux-s390x-gnu",
 		"electron",
 		"es6-promise",
 		"ffmpeg-static",
@@ -115,6 +134,7 @@ if (process.argv.includes("--dev")) {
 		dependencies: Object.fromEntries(Object.entries(pkg.dependencies).filter((a) => {
 			return [
 				"@derhuerst/ffprobe-static",
+				"@napi-rs/keyring",
 				"ffmpeg-static",
 				"formidable",
 			].indexOf(a[0]) != -1;

@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import { apiServer } from "../utils/AppInit.js";
 import BaseModal from "./BaseModal.vue";
 import Button from "./controls/Button.vue";
 import CheckboxInput from "./controls/CheckboxInput.vue";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import en_US from "../locale/en_US.js";
 import SelectInput from "./controls/SelectInput.vue";
 import SettingsModalWatermarks from "./SettingsModalWatermarks.vue";
 import useServerSetting from "../composables/useServerSettings.js";
 import { useStorage } from "@vueuse/core";
+import TextInput from "./controls/TextInput.vue";
 
 enum Tab {
 	Behavior,
@@ -14,12 +17,23 @@ enum Tab {
 	TTS,
 	Watermarks
 }
+type VfStatus = {
+	status: "success",
+	legacyAllowed: boolean,
+	nextResetDate: string,
+	tier: "fan_voice" | "premium" | "publisher",
+	synthesisUsed: number,
+	synthesisLimit: number
+} | {
+	status: "failure"
+} | {
+	status: "no_account"
+};
 
 const emit = defineEmits<{
 	userClose: []
 }>();
 
-const currentTab = ref<Tab>(Tab.Behavior);
 const assetThumbColor = useStorage("assetThumbColor", "dynamic");
 const enableMenuBar = useServerSetting("enableMenuBar");
 const fullComponentRotation = useStorage("fullComponentRotation", false);
@@ -31,7 +45,24 @@ const saveLogFiles = useServerSetting("saveLogFiles");
 const showWaveforms = useStorage("showWaveforms", true);
 const theme = useStorage("theme", "auto");
 const truncatedThemeList = useServerSetting("truncatedThemeList");
+const vfEmail = ref("");
+const vfPassword = ref("");
+const vfStatus = ref<VfStatus | null>(null);
 const widescreen = useStorage("widescreen", true);
+
+const currentTab = ref(Tab.Behavior);
+const onBehaviorTab = computed(() => currentTab.value == Tab.Behavior);
+const onAppearanceTab = computed(() => currentTab.value == Tab.Appearance);
+const onTTSTab = computed(() => currentTab.value == Tab.TTS);
+const onWatermarksTab = computed(() => currentTab.value == Tab.Watermarks);
+const vfButtonTextOverride = ref("");
+const vfButtonText = computed(() => {
+	if (vfButtonTextOverride.value) {
+		return vfButtonTextOverride.value;
+	}
+	return (vfEmail.value == "" || vfPassword.value == "") ?
+		en_US.settings.vf.reset : en_US.settings.vf.save;
+});
 
 /**
  * switches the currently displayed tab
@@ -41,11 +72,56 @@ function switchTab(switchTo:Tab) {
 	currentTab.value = switchTo;
 }
 
-const onBehaviorTab = computed(() => currentTab.value == Tab.Behavior);
-const onAppearanceTab = computed(() => currentTab.value == Tab.Appearance);
-const onTTSTab = computed(() => currentTab.value == Tab.TTS);
-const onWatermarksTab = computed(() => currentTab.value == Tab.Watermarks);
+async function updateVfStatus() {
+	const res = await fetch(apiServer + "/api/tts/voiceforge/status");
+	if (res.ok) {
+		const json = await res.json() as VfStatus;
+		vfStatus.value = json;
+	}	
+}
 
+/**
+ * forwards voiceforge credentials to the server
+ * @param event mouse event
+ */
+async function vfCreds_update(event:MouseEvent) {
+	const target = event.currentTarget as HTMLElement | null;
+	vfButtonTextOverride.value = "...";
+	const body = new FormData();
+	body.set("email", vfEmail.value);
+	body.set("password", vfPassword.value);
+	const res = await fetch(apiServer + "/api/tts/voiceforge/sign_in", {
+		method: "POST",
+		body
+	});
+	if (res.ok) {
+		await updateVfStatus();
+		if (!target) {
+			return;
+		}
+		vfButtonTextOverride.value = en_US.settings.vf.save_success;
+		target.classList.add("green");
+		setTimeout(() => {
+			vfButtonTextOverride.value = "";
+			target.classList.remove("green");
+		}, 1200);
+	} else {
+		vfStatus.value = { status:"failure" };
+		if (!target) {
+			return;
+		}
+		vfButtonTextOverride.value = en_US.settings.vf.save_failure;
+		target.classList.add("red");
+		setTimeout(() => {
+			vfButtonTextOverride.value = "";
+			target.classList.remove("red");
+		}, 1200);
+	}
+}
+
+onMounted(() => {
+	updateVfStatus();
+});
 </script>
 
 <template>
@@ -222,6 +298,29 @@ const onWatermarksTab = computed(() => currentTab.value == Tab.Watermarks);
 					/>
 				</div>
 			</div>
+
+			<div class="setting_row">
+				<div class="title">
+					<h3>VoiceForge</h3>
+					<div v-if="vfStatus">
+						<TextInput type="email" placeholder="Email" v-model="vfEmail"/>
+						<TextInput type="password" placeholder="Password" v-model="vfPassword"/>
+						<Button style="width:60px" @click="vfCreds_update">{{ vfButtonText }}</Button>
+					</div>
+				</div>
+				<p class="info">If you paid for a <a href="javascript:window.appWindow.openVoiceforge()">VoiceForge</a> subscription, you may enter
+					your credentials here to access their voices inside the video editor.
+					This is encrypted and not shared with anybody.</p>
+				<ul v-if="vfStatus" class="info">
+					<li>Status: {{ en_US.settings.vf.status[vfStatus.status] }}</li>
+					<template v-if="vfStatus.status == 'success'">
+						<li>Can use legacy voices: {{ vfStatus.legacyAllowed ? en_US.yes : en_US.no }}</li>
+						<li>Tier: {{ en_US.settings.vf.plan_names[vfStatus.tier] }}</li>
+						<li>Syntheses used: {{ vfStatus.synthesisUsed }} / {{ vfStatus.synthesisLimit }}</li>
+						<li>Resets at {{ vfStatus.nextResetDate }}</li>
+					</template>
+				</ul>
+			</div>
 		</div>
 		<div v-if="onWatermarksTab" class="tab">
 			<SettingsModalWatermarks/>
@@ -304,6 +403,25 @@ const onWatermarksTab = computed(() => currentTab.value == Tab.Watermarks);
 .settings_container .tab .setting_row .title .dropdown {
 	min-width: 90px;
 }
+.settings_container .tab .setting_row .title .text_input,
+.settings_container .tab .setting_row .title .btn {
+	margin: 0 0 0 5px;
+}
+.settings_container .tab .setting_row .title .btn {
+	transition: 0.2s var(--button-anim);
+	justify-content: center;
+}
+.settings_container .tab .setting_row .title .btn.green {
+	background: #41a569;
+	color: #e1fde7;
+}
+.settings_container .tab .setting_row .title .btn.red {
+	background: #da4153;
+	color: #fde6e5;
+}
+.settings_container .tab .setting_row .title div {
+	display: flex;
+}
 .settings_container .tab .setting_row h3 {
 	margin: 0;
 	font-size: 15px;
@@ -312,7 +430,7 @@ const onWatermarksTab = computed(() => currentTab.value == Tab.Watermarks);
 	color: hsl(0deg 0% 60%);
 	margin: 0;
 	font-size: 13px;
-	line-height: 15px;
+	line-height: 22px;
 }
 .settings_container .tab .setting_row.binary {
 	cursor: pointer;

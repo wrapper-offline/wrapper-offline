@@ -5,4 +5,5 @@ contextBridge.exposeInMainWorld("appWindow", {
 	openFAQ: () => ipcRenderer.send("open-faq"),
 	openGitHub: () => ipcRenderer.send("open-github"),
 	openDataFolder: () => ipcRenderer.send("open-data-folder"),
+	openVoiceforge: () => ipcRenderer.send("open-voiceforge"),
 });

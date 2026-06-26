@@ -1,0 +1,647 @@
+[
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Amy",
+		"name": "Amy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Belle",
+		"name": "Belle"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Callie",
+		"name": "Callie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Charlie",
+		"name": "Charlie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Conrad",
+		"name": "Conrad"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Dallas",
+		"name": "Dallas"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Damien",
+		"name": "Damien"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "David",
+		"name": "David"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Designer",
+		"name": "Designer Dave"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Diane",
+		"name": "Diane"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Diesel",
+		"name": "Diesel"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Dog",
+		"name": "Dog"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Duchess",
+		"name": "Duchess"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Duncan",
+		"name": "Duncan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Emily",
+		"name": "Emily"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Evilgenius",
+		"name": "Evil Genius"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Frank",
+		"name": "Frank"
+	},
+	{
+		"country": "FR",
+		"lang": "en",
+		"gender": "M",
+		"arg": "French-fry",
+		"name": "French-Fry"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Gregory",
+		"name": "Gregory"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Jerkface",
+		"name": "Jerkface"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "JerseyGirl",
+		"name": "Jersey Girl"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Kayla",
+		"name": "Kayla"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Kevin",
+		"name": "Kevin"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Kidaroo",
+		"name": "Kidaroo"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Lawrence",
+		"name": "Lawrence"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Linda",
+		"name": "Linda"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Millie",
+		"name": "Millie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Obama",
+		"name": "Obama"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Princess",
+		"name": "Princess"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "RansomNote",
+		"name": "Ransom Note"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Robot",
+		"name": "Robot"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Shouty",
+		"name": "Shouty"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Shygirl",
+		"name": "Shy Girl"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Susan",
+		"name": "Susan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Tamika",
+		"name": "Tamika"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "TopHat",
+		"name": "Top-Hat"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"arg": "Vixen",
+		"name": "Vixen"
+	},
+	{
+		"country": "RU",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Vlad",
+		"name": "Vlad"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Walter",
+		"name": "Walter"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Warren",
+		"name": "Warren Peas"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "William",
+		"name": "William"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Wiseguy",
+		"name": "Wiseguy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"arg": "Zach",
+		"name": "Zach"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Amy",
+		"name": "Legacy Amy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Belle",
+		"name": "Legacy Belle"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Callie",
+		"name": "Legacy Callie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:CallieQ",
+		"name": "Legacy CallieQ"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Charlie",
+		"name": "Young Guy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Conrad",
+		"name": "Professor"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Dallas",
+		"name": "Legacy Dallas"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Damien",
+		"name": "Scary Voice"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:David",
+		"name": "Legacy David"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Designer",
+		"name": "Legacy Designer Dave"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Diane",
+		"name": "Legacy Diane"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Diesel",
+		"name": "Legacy Diesel"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Dog",
+		"name": "Legacy Dog"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Duchess",
+		"name": "Legacy Duchess"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Duncan",
+		"name": "Legacy Duncan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Emily",
+		"name": "Legacy Emily"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Evilgenius",
+		"name": "Legacy Evil Genius"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Frank",
+		"name": "Legacy Frank"
+	},
+	{
+		"country": "FR",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:French-fry",
+		"name": "Legacy French-Fry"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Gregory",
+		"name": "Legacy Gregory"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Jerkface",
+		"name": "Legacy Jerkface"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:JerseyGirl",
+		"name": "Legacy Jersey Girl"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Kayla",
+		"name": "Legacy Kayla"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Kevin",
+		"name": "Legacy Kevin"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Kidaroo",
+		"name": "Legacy Kidaroo"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Lawrence",
+		"name": "Legacy Lawrence"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Linda",
+		"name": "Legacy Linda"
+	},
+	{
+		"country": "GB",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Millie",
+		"name": "Legacy Millie"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Obama",
+		"name": "Legacy Obama"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Princess",
+		"name": "Legacy Princess"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:RansomNote",
+		"name": "Legacy Ransom Note"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Shouty",
+		"name": "Legacy Shouty"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Shygirl",
+		"name": "Legacy Shy Girl"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Susan",
+		"name": "Legacy Susan"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Tamika",
+		"name": "Legacy Tamika"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:TopHat",
+		"name": "Legacy Top-Hat"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "F",
+		"legacy": true,
+		"arg": "legacy:Vixen",
+		"name": "Legacy Vixen"
+	},
+	{
+		"country": "RU",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Vlad",
+		"name": "Legacy Vlad"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Walter",
+		"name": "Legacy Walter"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Warren",
+		"name": "Legacy Warren Peas"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:William",
+		"name": "Legacy William"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Wiseguy",
+		"name": "Legacy Wiseguy"
+	},
+	{
+		"country": "US",
+		"lang": "en",
+		"gender": "M",
+		"legacy": true,
+		"arg": "legacy:Zach",
+		"name": "Legacy Zach"
+	}
+]

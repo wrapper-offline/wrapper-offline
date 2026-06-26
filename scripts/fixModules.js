@@ -4,7 +4,7 @@
 const fs = require("fs");
 const { join } = require("path");
 
-const searchDirs = ["@noble/hashes", "formidable"];
+const searchDirs = ["@napi-rs/keyring", "@noble/hashes", "formidable"];
 
 searchDirs.forEach((dir) => {
 	const path = join(__dirname, "../node_modules", dir);

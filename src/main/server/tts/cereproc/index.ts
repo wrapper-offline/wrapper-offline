@@ -32,7 +32,7 @@ export default {
 						res.on("data", (d) => data += d);
 						await once(res, "end");
 						const array = JSON.parse(data);
-						const resultElem = array.find((c) => {
+						const resultElem = array.find((c:any) => {
 							return c.selector && c.selector == "#live-demo-result"
 						});
 						const start = resultElem.data.indexOf("https://cerevoice.s3.amazonaws.com");

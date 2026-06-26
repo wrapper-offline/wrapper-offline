@@ -80,14 +80,15 @@ const createWindow = () => {
 	ipcMain.on("open-faq", openFaq);
 	ipcMain.on("open-github", openGitHub);
 	ipcMain.on("open-data-folder", openDataFolder);
+	ipcMain.on("open-voiceforge", openVoiceforge);
 
 	let host:string, port:string;
 	if (IS_DEV) {
 		host = app.commandLine.getSwitchValue("host");
 		port = app.commandLine.getSwitchValue("port");
 	} else {
-		host = process.env.API_SERVER_HOST;
-		port = process.env.API_SERVER_PORT;
+		host = process.env.API_SERVER_HOST as string;
+		port = process.env.API_SERVER_PORT as string;
 	}
 	root = `${host}:${port}`;
 	mainWindow.loadURL(root);
@@ -105,6 +106,9 @@ async function openGitHub() {
 }
 async function openDataFolder() {
 	await shell.openPath(Directories.userData);
+}
+async function openVoiceforge() {
+	await shell.openExternal("https://www.voiceforge.com/app/");
 }
 
 app.whenReady().then(() => {

@@ -23,7 +23,7 @@ export default {
 						if (res.statusCode != 200) {
 							return reject("ReadLoud error occurred when generating audio");
 						}
-						let buffers = [];
+						let buffers:Buffer[] = [];
 						res.on("data", (b) => buffers.push(b));
 						await once(res, "end");
 						const html = Buffer.concat(buffers);

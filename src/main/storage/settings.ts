@@ -10,8 +10,9 @@ class Settings {
 		TRUNCATED_THEMELIST: false,
 		SAVE_LOG_FILES: false,
 		HIDE_NAVBAR: true,
-		DEFAULT_WATERMARK: "none",
 		POLLY_SERVICE: "both",
+		DEFAULT_WATERMARK: "none",
+		VF_EMAIL: ""
 	};
 	private listeners:Record<string, SettingListener[]> = {};
 	private static _instance:Settings;
@@ -164,6 +165,18 @@ class Settings {
 		this.json["POLLY_SERVICE"] = newValue;
 		this.save(this.json);
 		this.callListeners("pollyService");
+	}
+
+	/**
+	 * email to use when logging into voiceforge
+	 */
+	get voiceforgeEmail() {
+		return this.json["VF_EMAIL"];
+	}
+	set voiceforgeEmail(newValue) {
+		this.json["VF_EMAIL"] = newValue;
+		this.save(this.json);
+		this.callListeners("voiceforgeEmail");
 	}
 }
 export default Settings.instance;

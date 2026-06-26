@@ -2,22 +2,22 @@ import acapela from "./acapela";
 import cepstral from "./cepstral";
 import cereproc from "./cereproc";
 import ispeech from "./ispeech";
-import langCodeMap from "../data/lang_code_map.json";
 import nuance from "./nuance";
+import readloud from "./readloud";
 import streamlabs from "./streamlabs";
 import tiktok from "./tiktok";
 import vocalware from "./vocalware";
+import voiceforge, { accountStats } from "./voiceforge";
 import { Engine, Voice } from "../interfaces/tts";
-import readloud from "./readloud";
+import langCodeMap from "../data/lang_code_map.json";
 import settings from "../../storage/settings";
 
 export let JOEY_ID:string;
 export let engines:Engine[] = [];
 export let voiceList:string;
 
-settings.addListener("pollyService", () => {
-	updateEngineList();
-});
+settings.addListener("voiceforgeEmail", updateEngineList);
+settings.addListener("pollyService", updateEngineList);
 
 updateEngineList();
 voiceList = generateListXml();
@@ -25,7 +25,7 @@ voiceList = generateListXml();
 /**
  * updates the array of every tts engine
  */
-function updateEngineList() {
+async function updateEngineList() {
 	engines = [
 		acapela,
 		cepstral,
@@ -35,12 +35,36 @@ function updateEngineList() {
 		tiktok,
 		vocalware
 	];
+	try {
+		const stats = await accountStats();
+		if (!stats.canUseLegacyVoices) {
+			voiceforge.voices = voiceforge.voices.filter((v:any) => !v.legacy);
+		}
+		if (stats.synthesisUsed < stats.synthesisLimit) {
+			engines.push(voiceforge);
+		}
+	} catch (e) {}
 	switch (settings.pollyService) {
 		case "rl":
 			engines.push(readloud);
 			JOEY_ID = "ReadLoud\\Joey";
 			break;
 		case "sl":
+			// streamlabs doesn't have Eric for some reason so we gotta add it from readloud
+			//
+			//
+			// yeah, that means this option isn't really "Streamlabs only"
+			//
+			// but
+			//
+			// it'll be our little secret.
+			//
+			const lobotomizedRl = Object.assign({}, readloud);
+			const eric = lobotomizedRl.voices.find((v) => v.name == "Eric");
+			if (eric) {
+				lobotomizedRl.voices = [eric];
+			}
+			engines.push(lobotomizedRl);
 			engines.push(streamlabs);
 			JOEY_ID = "Streamlabs\\Joey";
 			break;
@@ -65,14 +89,14 @@ function generateListXml() {
 			voices.push(voice);
 		}
 	}
-	const dupes:Record<string, boolean> = {};
+	const dupes:Record<string, boolean | undefined> = {};
 	for (const voice of voices) {
 		dupes[voice.name] = typeof dupes[voice.name] == "undefined" ? false : true;
 	}
 	const languages:Record<string, string[]> = {};
 	for (const voice of voices) {
 		let id = `${voice.source}\\${voice.name}`;
-		if (id == JOEY_ID) {
+		if (id == JOEY_ID) { // video editor expects a voice with the id "joey"
 			id = "joey";
 		}
 		const name = dupes[voice.name] ? `${voice.name} (${voice.source})` : voice.name;
@@ -82,8 +106,8 @@ function generateListXml() {
 	const xml = `${process.env.XML_HEADER}<voices>${
 		Object.keys(languages).map((langCode) => {
 			const voices = languages[langCode];
-			const langName = langCodeMap[langCode];
-			return `<language id="${langCode}" desc="${langName}">${voices.join("")}</language>`;
+			const langName = (langCodeMap as Record<string, string | undefined>)[langCode];
+			return `<language id="${langCode}" desc="${langName || langCode}">${voices.join("")}</language>`;
 		}).join("")
 	}</voices>`;
 	return xml;

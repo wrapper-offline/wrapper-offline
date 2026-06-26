@@ -1,4 +1,6 @@
 export default {
+	"yes": "Yes",
+	"no": "No",
 	"asset": {
 		// list of "flat" asset types (bg, holdable, video, bgmusic)
 		"flat_type_map": {
@@ -27,6 +29,24 @@ export default {
 			"movie_delete_confirm": {
 				"sing": "Are you sure you want to delete this movie? It cannot be recovered.",
 				"plr": "Are you sure you want to delete these movies? They cannot be recovered."
+			}
+		}
+	},
+	"settings": {
+		"vf": {
+			"save": "Save",
+			"reset": "Reset",
+			"save_success": "Saved",
+			"save_failure": "Failed",
+			"status": {
+				"no_account": "Not logged in",
+				"success": "Logged in",
+				"failure": "Failed to authenticate"
+			},
+			"plan_names": {
+				"fan_voice": "Fan Voice",
+				"premium": "Premium",
+				"publisher": "Publisher"
 			}
 		}
 	}

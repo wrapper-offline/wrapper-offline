@@ -31,7 +31,7 @@ function checkbox_click(event:MouseEvent) {
 .checkbox.sel::after {
 	content: "\2713";
 	color: #fff;
-	line-height: 0;
+	line-height: 18px;
 	font-size: 24px;
 }
 .checkbox.sel:hover {

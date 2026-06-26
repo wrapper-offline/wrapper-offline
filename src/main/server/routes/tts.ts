@@ -1,25 +1,22 @@
+import { accountStats, authenticate } from "../tts/voiceforge";
 import AssetModel, { Asset } from "../models/asset";
 import { engines, JOEY_ID, voiceList } from "../tts";
+import { Entry } from "@napi-rs/keyring";
 import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
 import { Readable } from "stream";
+import Settings from "../../storage/settings";
 import tempfile from "tempfile";
 import { once } from "events";
 
 const group = new httpz.Group();
 
-/*
-list
-*/
 group.route("POST", "/goapi/getTextToSpeechVoices/", (req, res) => {
 	res.setHeader("Content-Type", "text/xml; charset=UTF-8");
 	res.end(voiceList);
 });
 
-/*
-load
-*/
 group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 	let { voice: id, text } = req.body as {
 		voice: string,
@@ -34,9 +31,12 @@ group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 	}
 	const [engineName, voiceName] = id.split("\\");
 	const engine = engines.find((e) => e.name == engineName);
+	if (!engine) {
+		return res.status(400).end("1<error><code>ERR_ASSET_404</code><message>Engine does not exist.</message><text></text></error>");
+	}
 	const voice = engine.voices.find((v) => v.name == voiceName);
 	if (!voice) {
-		return res.status(400).end(`1<error><code>ERR_ASSET_404</code><message>Voice does not exist.</message><text></text></error>`);
+		return res.status(400).end("1<error><code>ERR_ASSET_404</code><message>Voice does not exist.</message><text></text></error>");
 	}
 	text = text.trim().substring(0, engine.limit);
 
@@ -64,6 +64,49 @@ group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 	} catch (e) {
 		res.log("Failed to generate TTS! " + e);
 		res.end(`1<error><code>ERR_ASSET_404</code><message>${e}</message><text></text></error>`);
+	}
+});
+
+group.route("POST", "/api/tts/voiceforge/sign_in", async (req, res) => {
+	const email = req.body.email as string | undefined;
+	const password = req.body.password as string | undefined;
+	if (!email || !password) {
+		Settings.voiceforgeEmail = "";
+		return res.json({ msg:"Reset" });
+	}
+
+	const entry = new Entry("voiceforge", email);
+	Settings.voiceforgeEmail = email;
+	entry.setPassword(password);
+
+	try {
+		await authenticate();
+		res.end();
+	} catch (e) {
+		Settings.voiceforgeEmail = "";
+		entry.deleteCredential();
+		res.log("Failed to authenticate: " + e);
+		res.status(400).json({ msg:"Failed to authenticate" });
+	}
+});
+
+group.route("GET", "/api/tts/voiceforge/status", async (req, res) => {
+	if (!Settings.voiceforgeEmail) {
+		return res.json({ status:"no_account" })
+	}
+	try {
+		const stats = await accountStats();
+		res.json({
+			status: "success",
+			legacyAllowed: stats.canUseLegacyVoices,
+			nextResetDate: stats.nextResetDate,
+			tier: stats.tier,
+			synthesisUsed: stats.synthesisUsed,
+			synthesisLimit: stats.synthesisLimit,
+		});
+	} catch (e) {
+		res.log("Failed to authenticate: " + e);
+		res.status(500).json({ status:"failure", msg:"Failed to authenticate" });
 	}
 });
 

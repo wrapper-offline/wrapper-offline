@@ -713,10 +713,10 @@ watch(() => search.value, (newSearch:string) => {
 	props.data.folders.forEach((v) => dataFilterFunc(v, newSearch, filteredEntryIds.folders || []));
 });
 onMounted(() => {
-	document.addEventListener("keydown", ctrlADown);
+	// document.addEventListener("keydown", ctrlADown);
 });
 onUnmounted(() => {
-	document.removeEventListener("keydown", ctrlADown);
+	// document.removeEventListener("keydown", ctrlADown);
 });
 
 defineExpose({ resetSelection, updateFilter });
