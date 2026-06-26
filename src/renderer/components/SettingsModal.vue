@@ -3,7 +3,7 @@ import { apiServer } from "../utils/AppInit.js";
 import BaseModal from "./BaseModal.vue";
 import Button from "./controls/Button.vue";
 import CheckboxInput from "./controls/CheckboxInput.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import en_US from "../locale/en_US.js";
 import SelectInput from "./controls/SelectInput.vue";
 import SettingsModalWatermarks from "./SettingsModalWatermarks.vue";
@@ -119,8 +119,9 @@ async function vfCreds_update(event:MouseEvent) {
 	}
 }
 
-onMounted(() => {
+const unwatch = watch(onTTSTab, () => {
 	updateVfStatus();
+	unwatch();
 });
 </script>
 
@@ -302,7 +303,7 @@ onMounted(() => {
 			<div class="setting_row">
 				<div class="title">
 					<h3>VoiceForge</h3>
-					<div v-if="vfStatus">
+					<div v-if="vfStatus" class="flex">
 						<TextInput type="email" placeholder="Email" v-model="vfEmail"/>
 						<TextInput type="password" placeholder="Password" v-model="vfPassword"/>
 						<Button style="width:60px" @click="vfCreds_update">{{ vfButtonText }}</Button>
@@ -409,7 +410,7 @@ onMounted(() => {
 }
 .settings_container .tab .setting_row .title .btn {
 	transition: 0.2s var(--button-anim);
-	justify-content: center;
+	text-align: center;
 }
 .settings_container .tab .setting_row .title .btn.green {
 	background: #41a569;
@@ -419,7 +420,7 @@ onMounted(() => {
 	background: #da4153;
 	color: #fde6e5;
 }
-.settings_container .tab .setting_row .title div {
+.settings_container .tab .setting_row .title div.flex {
 	display: flex;
 }
 .settings_container .tab .setting_row h3 {

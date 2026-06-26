@@ -7,7 +7,7 @@
 	<theme id="anime" name="Anime" cc_theme_id="anime" col="1"/>
 	<theme id="ninjaanime" name="Ninja Anime" cc_theme_id="ninjaanime" col="1"/>
 	<theme id="spacecitizen" name="Space Citizens" cc_theme_id="spacecitizen" col="1"/>
-	<theme id="fullenergy" name="Full Energy" col="1"/>
+	<theme id="retro" name="Cartoon Classics" col="1"/>
 
 	<theme id="action" name="Lil' Peepz" cc_theme_id="cc2" col="2"/>
 	<theme id="chibi" name="Chibi Peepz" cc_theme_id="chibi" col="2"/>
@@ -16,22 +16,22 @@
 	<theme id="ninja" name="Chibi Ninjas" cc_theme_id="ninja" col="2"/>
 	<theme id="vietnam" name="Jungle Warfare" cc_theme_id="cc2" col="2"/>
 
-	<theme id="ben10" name="Ben 10" col="3"/>
-	<theme id="bunny" name="It's Happy Bunny" col="3"/>
-	<theme id="chowder" name="Chowder" col="3"/>
-	<theme id="domo" name="Domo" col="3"/>
-	<theme id="monkeytalk" name="SuperRica &amp; Rashy" col="3"/>
-	<theme id="akon" name="AKON" col="3"/>
+	<theme id="fullenergy" name="Full Energy" col="3"/>
+	<theme id="stick" name="Stick Figure" col="3"/>
+	<theme id="politic" name="Politics &amp; Celebrity" col="3"/>
+	<theme id="christmas" name="Holiday &amp; Seasonal" col="3"/>
+	<theme id="monstermsh" name="Monsters Mayhem" col="3"/>
+	<theme id="street" name="Street" col="3"/>
 
-	<theme id="retro" name="Cartoon Classics" col="4"/>
-	<theme id="stick" name="Stick Figure" col="4"/>
-	<theme id="politic" name="Politics &amp; Celebrity" col="4"/>
-	<theme id="christmas" name="Holiday &amp; Seasonal" col="4"/>
-	<theme id="monstermsh" name="Monsters Mayhem" col="4"/>
-	<theme id="startrek" name="Star Trek Quogs" col="4"/>
+	<theme id="ben10" name="Ben 10" col="4"/>
+	<theme id="bunny" name="It's Happy Bunny" col="4"/>
+	<theme id="chowder" name="Chowder" col="4"/>
+	<theme id="domo" name="Domo" col="4"/>
+	<theme id="monkeytalk" name="SuperRica &amp; Rashy" col="4"/>
+	<theme id="akon" name="AKON" col="4"/>
 
 	<theme id="willie" name="Willie Nelson" col="5"/>
-	<theme id="street" name="Street" col="5"/>
+	<theme id="startrek" name="Star Trek Quogs" col="5"/>
 	<theme id="underdog" name="Saturday Morning TV" col="5"/>
 	<theme id="sf" name="Street Fighter" col="5"/>
 	<theme id="toonadv" name="Toon Adventure" col="5"/>
