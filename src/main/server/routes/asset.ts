@@ -12,7 +12,7 @@ import fileTypes from "../data/allowed_file_types.json";
 import fileUtil from "../utils/fileUtil";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
-import MovieModel, { Starter } from "../models/movie";
+import MovieModel from "../models/movie";
 import { once } from "events";
 import path from "path";
 import { Readable } from "stream";
@@ -25,17 +25,17 @@ const group = new httpz.Group();
 delete
 */
 group.route("POST", "/api_v2/asset/delete/", (req, res) => {
-	const id = req.body.data.id || req.body.data.starter_id;
-	if (typeof id == "undefined") {
+	const id = req.body.data.id;
+	const starterId = req.body.data.starter_id;
+	if (typeof id == "undefined" && typeof starterId == "undefined") {
 		return res.status(400).json({ status:"error" });
 	}
 
 	try {
-		const asset = AssetModel.getInfo(id) as Asset | Starter;
-		if (asset.type == "movie") {
-			MovieModel.delete(id);
-		} else {
+		if (id) {
 			AssetModel.delete(id);
+		} else if (starterId) {
+			MovieModel.delete(id);
 		}
 		res.json({ status:"ok" });
 	} catch (e) {
@@ -105,7 +105,7 @@ group.route("POST", "/goapi/getUserAssetsXml/", (req, res) => {
 			themeId = req.body.themeId;
 	}
 	const filters:Partial<Asset> = {
-		themeId,
+		theme: themeId,
 		type: "char"
 	};
 	// just a little workaround i did for getting character info when i was implementing the cc embed in the vm
@@ -147,70 +147,76 @@ group.route("*", /^\/(assets|goapi\/getAsset)\/([\S]*)$/, (req, res, next) => {
 		res.setHeader("Content-Type", mime);
 		readStream.pipe(res);
 	} catch (e) {
-		if (e == "404") {
+		if (e instanceof RangeError)
 			return res.status(404).end();
-		}
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
 		res.status(500).end();
 	}
 });
 
-/*
-info
-*/
-// get
+
+/**
+ * returns the properties of an asset
+ */
 group.route("POST", "/api_v2/asset/get", (req, res) => {
 	const id = req.body.data?.id ?? req.body.data?.starter_id;
-	if (!id) {
-		return res.status(404).json({status:"error"});
+	if (typeof id == "undefined") {
+		return res.status(404).json({ status:"error" });
 	}
 
 	try {
-		const info = AssetModel.getInfo(id);
-		// add stuff that will never be useful in an offline lvm clone because the lvm needs it
-		const extraInfo = {
-			share: {type:"none"},
+		const properties = AssetModel.properties(id);
+		// add stuff that will never be useful in an offline server
+		// emulator because the lvm will throw a fit otherwise
+		const extrabullshit = {
+			share: {
+				type: "none"
+			},
 			published: ""
-		}
+		};
 		res.json({
 			status: "ok",
-			data: Object.assign(info, extraInfo),
+			data: Object.assign(properties, extrabullshit),
 		});
 	} catch (e) {
-		if (e == "404") {
-			return res.status(404).json({status:"error"});
-		}
+		if (e instanceof RangeError)
+			return res.status(404).json({ status:"error" });
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status:"error"});
+		res.status(500).json({ status:"error" });
 	}
 });
+
+// more crap the lvm needs to not lock up
 group.route("POST", "/goapi/getAssetTags", (_, r) => r.json([]));
 group.route("POST", "/goapi/getLatestAssetId", (_, r) => r.end(0));
-// update
+
+/**
+ * updates an asset's properties
+ */
 group.route("POST", "/api_v2/asset/update/", (req, res) => {
-	const id = req.body.data?.id ?? req.body.data?.starter_id ?? null;
-	const title = req.body.data?.title ?? null;
-	const tags = req.body.data?.tags ?? null;
-	if (!id || title === null) {
-		return res.status(400).json({status:"error"});
+	const id = req.body.data?.id ?? req.body.data?.starter_id;
+	const title = req.body.data?.title;
+	const tags = req.body.data?.tags;
+	if (typeof id == "undefined" || typeof title == "undefined") {
+		return res.status(400).json({ status:"error" });
 	}
 
 	const update:Partial<Asset> = {
-		title: title
+		name: title
 	};
 	if (tags) {
 		update.tags = tags;
 	}
 
 	try {
-		AssetModel.updateInfo(id, update);
-		res.json({status:"ok"});
+		res.log("Updating asset properties...");
+		AssetModel.updateProperties(id, update);
+		res.json({ status:"ok" });
 	} catch (e) {
-		if (e == "404") {
-			return res.status(404).json({status:"error"});
-		}
+		if (e instanceof RangeError)
+			return res.status(404).json({ status:"error" });
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status:"error"});
+		res.status(500).json({ status:"error" });
 	}
 });
 
@@ -240,7 +246,7 @@ group.route("POST", "/api/asset/upload", async (req, res) => {
 
 	const asset:Partial<Asset> = {
 		type: req.body.type,
-		title: req.body.name || filename
+		name: req.body.name || filename
 	};
 
 	try {
@@ -418,7 +424,7 @@ group.route("POST", "/goapi/saveSound/", async (req, res) => {
 	const asset:Partial<Asset> = {
 		type: "sound",
 		subtype: req.body.subtype,
-		title: req.body.title
+		name: req.body.title
 	};
 
 	try {
@@ -436,7 +442,7 @@ group.route("POST", "/goapi/saveSound/", async (req, res) => {
 			id = await AssetModel.save(input, "mp3", asset);
 		}
 		res.end(
-			`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>${asset.subtype}</subtype><title>${asset.title}</title><published>0</published><tags></tags><duration>${asset.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`
+			`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>${asset.subtype}</subtype><title>${asset.name}</title><published>0</published><tags></tags><duration>${asset.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`
 		);
 	} catch (e) {
 		console.error(req.parsedUrl.pathname, "failed. Error:", e);

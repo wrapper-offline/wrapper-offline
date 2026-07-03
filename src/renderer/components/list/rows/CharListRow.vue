@@ -197,7 +197,7 @@ function fail(e:Event) {
 	src.value = "/img/load_circle.svg";
 	const elem = e.target as HTMLImageElement;
 	elem.classList.remove("hide");
-	cr.renderThumb(props.entry.id, props.entry.themeId, (bytes:string) => {
+	cr.renderThumb(props.entry.id, props.entry.theme, (bytes:string) => {
 		src.value = "data:image/png;base64," + bytes;
 	});
 }
@@ -222,7 +222,7 @@ function fail(e:Event) {
 			<CharListOptions :entry="entry"/>
 		</div>
 		<div class="data">
-			<span :title="entry.title">{{ entry.title }}</span>
+			<span :title="entry.name">{{ entry.name }}</span>
 		</div>
 	</div>
 </template>

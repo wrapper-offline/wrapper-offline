@@ -29,11 +29,11 @@ const assetList = ref<Asset[]>();
 const isLoading = ref(false);
 
 let columnWidths = JSON.parse(localStorage.getItem("sasset_list-columnWidths")) ??
-	{ "title":280, "id":120, "type":150 };
+	{ "name":280, "id":120, "type":150 };
 let columns:ListFieldColumn<Asset>[] = [
 	{
-		id: "title",
-		width: ref(columnWidths["title"]),
+		id: "name",
+		width: ref(columnWidths["name"]),
 	},
 	{
 		id: "id",
@@ -49,7 +49,7 @@ let columns:ListFieldColumn<Asset>[] = [
 const selectedSort = ref<SelectedListSort<Asset>>(
 	JSON.parse(localStorage.getItem("sasset_list-selectedSort")) ??
 		{
-			id: "title",
+			id: "name",
 			descending: true
 		}
 );

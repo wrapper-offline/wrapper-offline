@@ -2,44 +2,44 @@ import type { Char } from "./char";
 import directories from "../../storage/directories";
 import fs from "fs";
 import Database, { generateId } from "../../storage/database";
-import type { Starter } from "./movie";
 import path from "path";
 
 export interface Sound {
 	type: "sound",
 	subtype: "bgmusic" | "soundeffect" | "voiceover" | "tts",
-	tags?: string,
-	title: string,
-	duration: number,
 	id: string,
+	duration: number,
+	name: string,
+	tags?: string,
 };
 export interface Background {
 	type: "bg",
-	tags?: string,
-	title: string,
 	id: string,
+	name: string,
+	tags?: string,
 };
 export interface Prop {
 	type: "prop",
 	subtype: "0",
 	ptype: "placeable" | "headable" | "holdable" | "wearable",
-	tags?: string,
-	title: string,
 	id: string,
+	name: string,
+	tags?: string,
 };
 export interface Video {
 	type: "prop",
 	subtype: "video",
-	tags?: string,
-	title: string,
+	id: string,
 	duration: number,
 	width: number,
 	height: number,
-	id: string,
+	name: string,
+	tags?: string,
 };
 export type Asset = Sound | Background | Prop | Video | Char;
 
-const header = process.env.XML_HEADER;
+const API_SERVER = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
+const XML_HEADER = process.env.XML_HEADER as string;
 
 export default class AssetModel {
 	static folder = directories.asset;
@@ -50,12 +50,9 @@ export default class AssetModel {
 	 */
 	static delete(id:string) {
 		const asset = Database.get("assets", id);
-		if (!asset) {
-			throw "404";
-		}
 		Database.delete("assets", id);
 
-		const type = asset.data.type;
+		const type = asset.type;
 		// char ids don't have a file extension so we'll need to add it
 		if (type == "char") id += ".xml";
 		fs.unlinkSync(path.join(this.folder, id));
@@ -63,7 +60,7 @@ export default class AssetModel {
 		// delete video and char thumbnails
 		if (
 			type == "char" ||
-			(type == "prop" && asset.data.subtype == "video")
+			(type == "prop" && asset.subtype == "video")
 		) {
 			const thumbId = id.slice(0, -3) + "png";
 			fs.unlinkSync(path.join(this.folder, thumbId));
@@ -71,18 +68,20 @@ export default class AssetModel {
 	};
 
 	/**
-	 * Returns a buffer or stream. Throws an error if the asset doesn't exist.
+	 * loads an asset file
+	 * @param filename name of the file to load
+	 * @param asBuffer return a buffer instead of a readstream
+	 * @throws {RangeError} asset does not exist
 	 */
-	static load(id:string, returnBuffer:false): fs.ReadStream
-	static load(id:string, returnBuffer:true): Buffer
-	static load(id:string, returnBuffer = false): fs.ReadStream | Buffer {
-		if (!this.exists(id)) {
-			throw "404";
+	static load(filename:string, asBuffer?:false): fs.ReadStream
+	static load(filename:string, asBuffer:true): Buffer
+	static load(filename:string, asBuffer = false): fs.ReadStream | Buffer {
+		const filepath = path.join(this.folder, filename);
+		if (!fs.existsSync(filepath)) {
+			throw new RangeError("Asset does not exist FUCK YOU");
 		}
-
-		const filepath = path.join(this.folder, id);
 		let data;
-		if (returnBuffer) {
+		if (asBuffer) {
 			data = fs.readFileSync(filepath);
 		} else {
 			data = fs.createReadStream(filepath);
@@ -100,9 +99,9 @@ export default class AssetModel {
 	static list(returnXml:true): string
 	static list(returnXml:false): Asset[]
 	static list(param1?:boolean|Partial<Asset>, param2?:boolean) {
-		let filters, returnXml;
+		let filters:Partial<Asset> | undefined, 
+			returnXml:boolean = false;
 		if (typeof param1 == "boolean") {
-			filters = null;
 			returnXml = param1 || false;
 		} else if (typeof param1 == "object") {
 			filters = param1;
@@ -112,9 +111,10 @@ export default class AssetModel {
 		}
 
 		const files = Database.select("assets", filters);
+		console.log(filters)
 		if (returnXml) {
 			return `${
-				header
+				XML_HEADER
 			}<ugc more="0">${
 				files.map(this.meta2Xml).join("")
 			}</ugc>`;
@@ -124,75 +124,64 @@ export default class AssetModel {
 
 	/**
 	 * returns the info of an asset, throws 404 if it doesn't
-	 * @param id Asset ID
+	 * @param id asset id
+	 * @throws {RangeError} asset doesn't exist
 	 */
-	static getInfo(id:string): Asset {
-		const info = Database.get("assets", id);
-		if (info == false) {
-			throw "404";
-		}
-		return info.data;
+	static properties(id:string): Asset {
+		return Database.get("assets", id);
 	}
 
 	/**
 	 * updates asset info, throws 404 if asset doesn't exist
+	 * @param id asset id
+	 * @param properties properties to save
+	 * @throws {RangeError} asset doesn't exist
 	 */
-	static updateInfo(id:string, info:Partial<Asset>): void {
-		const success = Database.update("assets", id, info);
-		if (!success) {
-			throw "404";
-		}
+	static updateProperties(id:string, properties:Partial<Asset>) {
+		Database.update("assets", id, properties);
 	}
 
 	/**
 	 * checks if an asset exists by its id
 	 * @param id Asset ID
-	 * @param checkDBInstead check using the database instead of the existence of a file
 	 */
-	static exists(id:string, checkDBInstead = false) {
-		if (checkDBInstead) {
-			const asset = Database.get("assets", id);
-			return asset != false;
-		}
-		const filepath = path.join(this.folder, id);
-		const exists = fs.existsSync(filepath);
-		return exists;
+	static exists(id:string) {
+		return Database.exists("assets", id);
 	};
 
 	/**
-	 * converts an asset or starter object to a theme xml node
-	 * @param v asset or starter object
+	 * converts an asset object to a theme xml node
+	 * @param v asset object
 	 * @returns theme xml node with the asset information
 	 */
-	static meta2Xml(v:Asset | Starter) {
-		const apiServer = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
+	static meta2Xml(v:Asset) {
 		// sanitize stuff
-		v.title = (v.title || "").replace(/"/g, "&quot;");
+		v.name = (v.name || "").replace(/"/g, "&quot;");
 
 		let xml;
 		switch (v.type) {
 			case "char": {
-				xml = `<char id="${v.id}" enc_asset_id="${v.id}" name="${v.title || "Untitled"}" cc_theme_id="${v.themeId}" thumbnail_url="${apiServer}/assets/${v.id}.png" copyable="Y"><tags>${v.tags || ""}</tags></char>`;
+				xml = `<char id="${v.id}" enc_asset_id="${v.id}" name="${v.name || "Untitled"}" cc_theme_id="${v.theme}" thumbnail_url="${API_SERVER}/assets/${v.id}.png" copyable="Y"><tags>${v.tags || ""}</tags></char>`;
 				break;
 			}
 			case "bg": {
-				xml = `<background subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" asset_url="${apiServer}/assets/${v.id}"/>`
+				xml = `<background subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.name}" enable="Y" asset_url="${API_SERVER}/assets/${v.id}"/>`
 				break;
 			}
-			case "movie": {
-				xml = `<movie id="${v.id}" enc_asset_id="${v.id}" numScene="${v.sceneCount}" title="${v.title}" thumbnail_url="${apiServer}/file/movie/thumb/${v.id}"><tags></tags></movie>`;
-				break;
-			}
+			// case "movie": {
+			// 	xml = `<movie id="${v.id}" enc_asset_id="${v.id}" numScene="${v.sceneCount}" title="${v.title}" thumbnail_url="${apiServer}/file/movie/thumb/${v.id}"><tags></tags></movie>`;
+			// 	break;
+			// }
 			case "prop": {
 				if (v.subtype == "video") {
-					xml = `<prop subtype="video" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" placeable="1" facing="left" width="${v.width}" height="${v.height}" asset_url="${apiServer}/assets/${v.id}" thumbnail_url="${apiServer}/assets/${v.id.slice(0, -3) + "png"}"/>`;
+					xml = `<prop subtype="video" id="${v.id}" enc_asset_id="${v.id}" name="${v.name}" enable="Y" placeable="1" facing="left" width="${v.width}" height="${v.height}" asset_url="${API_SERVER}/assets/${v.id}" thumbnail_url="${API_SERVER}/assets/${v.id.slice(0, -3) + "png"}"/>`;
 				} else {
-					xml = `<prop subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" ${v.ptype}="1" facing="left" width="0" height="0" asset_url="${apiServer}/assets/${v.id}"/>`;
+					xml = `<prop subtype="0" id="${v.id}" enc_asset_id="${v.id}" name="${v.name}" enable="Y" ${v.ptype}="1" facing="left" width="0" height="0" asset_url="${API_SERVER}/assets/${v.id}"/>`;
 				}
 				break;
 			}
 			case "sound": {
-				xml = `<sound subtype="${v.subtype}" id="${v.id}" enc_asset_id="${v.id}" name="${v.title}" enable="Y" duration="${v.duration}" downloadtype="progressive"/>`;
+				xml = `<sound subtype="${v.subtype}" id="${v.id}" enc_asset_id="${v.id}" name="${v.name}" enable="Y" duration="${v.duration}" downloadtype="progressive"/>`;
 				break;
 			}
 			default: {

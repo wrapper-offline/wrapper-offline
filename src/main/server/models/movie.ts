@@ -1,5 +1,5 @@
 import directories from "../../storage/directories";
-import database, { DBJsonArrayKey, generateId } from "../../storage/database";
+import Database, { generateId } from "../../storage/database";
 import fs from "fs";
 import { join } from "path";
 import Parse from "../utils/movieParser.js";
@@ -11,15 +11,7 @@ export type Movie = {
 	title: string,
 	sceneCount: number,
 	watermark?: string,
-	parent_id?: string,
-	id: string,
-};
-export type Starter = {
-	type: "movie",
-	duration: string,
-	date: string,
-	title: string,
-	sceneCount: number,
+	parentFolder?: string,
 	id: string,
 };
 
@@ -27,42 +19,19 @@ export default class MovieModel {
 	static folder = directories.saved;
 
 	/**
-	 * deletes a movie do i really have to explain this to you
-	 * @param id movie id
-	 */
-	static delete(id:string): Promise<void> {
-		return new Promise((res, rej) => {
-			// if movie delete from movies, if starter delete from assets
-			if (database.get("movies", id)) {
-				database.delete("movies", id);
-			} else if (database.select("assets", {
-				id: id,
-				type: "movie"
-			}).length > 0) {
-				database.delete("assets", id);
-			} else {
-				return rej("404");
-			}
-
-			fs.unlinkSync(join(this.folder, id + ".xml"));
-			fs.unlinkSync(join(this.folder, id + ".png"));
-			res();
-		});
-	}
-
-	/**
 	 * packs a movie into a zip to be loaded by the videomaker
 	 * @param id movie id
+	 * @throws {RangeError} movvie no etscisting
 	 * @returns zip file containing the movie
 	 */
 	static async packMovie(id:string): Promise<Buffer> {
 		if (!this.exists(id)) {
-			throw "404";
+			throw new RangeError("THE MOVIE DOESN'T EXIST SHIT FOR BRAINS");
 		} 
 		const filepath = join(this.folder, id);
 		const xml = fs.readFileSync(filepath + ".xml");
 		const thumbPath = filepath + ".png";
-		let thumbnail:Buffer;
+		let thumbnail:Buffer | undefined;
 		if (fs.existsSync(thumbPath)) {
 			thumbnail = fs.readFileSync(thumbPath);
 		}
@@ -70,9 +39,133 @@ export default class MovieModel {
 		return zipped;
 	}
 
-	/*
-	extraction
-	*/
+	/**
+	 * returns a movie thumbnail stream
+	 * @param id movie id
+	 * @throws {RangeError} movie doesn't exist
+	 * @throws {Error} movie does exist, but the thumbnail file doesn't
+	 */
+	static thumb(id:string) {
+		if (!this.exists(id)) {
+			throw new RangeError("I'm so sorry... the movie.. it doesn't exist... x`C");
+		}
+		const filepath = join(this.folder, `${id}.png`);
+		if (fs.existsSync(filepath)) {
+			return fs.createReadStream(filepath);
+		}
+		throw new Error("ummmmm uhh ummmmmmm");
+	}
+
+	/**
+	 * checks if a movie exists
+	 * @param id movie id
+	 * @returns whether it exists or not
+	 */
+	static exists(id:string): boolean {
+		return Database.exists("movies", id);
+	}
+
+	/**
+	 * deletes a movie do i really have to explain this to you
+	 * @param id movie id
+	 * @throws {RangeError} if it doesn't exist
+	 */
+	static delete(id:string): Promise<void> {
+		return new Promise((resolve, reject) => {
+			Database.delete("movies", id);
+			fs.unlinkSync(join(this.folder, id + ".xml"));
+			fs.unlinkSync(join(this.folder, id + ".png"));
+			resolve();
+		});
+	}
+
+	/**
+	 * assigns a watermark to a movie
+	 * @param mId movie id
+	 * @param wId watermark id
+	 * @throws {RangeError} movie does not exist
+	 */
+	static setWatermark(mId:string, wId?:string) {
+		return Database.update("movies", mId, { watermark: wId });
+	}
+
+	/**
+	 * what do you think
+	 * @param xml the movie xml
+	 * @param thumb movie thumbnail in .png format
+	 * @param id movie id, if overwriting an old one
+	 * @param saveAsStarter
+	 * @throws {RangeError} four, oh, four. ohhh, four....
+	 * @returns movie id
+	 */
+	static async save(
+		xml: Buffer,
+		thumbnail: Buffer | void,
+		id: string,
+		saveAsStarter: boolean
+	): Promise<string> {
+		const newMovie = typeof id == "undefined";
+		if (!newMovie && !this.exists(id)) {
+			throw new RangeError("Movie does not exist and you fucking suck");
+		}
+		id ||= generateId();
+
+		if (thumbnail) {
+			fs.writeFileSync(join(this.folder, id + ".png"), thumbnail);
+		}
+		fs.writeFileSync(join(this.folder, id + ".xml"), xml);
+
+		const meta = await this.extractMeta(id);
+		const properties:Movie = {
+			id: id,
+			duration: meta.durationString,
+			date: meta.date.toISOString(),
+			title: meta.title,
+			sceneCount: meta.sceneCount,
+		};
+		if (Settings.defaultWatermark != "none") {
+			properties.watermark = Settings.defaultWatermark;
+		}
+		if (newMovie && saveAsStarter) {
+			properties.parentFolder = "starters";
+		}
+		try {
+			Database.update("movies", id, properties);
+		} catch (e) {
+			Database.insert("movies", properties);
+		}
+		return id;
+	}
+
+	/**
+	 * unpacks a movie zip
+	 * @param body zip containing the movie and its assets
+	 * @param isStarter is the movie being uploaded as a starter
+	 * @returns movie id
+	 */
+	static upload(body:Buffer, isStarter = false): Promise<string> {
+		return new Promise(async (resolve, reject) => {
+			const id = generateId();
+			const [xml, thumb] = await Parse.unpack(body);
+			fs.writeFileSync(join(this.folder, id + ".xml"), xml);
+			fs.writeFileSync(join(this.folder, id + ".png"), thumb);
+			this.extractMeta(id).then((meta) => {
+				const info:Movie = {
+					id,
+					duration: meta.durationString,
+					date: meta.date.toISOString(),
+					title: meta.title,
+					sceneCount: meta.sceneCount,
+				};
+				if (isStarter) {
+					info.parentFolder = "starters"
+				}
+
+				Database.insert("movies", info);
+				resolve(id);
+			});
+		});
+	}
 
 	/**
 	 * extracts audio information from a movie xml
@@ -113,7 +206,7 @@ export default class MovieModel {
 		date: Date,
 		durationString: string,
 		duration: number,
-		sceneCount?: number,
+		sceneCount: number,
 		title: string,
 		id: string
 	}> {
@@ -160,75 +253,6 @@ export default class MovieModel {
 	}
 
 	/**
-	 * what do you think
-	 * @param xml the movie xml
-	 * @param thumb movie thumbnail in .png format
-	 * @param id movie id, if overwriting an old one
-	 * @param saveAsStarter
-	 * @returns movie id
-	 */
-	static save(
-		xml:Buffer,
-		thumbnail:Buffer | void,
-		id:string,
-		saveAsStarter:boolean
-	): Promise<string> {
-		return new Promise(async (res, rej) => {
-			const newMovie = !id;
-			if (!newMovie && !this.exists(id)) {
-				return rej("404");
-			}
-			id ||= generateId();
-
-			if (thumbnail) {
-				fs.writeFileSync(join(this.folder, id + ".png"), thumbnail);
-			}
-			fs.writeFileSync(join(this.folder, id + ".xml"), xml);
-
-			const meta = await this.extractMeta(id);
-			// cat meoww x3
-			let dbCat:"assets"|"movies";
-			const info:Movie|Starter = {
-				id: id,
-				duration: meta.durationString,
-				date: meta.date.toISOString(),
-				title: meta.title,
-				sceneCount: meta.sceneCount,
-			};
-			if (Settings.defaultWatermark != "none") {
-				info.watermark = Settings.defaultWatermark;
-			}
-			if (
-				// new starter
-				(newMovie && saveAsStarter) ||
-				database.select("assets", {
-					id: id,
-					type: "movie"
-				}).length > 0
-			) {
-				(info as Starter).type = "movie";
-				dbCat = "assets";
-			} else {
-				dbCat = "movies";
-			}
-			if (!database.update(dbCat, id, info)) {
-				console.log("Models.movie#save: Inserting movie into database...");
-				database.insert(dbCat, info);
-			}
-			res(id);
-		});
-	}
-
-	/**
-	 * assigns a watermark to a movie
-	 * @param mId movie id
-	 * @param wId watermark id
-	 */
-	static setWatermark(mId:string, wId?:string) {
-		return database.update("movies", mId, { watermark: wId });
-	}
-
-	/**
 	 * moves a selection of movies or folders to a target folder
 	 * throws '404' if target folder doesn't exist
 	 * @param movies list of movie ids
@@ -242,29 +266,29 @@ export default class MovieModel {
 		}: { movieIds:string[], movieFolderIds:string[] },
 		targetFolderId: string
 	) {
-		if (targetFolderId == "/") {
-			targetFolderId = undefined;
-		} else {
-			if (!database.get("movie_folders", targetFolderId)) {
-				throw "t-404";
-			}
-		}
-		for (const movieId of movieIds) {
-			const success = database.update("movies", movieId, {
-				parent_id: targetFolderId
-			});
-			if (!success) {
-				throw "m-404";
-			}
-		}
-		for (const folderId of movieFolderIds) {
-			const success = database.update("movie_folders", folderId, {
-				parent_id: targetFolderId
-			});
-			if (!success) {
-				throw "f-404";
-			}
-		}
+		// if (targetFolderId == "/") {
+		// 	targetFolderId = undefined;
+		// } else {
+		// 	if (!database.get("movie_folders", targetFolderId)) {
+		// 		throw "t-404";
+		// 	}
+		// }
+		// for (const movieId of movieIds) {
+		// 	const success = database.update("movies", movieId, {
+		// 		parent_id: targetFolderId
+		// 	});
+		// 	if (!success) {
+		// 		throw "m-404";
+		// 	}
+		// }
+		// for (const folderId of movieFolderIds) {
+		// 	const success = database.update("movie_folders", folderId, {
+		// 		parent_id: targetFolderId
+		// 	});
+		// 	if (!success) {
+		// 		throw "f-404";
+		// 	}
+		// }
 	}
 
 	/**
@@ -273,23 +297,23 @@ export default class MovieModel {
 	 * @param newName new folder name
 	 */
 	static renameFolder(path:string, newName:string) {
-		let movies = database.select("movies");
-		movies = movies.filter((m) => m.parent_id && m.parent_id.startsWith(path));
-		console.log(path)
-		for (const movie of movies) {
-			const index = path.length;
-			const folders = movie.parent_id.substring(index + 1).split("/");
-			const pathBase = path.split("/").slice(0, -1);
-			let newPath = "";
-			if (pathBase.length > 0) {
-				newPath = pathBase.join("/") + "/";
-			}
-			newPath += newName;
-			if (folders.length > 0) {
-				newPath += folders.map(v => v != "" ? "/" + v : "");
-			}
-			database.update("movies", movie.id, { parent_id:newPath });
-		}
+		// let movies = database.select("movies");
+		// movies = movies.filter((m) => m.parent_id && m.parent_id.startsWith(path));
+		// console.log(path)
+		// for (const movie of movies) {
+		// 	const index = path.length;
+		// 	const folders = movie.parent_id.substring(index + 1).split("/");
+		// 	const pathBase = path.split("/").slice(0, -1);
+		// 	let newPath = "";
+		// 	if (pathBase.length > 0) {
+		// 		newPath = pathBase.join("/") + "/";
+		// 	}
+		// 	newPath += newName;
+		// 	if (folders.length > 0) {
+		// 		newPath += folders.map(v => v != "" ? "/" + v : "");
+		// 	}
+		// 	database.update("movies", movie.id, { parent_id:newPath });
+		// }
 	}
 
 	/**
@@ -297,88 +321,20 @@ export default class MovieModel {
 	 * @param path folder path
 	 */
 	static deleteFolder(path:string) {
-		let newParent = path.split("/").slice(0, -1).join("/") ?? "";
-		const movies = database.select("movies").filter(m => {
-			return m.parent_id && m.parent_id.startsWith(path)
-		});
-		const ids = movies.map(m => [m.id, m.parent_id]);
-		for (const [id, path] of ids) {
-			let index:number;
-			if (newParent.length == 0) {
-				index = 0;
-			} else {
-				index = path.indexOf(newParent) + newParent.length;
-			}
-			const newPath = path.substring(0, index);
-			database.update("movies", id, { parent_id:newPath });
-		}
-	}
-
-	/**
-	 * checks if a movie exists
-	 * @param id movie id
-	 * @returns whether it exists or not
-	 */
-	static exists(id:string): boolean {
-		if (
-			!database.get("movies", id) &&
-			database.select("assets", {
-				id: id,
-				type: "movie"
-			}).length <= 0
-		) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * returns a movie thumbnail stream. throws "404" if movie doesn't exist
-	 * @param id movie id
-	 */
-	static thumb(id:string) {
-		// look for match in folder
-		const filepath = join(this.folder, `${id}.png`);
-		if (fs.existsSync(filepath)) {
-			const readStream = fs.createReadStream(filepath);
-			return readStream;
-		} else {
-			throw "404";
-		}
-	}
-
-	/**
-	 * unpacks a movie zip
-	 * @param body zip containing the movie and its assets
-	 * @param isStarter is the movie being uploaded as a starter
-	 * @returns movie id
-	 */
-	static upload(body:Buffer, isStarter = false): Promise<string> {
-		return new Promise(async (res, rej) => {
-			const id = generateId();
-			const [xml, thumb] = await Parse.unpack(body);
-
-			fs.writeFileSync(join(this.folder, `${id}.xml`), xml);
-			fs.writeFileSync(join(this.folder, `${id}.png`), thumb);
-			this.extractMeta(id).then((meta) => {
-				let dbCategory:DBJsonArrayKey;
-				const info:Starter|Movie = {
-					id,
-					duration: meta.durationString,
-					date: meta.date.toISOString(),
-					title: meta.title,
-					sceneCount: meta.sceneCount,
-				};
-				if (isStarter) {
-					(info as Starter).type = "movie";
-					dbCategory = "assets";
-				} else {
-					dbCategory = "movies";
-				}
-
-				database.insert(dbCategory, info);
-				res(id);
-			});
-		});
+		// let newParent = path.split("/").slice(0, -1).join("/") ?? "";
+		// const movies = database.select("movies").filter(m => {
+		// 	return m.parent_id && m.parent_id.startsWith(path)
+		// });
+		// const ids = movies.map(m => [m.id, m.parent_id]);
+		// for (const [id, path] of ids) {
+		// 	let index:number;
+		// 	if (newParent.length == 0) {
+		// 		index = 0;
+		// 	} else {
+		// 		index = path.indexOf(newParent) + newParent.length;
+		// 	}
+		// 	const newPath = path.substring(0, index);
+		// 	database.update("movies", id, { parent_id:newPath });
+		// }
 	}
 };

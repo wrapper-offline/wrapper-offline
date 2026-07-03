@@ -47,11 +47,13 @@ group.route("GET", "/api/movie/get_info", (req, res) => {
 		return res.status(400).json({msg:"Movie ID missing."});
 	}
 
-	const movie = Database.get("movies", id)
-	if (movie) {
-		res.json(movie.data);
-	} else {
-		res.status(404).json({msg:"Movie not found."});
+	try {
+		const movie = Database.get("movies", id);
+		res.json(movie);
+	} catch (e) {
+		if (e instanceof RangeError)
+			return res.status(404).json({ msg:"movie not found" });
+		res.status(500).json({ msg:"error occurred" })
 	}
 });
 
@@ -60,53 +62,41 @@ list
 */
 // movies
 group.route("GET", "/api/movie/list", (req, res) => {
-	const type = req.query.type;
 	const basePath = req.query.path;
-	if (!type) {
-		return res.status(400).json({ msg:"Expected type parameter" });
-	}
-	let movies:Movie[];
-	switch (type) {
-		case "starter":
-			movies = Database.select("assets", { type: "movie" }) as any as Movie[];
-			return res.json({ movies });
-		case "movie":
-		default:
-			movies = Database.select("movies");
-	}
+	let movies:Movie[] = Database.select("movies");
 	movies = movies.filter(m => {
-		return basePath ? m.parent_id == basePath : !m.parent_id;
+		return basePath ? m.parentFolder == basePath : !m.parentFolder;
 	});
-	const folders = Database.select("movie_folders", {
-		parent_id: basePath ? basePath : "/",
-	});
-	let folderPath = [];
-	if (basePath) {
-		let rootFound = false;
-		let currentId = basePath;
-		while (!rootFound) {
-			const dbRes = Database.get("movie_folders", currentId);
-			if (!dbRes) {
-				if (currentId == basePath) {
-					return res.status(404).json({ msg:"Path does not exist" });
-				}
-				res.log(`Parent folder with id "${currentId}" not found, returning with empty folder_path...`);
-				folderPath = [];
-				break;
-			}
-			const folder = dbRes.data;
-			currentId = folder.parent_id;
-			if (currentId == "/") {
-				rootFound = true;
-				currentId = null;
-			}
-			folderPath.unshift({
-				id: folder.id,
-				title: folder.title
-			});
-		}
-	}
-	res.json({ folder_path:folderPath, folders, movies });
+	// const folders = Database.select("movie_folders", {
+	// 	parent_id: basePath ? basePath : "/",
+	// });
+	// let folderPath = [];
+	// if (basePath) {
+	// 	let rootFound = false;
+	// 	let currentId = basePath;
+	// 	while (!rootFound) {
+	// 		const dbRes = Database.get("movie_folders", currentId);
+	// 		if (!dbRes) {
+	// 			if (currentId == basePath) {
+	// 				return res.status(404).json({ msg:"Path does not exist" });
+	// 			}
+	// 			res.log(`Parent folder with id "${currentId}" not found, returning with empty folder_path...`);
+	// 			folderPath = [];
+	// 			break;
+	// 		}
+	// 		const folder = dbRes.data;
+	// 		currentId = folder.parent_id;
+	// 		if (currentId == "/") {
+	// 			rootFound = true;
+	// 			currentId = null;
+	// 		}
+	// 		folderPath.unshift({
+	// 			id: folder.id,
+	// 			title: folder.title
+	// 		});
+	// 	}
+	// }
+	res.json({ folder_path:[], folders:[], movies });
 });
 
 /*
@@ -178,21 +168,21 @@ delete folder
 move folder
 */
 group.route("GET", "/api/movie/delete_folder", (req, res) => {
-	const { path } = req.query;
-	if (!path) {
-		return res.status(400).json({msg:"Expected path parameter"});
-	}
+	// const { path } = req.query;
+	// if (!path) {
+	// 	return res.status(400).json({msg:"Expected path parameter"});
+	// }
 
-	try {
-		MovieModel.deleteFolder(path);
-		res.json({status:"ok"});
-	} catch (e) {
-		if (e == "404") {
-			return res.status(404).json({status:"error"});
-		}
-		console.error(req.parsedUrl.pathname, "failed. Error:", e);
-		res.status(500).json({status:"error"});
-	}
+	// try {
+	// 	MovieModel.deleteFolder(path);
+	// 	res.json({status:"ok"});
+	// } catch (e) {
+	// 	if (e == "404") {
+	// 		return res.status(404).json({status:"error"});
+	// 	}
+	// 	console.error(req.parsedUrl.pathname, "failed. Error:", e);
+	// 	res.status(500).json({status:"error"});
+	// }
 });
 
 /*
@@ -204,17 +194,16 @@ group.route("POST", "/api/movie/delete", async (req, res) => {
 		return res.status(400).json({ msg:"Missing required parameters" });
 	}
 	const ids = idField.split(",");
-
 	for (const id of ids) {
 		try {
 			await MovieModel.delete(id);
 			res.log("Deleted movie #" + id);
-		} catch (err) {
-			if (err == "404") {
-				res.log(`Failed to delete movie #${id} -- Movie does not exist`);
+		} catch (e) {
+			if (e instanceof RangeError) {
+				res.log(`Failed to delete movie #${id}: Movie does not exist`);
 				res.log(`Skipping movie #${id}...`)
 			}
-			res.log(`Failed to delete movie #${id} -- ${err}`);
+			res.log(`Failed to delete movie #${id}: ${e}`);
 			const remaining = ids.slice(id.indexOf(id));
 			res.log("Stopping movie deletion! Remaining: " + JSON.stringify(remaining));
 			return res.status(500).json({ msg:"Internal server error" });
@@ -230,7 +219,7 @@ group.route("POST", "/api/movie/upload", (req, res) => {
 	const file = req.files.import;
 	const isStarter = req.body.is_starter;
 	if (typeof file == "undefined") {
-		return res.status(400).json({ msg: "No file." });
+		return res.status(400).json({ msg:"No file." });
 	}
 
 	const path = file.filepath, buffer = fs.readFileSync(path);
@@ -241,7 +230,7 @@ group.route("POST", "/api/movie/upload", (req, res) => {
 			Buffer.from([0x50, 0x4b, 0x03, 0x04])
 		)
 	) {
-		return res.status(400).json({ msg: "Movie is not a zip." });
+		return res.status(400).json({ msg:"Movie is not a zip." });
 	}
 
 	MovieModel.upload(buffer, isStarter).then((id) => {
@@ -270,7 +259,7 @@ group.route(
 		const ids = idField.split(",");
 
 		let zip = new AdmZip();
-		let zipBuf:Buffer;
+		let zipBuf:Buffer | undefined;
 		for (const id of ids) {
 			try {
 				const zipped = await MovieModel.packMovie(id);
@@ -279,15 +268,17 @@ group.route(
 					break;
 				}
 				zip.addFile(id + ".zip", zipped);
-			} catch (err) {
-				if (err == "404") {
+			} catch (e) {
+				if (e instanceof RangeError) {
 					return res.status(404).end("movie no existing !!");
 				}
-				res.log("Error packing movie #" + JSON.stringify(ids) + ": " + err);
+				res.log("Error packing movie #" + JSON.stringify(ids) + ": " + e);
 				res.status(500).end("Internal server error");
 			}
 		}
-		zipBuf = zipBuf || await zip.toBufferPromise();
+		if (!zipBuf) {
+			zipBuf = await zip.toBufferPromise();
+		}
 		if (isPost) {
 			zipBuf = Buffer.concat([Buffer.alloc(1, 0), zipBuf]);
 		}
@@ -317,7 +308,7 @@ group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], async (req, r
 	}
 	
 	const body = Buffer.from(zipField, "base64");
-	let thumb:Buffer | void;
+	let thumb:Buffer | undefined;
 	if (thumbField) {
 		thumb = Buffer.from(thumbField, "base64");
 	}
@@ -334,14 +325,17 @@ group.route("POST", ["/goapi/saveMovie/", "/goapi/saveTemplate/"], async (req, r
 	const movieXml = zip.readFile("movie.xml");
 	const saveAsStarter = req.parsedUrl.pathname == "/goapi/saveTemplate/";
 	try {
+		if (!movieXml) {
+			throw new Error("fuck");
+		}
 		const id = await MovieModel.save(movieXml, thumb, movieId, saveAsStarter);
 		res.log("Successfully saved movie #" + id);
 		res.end("0" + id);
-	} catch (err) {
-		if (err == "404") {
+	} catch (e) {
+		if (e instanceof RangeError) {
 			return res.status(404).end("Specified movie does not exist");
 		}
-		res.log("Error saving movie: " + err);
+		res.log("Error saving movie: " + e);
 		res.status(500).end("Internal server error");
 	}
 });

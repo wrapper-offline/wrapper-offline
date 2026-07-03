@@ -8,9 +8,8 @@ import type { Watermark } from "../../main/server/models/watermark";
 
 export type Folder = {
 	id: string,
-	title: string,
-	/** folder color as a hex code, (ie. "ff00ff") */
-	color: string,
+	title: string
+	color: number,
 	parent_id: string,
 };
 
@@ -28,6 +27,8 @@ type ArrayKey<T> = {
 export type DBJsonArrayKey = ArrayKey<DatabaseJson>;
 type DBJsonArrayProp<K extends DBJsonArrayKey> = DatabaseJson[K][number];
 
+const charMap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_-".split("");
+
 export class Database {
 	private path = join(directories.saved, "database.json");
 	private json:DatabaseJson = {
@@ -40,7 +41,6 @@ export class Database {
 	private static _instance:Database;
 
 	constructor() {
-		// create the file if it doesn't exist
 		if (!existsSync(this.path)) {
 			console.warn("Database doesn't exist! Creating...");
 			this.save(this.json);
@@ -65,6 +65,7 @@ export class Database {
 			json.version = "2.1.0";
 			json.movie_folders = [];
 			const watermarks = this.select("assets", {
+				//@ts-ignore
 				type: "watermark"
 			});
 			json.watermarks = watermarks.map(w => ({
@@ -72,8 +73,34 @@ export class Database {
 			}));
 			console.log(`Database upgraded from ${oldVer} to v2.1.0!`);
 		}
-		this.save(json);
+		if (json.version == "2.1.0") {
+			const oldVer = json.version;
+			json.version = "2.2.0";
+			for (const i in json.assets) {
+				const asset = json.assets[i];
+				if ((asset as any).type == "movie") {
+					json.movies.unshift({
+						id: asset.id,
+						duration: (asset as any).duration,
+						date: (asset as any).date,
+						title: (asset as any).title,
+						sceneCount: (asset as any).sceneCount,
+						parentFolder: "starters"
+					});
+					json.assets.splice(Number(i), 1);
+					continue;
+				}
+				if (asset.type == "char") {
+					asset.theme = (asset as any).themeId;
+					delete (asset as any).themeId;
+				}
+				asset.name = (asset as any).title;
+				delete (asset as any).title;
+			}
+			console.log(`Database upgraded from ${oldVer} to v2.2.0!`);
+		}
 		// just keep adding onto this as you change stuff
+		this.save(json);
 	}
 
 	static get instance() {
@@ -84,7 +111,7 @@ export class Database {
 	}
 
 	/**
-	 * refreshes this.json using the this.json in its current state
+	 * refreshes this.json by reading the db file
 	 */
 	private refresh() { // refresh the database vars
 		const data = readFileSync(this.path);
@@ -104,107 +131,119 @@ export class Database {
 	}
 
 	/**
-	 * deletes a field from the database
-	 * @param from category to select from
-	 * @param id id to look for
-	 * @returns did it work or not
+	 * returns an object from the database
+	 * @param from category containing the object
+	 * @param id id of the object to look for
+	 * @throws {RangeError} object does not exist
+	 * @returns the object
 	 */
-	delete(from:DBJsonArrayKey, id:string) {
-		const object = this.get(from, id);
-		if (object == false) {
-			return false;
+	get<K extends DBJsonArrayKey>(from:K, id:string): DBJsonArrayProp<K> {
+		const category = this.json[from];
+		for (let i:number = 0; i < category.length; i++) {
+			const obj = category[i];
+			if (obj.id == id) {
+				return obj;
+			}
 		}
-		const index = object.index;
-
-		this.json[from].splice(index, 1);
-		this.save(this.json);
-		return true;
+		throw new RangeError("Object does not exist kys");
 	}
 
 	/**
-	 * returns an object from the database
-	 * @param from category to select from
-	 * @param id id to look for
-	 * @returns returns object if it worked, false if it didn't
+	 * returns the index of an object in the database
+	 * @param from category containing the object
+	 * @param id id of the object to look for
+	 * @throws {RangeError} object does not exist
+	 * @returns the object's index
 	 */
-	get<K extends DBJsonArrayKey>(from:K, id:string): {
-		data: DBJsonArrayProp<K>,
-		index: number
-	} | false {
-		this.refresh();
-
+	getIndex<K extends DBJsonArrayKey>(from:K, id:string): number {
 		const category = this.json[from];
-		let index:number = 0;
-		const object = category.find((i, ind) => {
-			if (i.id == id) {
-				index = ind;
+		for (let i:number = 0; i < category.length; i++) {
+			const obj = category[i];
+			if (obj.id == id) {
+				return i;
+			}
+		}
+		throw new RangeError("object is no existing D: !!!!!");
+	}
+
+	/**
+	 * checks if an object exists
+	 * @param from category containing the object
+	 * @param id id of the object to look for
+	 * @returns whether the object exists
+	 */
+	exists<K extends DBJsonArrayKey>(from:K, id:string): boolean {
+		const category = this.json[from];
+		for (let i:number = 0; i < category.length; i++) {
+			const obj = category[i];
+			if (obj.id == id) {
 				return true;
 			}
-		});
-		if (!object) {
-			return false;
 		}
-
-		return {
-			data: object,
-			index: index
-		}
+		return false;
 	}
 
 	/**
-	 * Adds another field to the database.
-	 * @param into Category to insert into.
-	 * @param data Data to insert.
+	 * updates an object in the database
+	 * @param from category containing the object
+	 * @param id id of the object to look for
+	 * @param data new data to assign to the object
+	 * @throws {RangeError} object does not exist
 	 */
-	insert<K extends DBJsonArrayKey>(into:K, data:DBJsonArrayProp<K>) {
-		this.refresh();
-		this.json[into].unshift(data as Folder & Asset & Movie & Watermark);
+	update<K extends DBJsonArrayKey>(from:K, id:string, data:Partial<DBJsonArrayProp<K>>) {
+		const index = this.getIndex(from, id);
+		Object.assign(this.json[from][index], data);
 		this.save(this.json);
 	}
 
 	/**
-	 * Returns the database.
+	 * removes an object from the database
+	 * @param from category containing the object
+	 * @param id id of the object to delete
+	 * @throws {RangeError} object does not exist
+	 */
+	delete(from:DBJsonArrayKey, id:string) {
+		const index = this.getIndex(from, id);
+		this.json[from].splice(index, 1);
+		this.save(this.json);
+	}
+
+	/**
+	 * adds an object to the database
+	 * @param into category to insert the object
+	 * @param obj object to insert
+	 */
+	insert<K extends DBJsonArrayKey>(into:K, obj:DBJsonArrayProp<K>) {
+		this.json[into].unshift(obj as Asset & Movie & Folder & Watermark);
+		this.save(this.json);
+	}
+
+	/**
+	 * selects all objects that match a filter
+	 * the filter can contain anything. if the value of a filter
+	 * key is an array, this will check if the value of the object
+	 * matches anything in it
 	 * @param from Category to select from.
 	 * @param where Parameters for each key.
 	 */
 	select<K extends DBJsonArrayKey>(
-		from:K,
-		where?:Record<string, any> | null
-	):DBJsonArrayProp<K>[] {
-		this.refresh();
-
+		from: K,
+		where?: Partial<DBJsonArrayProp<K>>
+	): DBJsonArrayProp<K>[] {
 		const category = this.json[from];
-		const filtered = category.filter((val:Record<string, unknown>) => {
-			for (const [key, value] of Object.entries(where || {})) {
-				if (typeof value == "object") {
-					return value.includes((val[key] || "").toString());
+		return where ?
+			category.filter((val:Record<string, any>) => {
+				for (const [key, value] of Object.entries(where)) {
+					if (typeof value == "object") {
+						if (!value.includes((val[key] || ""))) {
+							return false;
+						}
+					} else if (val[key] && val[key] != value) {
+						return false;
+					}
 				}
-				if (val[key] && val[key] != value) {
-					return false;
-				}
-			}
-			return true;
-		});
-		return filtered;
-	}
-
-	/**
-	 * Updates a field from the database.
-	 * @param from Category to select from.
-	 * @param id Id to look for.
-	 * @param data New data to save.
-	 * @returns did it work or not
-	 */
-	update<K extends DBJsonArrayKey>(from:K, id:string, data:Partial<DBJsonArrayProp<K>>): boolean {
-		const object = this.get(from, id);
-		if (object == false) {
-			return false;
-		}
-		const index = object.index;
-
-		Object.assign(this.json[from][index], data);
-		this.save(this.json);
-		return true;
+				return true;
+			}) : category;
 	}
 };
 
@@ -212,7 +251,11 @@ export class Database {
  * @summary generates a random id
  */
 export function generateId() {
-	return crypto.randomBytes(4).toString("hex");
+	let id = "";
+	for (const n of crypto.randomBytes(8)) {
+		id += charMap[n % 64];
+	}
+	return id;
 }
 
 export default Database.instance;

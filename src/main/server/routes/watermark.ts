@@ -3,7 +3,7 @@ import Database from "../../storage/database.js";
 import fileTypes from "../data/allowed_file_types.json";
 import { extensions, FileExtension, fromFile, mimeTypes } from "file-type";
 import { Group } from "@octanuary/httpz";
-import MovieModel from "../models/movie.js";
+import MovieModel, { Movie } from "../models/movie.js";
 import Settings from "../../storage/settings.js";
 import WatermarkModel from "../models/watermark.js";
 import tempfile from "tempfile";
@@ -11,9 +11,9 @@ import { spawn } from "child_process";
 import ffmpegPath from "ffmpeg-static";
 import { once } from "events";
 
+const API_SERVER = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const APP_WATERMARK_ID = "0vTLbQy9hG7k";
 const NO_WATERMARK_ID = "0dhteqDBt5nY";
-const url = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const XML_HEADER = process.env.XML_HEADER;
 const group = new Group();
 
@@ -30,11 +30,15 @@ group.route("POST", /\/goapi\/assignwatermark\/movie\/([\S]+)\/([\S]+)/, (req, r
 		return res.status(404).end("1Watermark does not exist");
 	}
 
-	if (MovieModel.setWatermark(mId, wId)) {
+	try {
+		res.log(`Assigning watermark #${wId} to movie #${mId}...`);
+		MovieModel.setWatermark(mId, wId);
 		res.end("0");
-		res.log(`Watermark #${wId} assigned to movie #${mId}`);
-	} else {
-		res.status(404).end("1Movie does not exist");
+	} catch (e) {
+		if (e instanceof RangeError)
+			return res.status(404).end("1Movie does not exist");
+		res.log("Error assigning watermark: " + e);
+		res.status(500).end("1ise");
 	}
 });
 group.route("POST", "/api/watermark/set_default", (req, res) => {
@@ -55,10 +59,12 @@ group.route("POST", "/api/watermark/set_default", (req, res) => {
 list
 */
 group.route("GET", "/api/watermark/list", (req, res) => {
-	const list = WatermarkModel.list().map((w:any) => {
-		w.thumbnail = `${url}/watermarks/${w.id}`;
-		return w;
-	});
+	const list = WatermarkModel
+		.list()
+		.map(wm => ({
+			id: wm.id,
+			thumbnail: `${API_SERVER}/watermarks/${wm.id}`
+		}));
 	res.json(list);
 });
 group.route("GET", "/api/watermark/get_default", (req, res) => {
@@ -68,11 +74,16 @@ group.route("POST", "/goapi/getUserWatermarks/", (req, res) => {
 	let wId = null;
 	const mId = req.body.movieId;
 	if (mId) {
-		const movie = Database.get("movies", mId);
-		if (!movie) {
-			return res.status(404).end();
+		let movie:Movie;
+		try {
+			movie = Database.get("movies", mId)
+		} catch (e) {
+			if (e instanceof RangeError)
+				return res.status(404).end();
+			res.end("Error occurred getting movie watermark: " + e);
+			return res.status(500).end();
 		}
-		wId = movie.data.watermark;
+		wId = movie.watermark;
 	} else {
 		const { defaultWatermark } = Settings;
 		wId = defaultWatermark ? defaultWatermark : null;
@@ -81,7 +92,7 @@ group.route("POST", "/goapi/getUserWatermarks/", (req, res) => {
 	const list = WatermarkModel.list();
 	res.setHeader("Content-Type", "application/xml");
 	res.end(`${XML_HEADER}<watermarks>${
-		list.map((w) => `<watermark id="${w.id}" thumbnail="${url}/watermarks/${w.id}"/>`).join("")
+		list.map((w) => `<watermark id="${w.id}" thumbnail="${API_SERVER}/watermarks/${w.id}"/>`).join("")
 	}${wId !== null ? `<preview>${wId}</preview>` : ""}</watermarks>`);
 });
 
@@ -114,12 +125,16 @@ group.route("GET", /^\/watermarks\/([\S]*)$/, (req, res) => {
 });
 group.route("POST", "/goapi/getMovieInfo/", (req, res) => {
 	const mId = req.body.movieId;
-	const movie = Database.get("movies", mId);
-	if (!movie) {
-		return res.status(400).end("1Movie not found.");
+	let movie:Movie;
+	try {
+		movie = Database.get("movies", mId);
+	} catch (e) {
+		if (e instanceof RangeError)
+			return res.status(404).end("1Movie not found.");
+		return res.status(500).end("1Internal sverever error");
 	}
 
-	const wId = movie.data.watermark;
+	const wId = movie.watermark;
 	res.setHeader("Content-Type", "application/xml");
 	res.end(`${XML_HEADER}<watermarks>${
 		typeof wId == "undefined" ?
@@ -128,7 +143,7 @@ group.route("POST", "/goapi/getMovieInfo/", (req, res) => {
 				// default watermark
 				"" :
 				// custom watermark
-				`<watermark>${url}/watermarks/${wId}</watermark>`
+				`<watermark>${API_SERVER}/watermarks/${wId}</watermark>`
 	}</watermarks>`);
 });
 
@@ -149,9 +164,9 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 		return res.status(400).json({ msg:"Missing required parameters" });
 	}
 
-	let id = req.body.id;
+	let id:string|undefined = req.body.id;
 	if (id && !WatermarkModel.exists(id)) {
-		return res.status(400).json({ msg:"Watermark does not exist" })
+		return res.status(404).json({ msg:"Watermark does not exist" })
 	}
 
 	const { filepath } = file;
@@ -187,8 +202,8 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 		});
 		await once(ffmpeg, "exit");
 		if (data.length > 0) {
-			console.log("Error occurred during image conversion:", data);
-			throw data;
+			res.log("Error occurred during image conversion: " + data);
+			return res.status(500).end("1");
 		}
 
 		id = await WatermarkModel.save(tempPath, toExt, id);
@@ -198,7 +213,7 @@ group.route("POST", "/api/watermark/save", async (req, res) => {
 	res.log("Saved watermark #" + id);
 	res.json({
 		id,
-		thumbnail: `${url}/watermarks/${id}`
+		thumbnail: `${API_SERVER}/watermarks/${id}`
 	});
 });
 
@@ -208,16 +223,22 @@ delete
 group.route("POST", "/api/watermark/delete", (req, res) => {
 	const id = req.body.id;
 	if (typeof id == "undefined") {
-		return res.status(404).json({ msg:"Missing required fields" });
+		return res.status(400).json({ msg:"Missing required fields" });
 	}
 
 	if (Settings.defaultWatermark == id) {
 		Settings.defaultWatermark = "none";
 	}
-
-	WatermarkModel.delete(id);
-	res.end();
-	res.log("Deleted watermark #" + id);
+	res.log(`Deleting watermark #${id}...`);
+	try {
+		WatermarkModel.delete(id);
+		res.end();
+	} catch (e) {
+		if (e instanceof RangeError)
+			return res.status(404).json({ msg:"Watermark does not exist" })
+		res.log("Error deleting watermark: " + e);
+		res.status(500).json({ msg:"Internal Server Error" });
+	}
 });
 
 export default group;

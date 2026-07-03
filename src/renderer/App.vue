@@ -13,7 +13,7 @@ general
 **/
 html, body {
 	color: hsl(218deg 14% 36%);
-	font: 15px/1.7 "Lato", Arial, sans-serif;
+	font: 15px/1.5 "Lato", Arial, sans-serif;
 	overflow: hidden;
 	width: 100%;
 	height: 100%;

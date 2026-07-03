@@ -20,7 +20,8 @@ export default {
 		"column_name": {
 			"index": "Created",
 			"id": "ID",
-			"title": "Name",
+			"title": "Title",
+			"name": "Name",
 			"type": "Type",
 			"duration": "Duration",
 			"date": "Modified"

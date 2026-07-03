@@ -1,6 +1,6 @@
 <style lang="css">
 .app_sidebar {
-	background: hsl(240deg 17% 23%);
+	background: hsl(240deg 18% 26%);
 	z-index: 8;
 	user-select: none;
 	display: flex;
@@ -12,8 +12,7 @@
 logo container
 **/
 .app_sidebar #logo_container {
-	background: hsl(240deg 17% 13%);
-	border-bottom: 1px solid #3d3d57;
+	background: hsl(240deg 18% 13%);
 	padding: 4px 8px;
 	transform: translateX(0);
 	height: 50px;
@@ -66,7 +65,7 @@ sidebar sections *OR* grouped link containers
 }
 .app_sidebar>ul.page_specific::-webkit-scrollbar-thumb {
 	background: hsl(240deg 10% 73%);
-	border-color: hsl(240deg 17% 23%);
+	border-color: hsl(240deg 18% 23%);
 }
 .app_sidebar>ul:last-of-type {
 	border-top: 1px solid hsl(240 14% 32% / 1);
@@ -135,18 +134,18 @@ links
 }
 /* states */
 .app_sidebar .link:hover {
-	background: hsl(240 17% 29% / 1);
+	background: hsl(240 18% 29% / 1);
 	transition: none;
 }
 .app_sidebar .link:hover::after {
-	background: linear-gradient(90deg, #0000 0, hsl(240 17% 29% / 1) 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(240 18% 29% / 1) 10px);
 }
 .app_sidebar .link.sel {
-	background: hsl(240deg 17% 35%);
+	background: hsl(238deg 18% 36%);
 	font-weight: bold;
 }
 .app_sidebar .link.sel::after {
-	background: linear-gradient(90deg, #0000 0, hsl(240deg 17% 35%) 10px);
+	background: linear-gradient(90deg, #0000 0, hsl(238deg 18% 36%) 10px);
 }
 
 

@@ -15,14 +15,14 @@
 
 export interface Base {
 	id: string,
-	title: string,
+	name: string,
 	tags?: string,
 	type: string,
 };
 
 export interface Char extends Base {
 	type: "char",
-	themeId: string,
+	theme: string,
 	thumbnail: string,
 };
 

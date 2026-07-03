@@ -77,8 +77,8 @@ function assetPreviewClose_click() {
  * called when the asset info has been updated in the preview modal
  * @param param0 object containing new asset info
  */
-function assetInfoUpdated({ title }:Partial<T>) {
-	props.entry.title = title;
+function assetInfoUpdated({ name }:Partial<T>) {
+	props.entry.name = name;
 	const origKey = toValue(key);
 	key.value = null;
 	key.value = origKey;
@@ -119,9 +119,9 @@ function assetInfo(field:FieldId<T>): string {
 		<td class="hidden">
 			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
 		</td>
-		<td v-for="columnId in columns" :class="{ title:columnId=='title' }">
+		<td v-for="columnId in columns" :class="{ title:columnId=='name' }">
 			<!-- thumbnail block for title column -->
-			<template v-if="columnId == 'title'" class="title">
+			<template v-if="columnId == 'name'">
 				<AssetImage :asset="entry"/>
 			</template>
 			<span>{{ assetInfo(columnId) }}</span>
@@ -129,12 +129,10 @@ function assetInfo(field:FieldId<T>): string {
 		<td class="hidden">
 			<AssetListOptions :entry="entry"/>
 		</td>
-		<Teleport to="body">
-			<AssetInfoModal
-				v-if="showPreview"
-				:asset="entry"
-				@close-clicked="assetPreviewClose_click"
-				@update="assetInfoUpdated"/>
-		</Teleport>
+		<AssetInfoModal
+			v-if="showPreview"
+			:asset="entry"
+			@close-clicked="assetPreviewClose_click"
+			@update="assetInfoUpdated"/>
 	</tr>
 </template>

@@ -2,7 +2,7 @@ import AdmZip from "adm-zip";
 import Directories from "../storage/directories";
 import handler from "serve-handler";
 import { IncomingMessage, ServerResponse } from "http";
-import path from "path";
+import { join } from "path";
 import { readFileSync } from "fs";
 
 interface CCCharObject {
@@ -11,18 +11,16 @@ interface CCCharObject {
 	category: string
 };
 
-const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST;
-const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT;
+const STATIC_SERVER_HOST = process.env.STATIC_SERVER_HOST as string;
+const STATIC_SERVER_PORT = process.env.STATIC_SERVER_PORT as string;
+const THEME_ZIP_PATTERN = /^\/store\/[\da-zA-Z]+\/([\S]+)\/\1.zip$/;
+const THEME_XML_PATTERN = /^\/store\/[\da-zA-Z]+\/([\S]+)\/theme.xml$/;
 
 export const charThumb = (id:number) => `${STATIC_SERVER_HOST}:${STATIC_SERVER_PORT}/thumbnails/${id}.png`;
-
 const ccCharObject2Xml = (char:CCCharObject, themeId:string) => 
 	`<char id="${char.id}" name="${char.name || "Untitled"}" cc_theme_id="${themeId}" thumbnail_url="${charThumb(char.id)}" copyable="Y">
 		<tags>${themeId},_free,_cat:${char.category || "Stock characters"}</tags>
 	</char>`;
-
-const themeZipPattern = /^\/store\/[\da-zA-Z]+\/([\S]+)\/\1.zip$/;
-const themeXmlPattern = /^\/store\/[\da-zA-Z]+\/([\S]+)\/theme.xml$/;
 
 /**
  * handles requests for studio theme zips
@@ -35,7 +33,7 @@ async function handleStudioTheme(
 	returnZip: boolean,
 	res: ServerResponse
 ) {
-	const filepath = path.join(Directories.store, themeId, "theme.xml");
+	const filepath = join(Directories.store, themeId, "theme.xml");
 	const themeXml = fixThemeXml(themeId, readFileSync(filepath));
 	if (returnZip) {
 		const zip = new AdmZip();
@@ -80,7 +78,7 @@ function fixThemeXml(themeId:string, themeXml:Buffer): Buffer {
 export function readStockCCChars(): Record<string, CCCharObject[]>
 export function readStockCCChars(themeId:string): CCCharObject[]
 export function readStockCCChars(themeId?:string): Record<string, CCCharObject[]> | CCCharObject[] {
-	const filepath = path.join(Directories.static, "characters/index.json");
+	const filepath = join(Directories.static, "characters/index.json");
 	const contents = readFileSync(filepath, {
 		encoding: "utf-8"
 	});
@@ -98,18 +96,17 @@ export default async function staticServer(
 ) {
 	res.setHeader("access-control-allow-headers", "*");
 	res.setHeader("access-control-allow-origin", "*");
-	const themeXmlMatch = req.url.match(themeXmlPattern);
+	res.setHeader("cache-control", "no-store");
+	const urlExists = typeof req.url == "string";
+	const themeXmlMatch = urlExists ? (req.url as string).match(THEME_XML_PATTERN) : false;
 	if (themeXmlMatch) {
 		return handleStudioTheme(themeXmlMatch[1], false, res);
 	}
-	const themeZipMatch = req.url.match(themeZipPattern);
+	const themeZipMatch = urlExists ? (req.url as string).match(THEME_ZIP_PATTERN) : false;
 	if (themeZipMatch) {
 		return handleStudioTheme(themeZipMatch[1], true, res);
 	}
 	await handler(req, res, {
-		public: Directories.static,
-		headers: {
-			"Cache-Control": "no-store"
-		}
+		public: Directories.static
 	});
 };

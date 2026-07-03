@@ -235,7 +235,7 @@ function refilter() {
 
 	let filtered:string[] = [];
 	for (const char of chars.value) {
-		if (filters.themeI !== null && (char.themeId != themelist[filters.themeI].cc_theme_id)) {
+		if (filters.themeI !== null && (char.theme != themelist[filters.themeI].cc_theme_id)) {
 			continue;
 		}
 

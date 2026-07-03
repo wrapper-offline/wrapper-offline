@@ -101,7 +101,7 @@ function confirmCancel(response:boolean) {
 function editFinished() {
 	isEditing.value = false;
 	const title = titleBox.value.innerText.trim();
-	updateAssetInfo({ title });
+	updateAssetInfo({ name: title });
 }
 
 function updateAssetInfo(newInfo:Partial<Asset>) {
@@ -114,7 +114,7 @@ function updateAssetInfo(newInfo:Partial<Asset>) {
 	xhttp.send(JSON.stringify({
 		data: {
 			id: props.asset.id,
-			title: newInfo.title,
+			title: newInfo.name,
 		}
 	}));
 }
@@ -131,10 +131,10 @@ function updateAssetInfo(newInfo:Partial<Asset>) {
 			</div>
 			<div class="asset_info_right">
 				<h3
-					:title="asset.title.length > 25 ? asset.title : ''"
+					:title="asset.name.length > 25 ? asset.name : ''"
 					:contenteditable="isEditing"
 					ref="title_box">
-					{{ asset.title }}
+					{{ asset.name }}
 				</h3>
 				<table>
 					<tbody>

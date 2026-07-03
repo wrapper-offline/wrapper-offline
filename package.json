@@ -44,6 +44,7 @@
 		"@types/formidable": "^3.4.5",
 		"@types/node": "^20.11.13",
 		"@types/node-static": "^0.7.11",
+		"@types/serve-handler": "^6.1.4",
 		"@types/xmldoc": "^1.1.9",
 		"@vitejs/plugin-vue": "^5.2.1",
 		"concurrently": "^9.1.2",

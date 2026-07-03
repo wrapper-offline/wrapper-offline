@@ -120,10 +120,7 @@ export default {
 
 					// add asset meta
 					const assetMeta = database.get("assets", id);
-					if (!assetMeta) {
-						throw new Error(`Asset #${id} is in the XML, but it does not exist.`);
-					}
-					ugc += AssetModel.meta2Xml(assetMeta.data);
+					ugc += AssetModel.meta2Xml(assetMeta);
 
 					// add video thumbnails
 					if (type == "prop" && subtype == "video") {
@@ -215,14 +212,14 @@ export default {
 	
 									const id = pieces[2];
 									try {
-										const charXml = CharModel.charXml(id);
+										const charXml = await CharModel.load(id);
 										const filename = pieces.join(".");
 	
 										ugc += AssetModel.meta2Xml({
 											// i can't just select the character data because of stock chars :(
 											id: id,
 											type: "char",
-											themeId: CharModel.getThemeId(charXml)
+											theme: CharModel.getThemeId(charXml)
 										} as Char);
 										zip.addFile(filename + ".xml", charXml);
 									} catch (e) {
@@ -402,7 +399,7 @@ export default {
 						const buffer = zip.readFile(`ugc.bg.${elem.attr.id}`);
 						AssetModel.save(buffer, elem.attr.id, {
 							type: "bg",
-							title: elem.attr.name,
+							name: elem.attr.name,
 							id: "c55fb6c.swf"
 						});
 					}
@@ -416,7 +413,7 @@ export default {
 							AssetModel.save(assetBuf, elem.attr.id, {
 								type: "prop",
 								subtype: "video",
-								title: elem.attr.name,
+								name: elem.attr.name,
 								width: +elem.attr.width,
 								height: +elem.attr.height,
 								id: elem.attr.id
@@ -434,7 +431,7 @@ export default {
 							AssetModel.save(buffer, elem.attr.id, {
 								type: "prop",
 								subtype: "0",
-								title: elem.attr.name,
+								name: elem.attr.name,
 								ptype: elem.attr.wearable == "1" ? "wearable" :
 									elem.attr.holdable == "1" ? "holdable" :
 									"placeable",
@@ -450,8 +447,8 @@ export default {
 						const buffer = zip.readFile(`ugc.char.${elem.attr.id}.xml`);
 						CharModel.save(buffer, {
 							type: "char",
-							title: elem.attr.name,
-							themeId: CharModel.getThemeId(buffer),
+							name: elem.attr.name,
+							theme: CharModel.getThemeId(buffer),
 							id: elem.attr.id
 						});
 					}
@@ -473,7 +470,7 @@ export default {
 							duration: +elem.attr.duration,
 							type: elem.name,
 							subtype: elem.attr.subtype,
-							title: elem.attr.name,
+							name: elem.attr.name,
 							id: elem.attr.id
 						});
 					}

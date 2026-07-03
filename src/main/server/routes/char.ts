@@ -1,128 +1,77 @@
-import { Char } from "../models/char.js";
-import CharModel from "../models/char.js";
+import CharModel, { Char } from "../models/char.js";
 import Database from "../../storage/database";
 import fs from "fs";
 import httpz from "@octanuary/httpz";
-import path from "path";
 
+const API_SERVER = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const base = Buffer.alloc(1, "0");
-const defaultTypes = {
-	anime: "guy",
-	cctoonadventure: "default",
-	family: "adam",
-};
-const bfTypes = {
-	man: "default&ft=_sticky_filter_guy",
-	woman: "default&ft=_sticky_filter_girl",
-	boy: "kid&ft=_sticky_filter_littleboy",
-	girl: "kid&ft=_sticky_filter_littlegirl",
-	heavy_man: "heavy&ft=_sticky_filter_heavyguy",
-	heavy_woman: "heavy&ft=_sticky_filter_heavygirl"
-};
-const thumbUrl = process.env.THUMB_BASE_URL;
-const url = `${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}`;
 const group = new httpz.Group();
 
-/*
-list
-*/
 group.route("GET", "/api/char/list", (req, res) => {
 	res.log("Retrieving character list...")
-	let filter = { type: "char" };
-	for (const key in req.query) {
-		filter[key] = req.query[key];
-	}
-	const chars = Database.select("assets", filter)
+	let filter:Partial<Char> = {
+		type: "char"
+	};
+	Object.assign(filter, req.query);
+	const chars = Database
+		.select("assets", filter)
 		.map((c:any) => {
-			c.thumbnail = `${url}/assets/${c.id}.png`;
+			c.thumbnail = `${API_SERVER}/assets/${c.id}.png`;
 			return c;
 		});
 	return res.json(chars);
 });
 
-/*
-load
-*/
-group.route("POST", "/goapi/getCcCharCompositionXml/", (req, res) => {
+group.route("POST", "/goapi/getCcCharCompositionXml/", async (req, res) => {
 	const id = req.body.assetId;
 	if (typeof id == "undefined") {
 		return res.status(400).end("Missing one or more fields.");
 	}
 
-	console.log(`Loading character #${id}...`);
+	res.log(`Loading character #${id}...`);
 	try {
-		const buf = CharModel.charXml(id);
+		const buf = await CharModel.load(id);
 		res.setHeader("Content-Type", "application/xml");
 		res.end(Buffer.concat([base, buf]));
-	} catch (err) {
-		if (err == "404") {
+	} catch (e) {
+		if (e instanceof RangeError) {
+			res.log("But nobody came.");
 			return res.status(404).end("1");
 		}
-		console.log(req.parsedUrl.pathname, "failed. Error:", err);
+		res.log("Failed to load character. Error:" + e);
 		res.status(500).end("1");
 	}
 });
 
-/*
-thumb
-*/
-group.route("GET", /\/stock_thumbs\/([\S]+)/, (req, res) => {
-	const filepath = path.join(__dirname, "../../", thumbUrl, req.matches[1]);
-	if (fs.existsSync(filepath)) {
-		fs.createReadStream(filepath).pipe(res);
-	} else {
-		console.warn(req.parsedUrl.pathname, "attempted on nonexistent asset.");
-		res.status(404).end();
-	}
-});
-
-/*
-redirect
-*/
-group.route("GET", /\/go\/character_creator\/(\w+)(\/\w+)?(\/.+)?$/, (req, res) => {
-	let [, theme, mode, id] = req.matches;
-
-	let redirect, external = "";
-	if (req.headers.referer?.indexOf("external=true") != -1) {
-		external = "&external=true";
-	}
-	switch (mode) {
-		case "/copy": {
-			redirect = `/cc?themeId=${theme}&original_asset_id=${id.substring(1)}${external}`;
-			break;
-		} default: {
-			const type = theme == "business" ?
-				bfTypes[req.query.type || "woman"] || "":
-				req.query.type || defaultTypes[theme] || "";
-			redirect = `/cc?themeId=${theme}&bs=${type}${external}`;
-			break;
-		}
-	}
-	
-	res.redirect(redirect);
-});
-
-/*
-save
-*/
-// save character + thumbnail
 group.route("POST", "/goapi/saveCCCharacter/", (req, res) => {
 	if (!req.body.body || !req.body.thumbdata || !req.body.themeId) {
 		return res.status(400).end("Missing one or more fields.");
 	}
 	const body = Buffer.from(req.body.body);
 	const thumb = Buffer.from(req.body.thumbdata, "base64");
+	let name:string;
+	if (req.body.name) {
+		name = (req.body.name as string).trim().slice(0, 100);
+	} else {
+		name = "Untitled";
+	}
 
-	const meta:Partial<Char> = {
-		type: "char",
-		title: req.body.title,
-		themeId: req.body.themeId
+	const meta = {
+		type: "char" as const,
+		title: name,
+		theme: req.body.themeId as string
 	};
-	const id = CharModel.save(body, meta);
-	CharModel.saveThumb(id, thumb);
-	res.end("0" + id);
+	try {
+		res.log("Saving character...");
+		const id = CharModel.save(body, meta);
+		CharModel.saveThumb(id, thumb);
+		res.log("Successfully saved character #" + id);
+		res.end("0" + id);
+	} catch (e) {
+		res.log("Error saving character: " + e);
+	}
 });
-// save thumbnail only
+
 group.route("POST", "/goapi/saveCCThumbs/", (req, res) => {
 	const id = req.body.assetId;
 	if (typeof id == "undefined" || !req.body.thumbdata) {
@@ -138,31 +87,29 @@ group.route("POST", "/goapi/saveCCThumbs/", (req, res) => {
 	}
 });
 
-/*
-upload
-*/
-group.route("*", "/api/char/upload", (req, res) => {
+group.route("POST", "/api/char/upload", (req, res) => {
 	const file = req.files.import;
 	if (!file) {
-		return res.status(400).json({ msg: "No file" });
+		return res.status(400).json({ msg:"No file" });
 	} else if (file.mimetype !== "text/xml") {
-		return res.status(400).json({ msg: "Character is not an XML" });
+		return res.status(400).json({ msg:"Character is not an XML" });
 	}
-	const origName = file.originalFilename;
-	const path = file.filepath, buffer = fs.readFileSync(path);
+	const origName = file.originalFilename?.trim()?.slice(0, 100);
+	const path = file.filepath,
+		buffer = fs.readFileSync(path);
 
-	const meta:Partial<Char> = {
-		type: "char",
-		title: origName || "Untitled",
-		themeId: CharModel.getThemeId(buffer)
+	const meta = {
+		type: "char" as const,
+		name: origName || "Untitled",
+		theme: CharModel.getThemeId(buffer)
 	};
 	try {
 		CharModel.save(buffer, meta);
 		fs.unlinkSync(path);
-		const url = `/cc_browser?themeId=${meta.themeId}`;
+		const url = `/cc_browser?themeId=${meta.theme}`;
 		res.redirect(url);
 	} catch (e) {
-		console.error("Error uploading character:", e);
+		res.log("Error uploading character:" + e);
 		res.status(500).end();
 	}
 });

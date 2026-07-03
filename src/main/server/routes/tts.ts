@@ -56,11 +56,11 @@ group.route("POST", "/goapi/convertTextToSoundAsset/", async (req, res) => {
 			duration,
 			type: "sound",
 			subtype: "tts",
-			title: `[${voiceName}] ${text}`
+			name: `[${voiceName}] ${text}`
 		};
 		const id = await AssetModel.save(filepath, "mp3", meta);
 		fs.unlinkSync(filepath);
-		res.end(`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>tts</subtype><title>${meta.title}</title><published>0</published><tags></tags><duration>${meta.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`);
+		res.end(`0<response><asset><id>${id}</id><enc_asset_id>${id}</enc_asset_id><type>sound</type><subtype>tts</subtype><title>${meta.name}</title><published>0</published><tags></tags><duration>${meta.duration}</duration><downloadtype>progressive</downloadtype><file>${id}</file></asset></response>`);
 	} catch (e) {
 		res.log("Failed to generate TTS! " + e);
 		res.end(`1<error><code>ERR_ASSET_404</code><message>${e}</message><text></text></error>`);

@@ -190,9 +190,6 @@ table.data_list tbody tr:hover td.hidden,
 table.data_list tbody tr.checked td.hidden {
 	opacity: 1;
 }
-.multiselect table.data_list tbody tr td.actions.hidden {
-	opacity: 0;
-}
 
 /* tr.folder td.title .folder_icon {
 	margin-right: 7px;
@@ -400,7 +397,7 @@ import {
 } from "../../interfaces/DataList";
 import FolderIcon from "../icons/FolderIcon.vue";
 import locale from "../../locale/en_US";
-import { onMounted, onUnmounted, provide, reactive, ref, toValue, useTemplateRef, watch } from "vue";
+import { onMounted, onUnmounted, provide, reactive, ref, useTemplateRef, watch } from "vue";
 import useListStore from "../../composables/useListStore";
 import { useRoute, useRouter } from "vue-router";
 import { useScreenWidth } from "../../composables/useScreenWidth";
@@ -724,13 +721,15 @@ defineExpose({ resetSelection, updateFilter });
 </script>
 
 <template>
-	<div :class="{
-		data_list_container: true,
-		load_state: isLoading,
-		grid: mode() == ViewMode.Grid,
-		multiselect: selection.entries.length > 1,
-		select_mode: selection.entries.length > 0
-	}" @click.self="resetSelection">
+	<div
+		:class="{
+			data_list_container: true,
+			load_state: isLoading,
+			grid: mode() == ViewMode.Grid,
+			select_mode: selection.entries.length > 0
+		}"
+		@click.self="resetSelection"
+	>
 		<div class="select_mode_options">
 			<div class="side_padding">
 				<input
