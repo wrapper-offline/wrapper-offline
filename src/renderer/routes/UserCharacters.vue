@@ -70,9 +70,9 @@ import { Char } from "../interfaces/Asset";
 import Navbar from "../components/Navbar.vue";
 import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import { apiServer } from "../utils/AppInit";
-import DataList from "../components/list/DataList.vue";
+import DataList from "../components/DataList.vue/index.js";
 import CharListRow from "../components/list/rows/CharListRow.vue";
-import { DataListRow2, FieldId, ListFieldColumn, SelectedListSort, ViewMode } from "../interfaces/DataList";
+import { DataListRow2, EntryKey, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
 import { useNavbar } from "../composables/useNavbar";
 import Dropdown from "../components/controls/DropdownMenu.vue";
 import DropdownItem from "../components/controls/DropdownItem.vue";
@@ -303,7 +303,7 @@ function category_click(category?:string) {
  * called when the user clicks a sort option
  * @param newSort sort option to switch to
  */
-function dataList_sortChange(newSort:FieldId<Char>) {
+function dataList_sortChange(newSort:EntryKey<Char>) {
 	if (selectedSort.value.id == newSort) {
 		selectedSort.value.descending = !selectedSort.value.descending;
 	} else {
@@ -399,9 +399,9 @@ onMounted(async () => {
 				:columns="columns"
 				:selected-sort="selectedSort"
 				:restrictions="{
-					mode: ViewMode.Grid
+					flow: ViewMode.Grid
 				}"
-				:row-component="CharListRow as any as DataListRow2<Char>"
+				:dataComponent="CharListRow as any as DataListRow2<Char>"
 				@sort-change="dataList_sortChange"
 			/>
 		</div>

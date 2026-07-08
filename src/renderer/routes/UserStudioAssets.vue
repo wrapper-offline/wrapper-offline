@@ -1,195 +1,164 @@
-<style lang="css" scoped>
-.page_contents {
-	overflow: auto;
-}
-</style>
-
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
 import type { Asset } from "../interfaces/Asset";
-import AssetRowOptions from "../components/list/options/AssetListOptions.vue";
-import AssetListRow from "../components/list/rows/AssetListRow.vue";
-import { ViewMode, type DataListRow2, type FieldId, type ListFieldColumn, type SelectedListSort } from "../interfaces/DataList";
+import AssetListOptions from "../components/AssetListOptions.vue";
+import AssetListData from "../components/AssetListData.vue";
+import { Columns, Flow, type EntryKey } from "../interfaces/DataList";
 import { flattenAssetType } from "../utils/flattenAssetType";
-import DataList from "../components/list/DataList.vue";
+import DataList from "../components/DataList.vue";
 import Navbar from "../components/Navbar.vue";
 import {
+	computed,
 	onMounted,
+	provide,
 	ref,
-	toValue,
-	watch
+	useTemplateRef,
 } from "vue";
-import { useRoute } from "vue-router";
+import { useStorage } from "@vueuse/core";
+import NavbarDataListSettings from "../components/NavbarDataListSettings.vue";
 
-const route = useRoute();
+const listTree = useTemplateRef("list-tree");
 
-/** list of user assets */
-const assetList = ref<Asset[]>();
-/** is the asset list currently being loaded */
-const isLoading = ref(false);
+const columns = useStorage<Columns<Asset>>("assetListColumns", {
+	"name": 280,
+	"id": 120,
+	"type": 150
+});
+const columnKeys = computed(() => Object.keys(columns.value));
+const scale = useStorage("assetListScale", 60);
+/** [key, descending] */
+const sort = useStorage<[EntryKey<Asset>, boolean]>("assetListSort", ["name", true]);
 
-let columnWidths = JSON.parse(localStorage.getItem("sasset_list-columnWidths")) ??
-	{ "name":280, "id":120, "type":150 };
-let columns:ListFieldColumn<Asset>[] = [
-	{
-		id: "name",
-		width: ref(columnWidths["name"]),
-	},
-	{
-		id: "id",
-		width: ref(columnWidths["id"]),
-	},
-	{
-		id: "type",
-		width: ref(columnWidths["type"]),
-	},
-];
+const isLoading = ref(true);
+const entryList = ref<{
+	folders: [],
+	entries: Asset[]
+}>({
+	folders: [],
+	entries: [],
+});
 
-/** list sort option that is currently selected */
-const selectedSort = ref<SelectedListSort<Asset>>(
-	JSON.parse(localStorage.getItem("sasset_list-selectedSort")) ??
-		{
-			id: "name",
-			descending: true
-		}
-);
+provide("columnKeys", columnKeys);
+provide("flow", Flow.List);
+provide("scale", scale);
 
-/**
- * clears the asset list array
- */
-function initList() {
-	assetList.value = [];
+function resetList() {
+	entryList.value = {
+		folders: [],
+		entries: [],
+	};
 }
 
 /**
- * used to resort a list of entries
- * @param asset1 movie 1
- * @param asset2 movie 2
+ * compares entry using the current sort setting
+ * @param entry1 asset 1
+ * @param entry2 entry 2
  */
-function assetSortCb(asset1:Asset, asset2:Asset): number {
-	let mul = toValue(selectedSort).descending ? 1 : -1;
-	const sortOption = toValue(selectedSort).id;
-	switch (sortOption) {
+function compareEntries(entry1:Asset, entry2:Asset): number {
+	const sortBy = sort.value[0];
+	const co = sort.value[1] ? 1 : -1;
+	switch (sortBy) {
 		case "type": {
-			const type1 = flattenAssetType(asset1);
-			const type2 = flattenAssetType(asset2);
-			return type1.localeCompare(type2) * mul;
+			const type1 = flattenAssetType(entry1);
+			const type2 = flattenAssetType(entry2);
+			return type1.localeCompare(type2) * co;
+		}
+		case "index": {
+			return 0;
 		}
 		default: {
-			const compare1 = asset1[sortOption].toString();
-			const compare2 = asset2[sortOption].toString();
-			return compare1.localeCompare(compare2) * mul;
+			const compare1 = (entry1[sortBy] || "").toString();
+			const compare2 = (entry2[sortBy] || "").toString();
+			return compare1.localeCompare(compare2) * co;
 		}
 	}
 }
 
-/**
- * called when the user clicks a sort option
- * @param newSort sort option to switch to
- */
-function changeSort(newSort:FieldId<Asset>) {
-	if (selectedSort.value.id == newSort) {
-		selectedSort.value.descending = !selectedSort.value.descending;
-	} else {
-		selectedSort.value = {
-			id: newSort,
-			descending: true,
-		};
-	}
-	localStorage.setItem("sasset_list-selectedSort", JSON.stringify(toValue(selectedSort)));
-	assetList.value = assetList.value.sort(assetSortCb);
+function resizeColumn(key:EntryKey<Asset>, newWidth:number) {
+	columns.value[key] = newWidth;
 }
 
-/**
- * called when the user resizes a movie list column
- * @param id column id
- * @param newWidth new width in pixels
- */
-function columnResized(id:FieldId<Asset>, newWidth:number) {
-	columnWidths[id] = newWidth;
-	localStorage.setItem("sasset_list-columnWidths", JSON.stringify(columnWidths));
+/** updates the sort setting and resorts the list */
+function changeSort(key:EntryKey<Asset>) {
+	if (sort.value[0] == key) {
+		sort.value[1] = !sort.value[1];
+	} else {
+		sort.value = [key, true];
+	}
+	entryList.value.entries = entryList.value.entries.sort(compareEntries);
 }
 
 /**
  * initializes the list by loading assets
  */
-function getAssetList(): Promise<Asset[]> {
-	return new Promise((res) => {
-		const xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function () {
-			if (this.readyState != 4 || this.status != 200) {
-				return;
-			}
-			let responseJson = JSON.parse(this.responseText);
-			res(responseJson);
-		};
-		let url = `${apiServer}/api/asset/list`;
-		xhttp.open("GET", url, true);
-		xhttp.send();
-	});
-}
-
-/**
- * called when the route updates, gathers information before reloading the list
- */
-async function routeUpdated() {
-	isLoading.value = true;
-	setTimeout(() => {
-		loadAssetList();
-	}, 20);
+async function getAssetList(): Promise<Asset[]> {
+	const url = `${apiServer}/api/asset/list`;
+	const res = await fetch(url);
+	if (!res.ok) {
+		return [];
+	}
+	const json = await res.json();
+	return json;
 }
 
 /**
  * loads the movie/starter list along with the relevant navbar entries
  */
 async function loadAssetList() {
-	initList();
 	const response = await getAssetList();
-	// navbarEntries.value = [
-	// 	{
-	// 		path: "/assets",
-	// 		title: `Your Library`
-	// 	}
-	// ];
-	assetList.value = response.sort(assetSortCb);
-	setTimeout(() => {
+	entryList.value.entries = response;
+	entryList.value.entries = entryList.value.entries.sort(compareEntries);
+	setTimeout(() => { // wait for thumbs to load
 		isLoading.value = false;
-	}, 80);
+	}, 20);
 }
 
-watch(() => route.path, routeUpdated);
 onMounted(async () => {
-	routeUpdated();
+	if (!listTree.value) {
+		return;
+	}
+	listTree.value.resetSelection();
+	resetList()
+	isLoading.value = true;
+	loadAssetList();
 });
-
-initList();
 
 </script>
 
 <template>
 	<div>
-		<Navbar
-			:count="assetList.length"
-			:supported="{
-				search: true,
-				zoom: true
-			}"
-		/>
+		<Navbar>
+			<template #right>
+				<NavbarDataListSettings/>
+			</template>
+		</Navbar>
 
 		<div class="page_contents">
 			Filter by [Type]
 			<DataList
-				:data="{ folders:[], entries:assetList }"
-				:is-loading="isLoading"
-				:columns="columns"
-				:selected-sort="selectedSort"
-				:restrictions="{
-					mode: ViewMode.List
-				}"
-				:row-component="AssetListRow as any as DataListRow2<Asset>"
-				@column-resize="columnResized"
-				@sort-change="changeSort"
-			/>
+				ref="list-tree"
+				:class="{ load_state:isLoading }"
+				v-model="entryList"
+				:columns
+				:sort
+				:data-component="AssetListData"
+				:options-component="AssetListOptions"
+				@column-resize="resizeColumn"
+				@sort-change="changeSort"/>
 		</div>
 	</div>
 </template>
+
+<style lang="css" scoped>
+:deep(.dl_row.asset) td.title img {
+	display: block;
+	margin-right: 7px;
+	width: calc(var(--scale) - 20px);
+	height: calc(var(--scale) - 20px);
+}
+
+.page_contents {
+	overflow: auto;
+}
+
+</style>

@@ -1,39 +1,39 @@
-<style lang="css">
-table.data_list tbody tr.movie td.title img {
-	width: calc(calc(calc(v-bind("zoomLevel + 'px'") - 20px) / 9) * 16);
-}
-</style>
-
 <script setup lang="ts">
 import { apiServer } from "../utils/AppInit";
-import type { DataListRow2, FieldId, ListFieldColumn, SelectedListSort } from "../interfaces/DataList";
-import DataList from "../components/list/DataList.vue";
-import type { Movie } from "../interfaces/Movie";
-import MovieListRow from "../components/list/rows/MovieListRow.vue";
-import Navbar from "../components/Navbar.vue";
+import { Columns, Flow, type EntryKey } from "../interfaces/DataList";
 import {
-	onMounted,
+	computed,
+	provide,
 	ref,
-	toValue,
 	useTemplateRef,
-	watch
+	watchEffect
 } from "vue";
-import useListStore from "../composables/useListStore";
+import DataList from "../components/DataList.vue";
+import type { Movie } from "../interfaces/Movie";
+import MovieListData from "../components/MovieListData.vue";
+import MovieListOptions from "../components/MovieListOptions.vue";
+import Navbar from "../components/Navbar.vue";
+import NavbarDataListSettings from "../components/NavbarDataListSettings.vue";
+import { useStorage } from "@vueuse/core";
 import { useRoute } from "vue-router";
-import unwrapJson from "../utils/unwrapJson";
 
 const listTree = useTemplateRef("list-tree");
-const { pendingRefresh, zoomLevel } = useListStore();
 const route = useRoute();
 
-/** id of the folder whose contents are currently being listed */
-const currentFolder = ref<string>("");
-/** is the movie list currently being loaded */
-const isLoading = ref(false);
-/** movie or starters page being used */
-let listPage:"movie"|"starter";
-/** list of movies and folders (if applicable) */
-const movieList = ref<{
+const columns = useStorage<Columns<Movie>>("movieListColumns", {
+	"title": 250,
+	"duration": 100,
+	"date": 180
+});
+const columnKeys = computed(() => Object.keys(columns.value));
+const flow = useStorage("movieListFlow", Flow.List);
+const scale = useStorage("movieListScale", 60);
+/** [key, descending] */
+const sort = useStorage<[EntryKey<Movie>, boolean]>("movieListSort", ["title", true]);
+
+const folder = ref<string>("");
+const isLoading = ref(true);
+const entryList = ref<{
 	folders: [],
 	entries: Movie[]
 }>({
@@ -41,42 +41,12 @@ const movieList = ref<{
 	entries: [],
 });
 
-let columnWidths = unwrapJson(
-	localStorage.getItem("movie_list-columnWidths"),
-	{ "title":250, "id":100, "duration":100, "date":180 }
-);
-let columns:ListFieldColumn<Movie>[] = [
-	{
-		id: "title",
-		width: ref(columnWidths["title"]),
-	},
-	{
-		id: "id",
-		width: ref(columnWidths["id"]),
-	},
-	{
-		id: "duration",
-		width: ref(columnWidths["duration"]),
-	},
-	{
-		id: "date",
-		width: ref(columnWidths["date"]),
-	}
-];
+provide("columnKeys", columnKeys);
+provide("flow", flow);
+provide("scale", scale);
 
-/** list sort option that is currently selected */
-const selectedSort = ref<SelectedListSort<Movie>>(
-	unwrapJson(localStorage.getItem("movie_list-selectedSort"), {
-		id: "title",
-		descending: true
-	})
-);
-
-/**
- * resets the movie list object to a blank value
- */
-function initList() {
-	movieList.value = {
+function resetList() {
+	entryList.value = {
 		folders: [],
 		entries: [],
 	};
@@ -98,27 +68,27 @@ function timestampToSeconds(time:string) {
 }
 
 /**
- * used to resort a list of entries
- * @param movie1 movie 1
- * @param movie2 movie 2
+ * compares entry using the current sort setting
+ * @param entry1 asset 1
+ * @param entry2 entry 2
  */
-function movieSort(movie1:Movie, movie2:Movie): number {
-	const co = selectedSort.value.descending ? 1 : -1;
-	const sortOption = selectedSort.value.id;
-	switch (sortOption) {
+function compareEntries(entry1:Movie, entry2:Movie): number {
+	const sortBy = sort.value[0];
+	const co = sort.value[1] ? 1 : -1;
+	switch (sortBy) {
 		case "id":
 		case "title": {
-			return co * movie1[sortOption].localeCompare(movie2[sortOption]);
+			return co * entry1[sortBy].localeCompare(entry2[sortBy]);
 		}
 		case "duration": {
 			// hehehehehe sex
-			const secs1 = timestampToSeconds(movie1.duration);
-			const secs2 = timestampToSeconds(movie2.duration);
-			return co * (secs2 - secs1);
+			const secs1 = timestampToSeconds(entry1.duration);
+			const secs2 = timestampToSeconds(entry2.duration);
+			return co * (secs1 - secs2);
 		}
 		case "date": {
-			const date1 = new Date(movie1.date);
-			const date2 = new Date(movie2.date);
+			const date1 = new Date(entry1.date);
+			const date2 = new Date(entry2.date);
 			return co * (+date1 - +date2);
 		}
 		default: {
@@ -127,31 +97,22 @@ function movieSort(movie1:Movie, movie2:Movie): number {
 	}
 }
 
-/**
- * called when the user clicks a sort option
- * @param newSort sort option to switch to
- */
-function changeSort(newSort:FieldId<Movie>) {
-	if (selectedSort.value.id == newSort) {
-		selectedSort.value.descending = !selectedSort.value.descending;
-	} else {
-		selectedSort.value = {
-			id: newSort,
-			descending: true,
-		};
-	}
-	localStorage.setItem("movie_list-selectedSort", JSON.stringify(toValue(selectedSort)));
-	movieList.value.entries = movieList.value.entries.sort(movieSort);
+function resizeColumn(key:EntryKey<Movie>, newWidth:number) {
+	columns.value[key] = newWidth;
 }
 
-/**
- * called when the user resizes a movie list column
- * @param id column id
- * @param newWidth new width in pixels
- */
-function columnResized(id:FieldId<Movie>, newWidth:number) {
-	columnWidths[id] = newWidth;
-	localStorage.setItem("movie_list-columnWidths", JSON.stringify(columnWidths));
+function changeFlow(value:Flow) {
+	flow.value = value;
+}
+
+/** updates the sort setting and resorts the list */
+function changeSort(key:EntryKey<Movie>) {
+	if (sort.value[0] == key) {
+		sort.value[1] = !sort.value[1];
+	} else {
+		sort.value = [key, true];
+	}
+	entryList.value.entries = entryList.value.entries.sort(compareEntries);
 }
 
 /**
@@ -160,13 +121,7 @@ function columnResized(id:FieldId<Movie>, newWidth:number) {
  * @param filter should the movie or starter list be loaded
  * @param folderId folder to load
  */
-function getMovieTree(filter:"starter"): Promise<{
-	list_data: {
-		folders: [],
-		entries: Movie[],
-	}
-}>
-function getMovieTree(filter:"movie", folderId:string): Promise<{
+async function getMovieTree(folderId:string): Promise<{
 	// navbar_parent_folders: NavbarEntry[],
 	navbar_parent_folders: void,
 	list_data: {
@@ -174,121 +129,82 @@ function getMovieTree(filter:"movie", folderId:string): Promise<{
 		entries: Movie[],
 	}
 }>
-function getMovieTree(filter:"movie"|"starter", folderId?:string) {
-	return new Promise((res) => {
-		const xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function () {
-			if (this.readyState != 4 || this.status != 200) {
-				return;
-			}
-			let responseJson = JSON.parse(this.responseText);
-
-			// let parentFolderEntries:NavbarEntry[] | void;
-			let parentFolderEntries:void;
-			if (filter == "movie") {
-				// parentFolderEntries = responseJson.folder_path.map(v => ({
-				// 	path: "/movies/" + v.id,
-				// 	title: v.title
-				// }));
-			}
-			res({
-				navbar_parent_folders: parentFolderEntries,
-				list_data: {
-					folders: responseJson.folders,
-					entries: responseJson.movies,
-				}
-			});
-		};
-		let url = `${apiServer}/api/movie/list?type=${filter}`;
-		if (folderId && folderId.length > 0) {
-			url += `&path=${folderId}`;
-		}
-		xhttp.open("GET", url, true);
-		xhttp.send();
-	});
-}
-
-/**
- * called when the route updates, gathers information before reloading the list
- */
-async function routeUpdated() {
-	if (!listTree.value) {
+async function getMovieTree(folderId?:string) {
+	let url = `${apiServer}/api/movie/list`;
+	if (folderId && folderId.length > 0) {
+		url += `?path=${folderId}`;
+	}
+	const res = await fetch(url);
+	if (!res.ok) {
 		return;
 	}
-	listTree.value.resetSelection();
-	initList();
-	listPage = route.name == "movie_list" ? "movie" : "starter";
-	if (listPage == "movie") {
-		currentFolder.value = route.params.folderId as string || "";
-	}
-	isLoading.value = true;
-	await loadMovieList();
+	const json = await res.json();
+
+	// let parentFolderEntries:NavbarEntry[] | void;
+	let parentFolderEntries:void;
+	return {
+		navbar_parent_folders: parentFolderEntries,
+		list_data: {
+			folders: json.folders,
+			entries: json.movies,
+		}
+	};
 }
 
 /**
  * loads the movie/starter list along with the relevant navbar entries
  */
 async function loadMovieList() {
-	if (listPage == "movie") {
-		const response = await getMovieTree(listPage, currentFolder.value);
-		// navbarEntries.value = [
-		// 	{
-		// 		path: "/movies",
-		// 		title: "Videos"
-		// 	},
-		// 	...response.navbar_parent_folders
-		// ];
-		movieList.value = response.list_data;
-	} else {
-		const response = await getMovieTree(listPage);
-		// navbarEntries.value = [
-		// 	{
-		// 		path: "/starters",
-		// 		title: "Starters"
-		// 	}
-		// ];
-		movieList.value = response.list_data;
-	}
-	movieList.value.entries = movieList.value.entries.sort(movieSort);
-	setTimeout(() => {
+	const response = await getMovieTree(folder.value);
+	entryList.value = response.list_data;
+	entryList.value.entries = entryList.value.entries.sort(compareEntries);
+	setTimeout(() => { // wait for thumbs to load
 		isLoading.value = false;
-	}, 80);
+	}, 20);
 }
 
-watch(() => pendingRefresh.value, routeUpdated);
-watch(() => route.path, routeUpdated);
-onMounted(async () => {
-	routeUpdated();
+watchEffect(async () => {
+	if (!listTree.value) {
+		return;
+	}
+	listTree.value.resetSelection();
+	resetList();
+	folder.value = route.params.folderId as string || "";
+	isLoading.value = true;
+	await loadMovieList();
 });
-
-initList();
 
 </script>
 
 <template>
 	<div>
-		<Navbar
-			:count="movieList.entries.length"
-			:supported="{
-				newFolder: listPage != 'starter',
-				search: true,
-				viewMode: true,
-				zoom: true
-			}"
-		/>
+		<Navbar>
+			<template #right>
+				<NavbarDataListSettings
+					:flow
+					@flow-update="changeFlow"/>
+			</template>
+		</Navbar>
 
 		<div class="page_contents">
 			<br/><br/><br/>new movie, recents<br/><br/><br/><br/>
 			<DataList
 				ref="list-tree"
-				:data="movieList"
-				:is-loading="isLoading"
-				:columns="columns"
-				:selected-sort="selectedSort"
-				:row-component="MovieListRow as any as DataListRow2<Movie>"
-				@column-resize="columnResized"
-				@sort-change="changeSort"
-			/>
+				:class="{ load_state:isLoading }"
+				v-model="entryList"
+				:columns
+				:sort
+				:data-component="MovieListData"
+				:options-component="MovieListOptions"
+				@column-resize="resizeColumn"
+				@sort-change="changeSort"/>
 		</div>
 	</div>
 </template>
+
+<style lang="css" scoped>
+:deep(.dl_row.movie) td.title img {
+	width: calc(calc(calc(v-bind("scale + 'px'") - 20px) / 9) * 16);
+}
+
+</style>

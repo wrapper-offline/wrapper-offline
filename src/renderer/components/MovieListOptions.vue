@@ -1,10 +1,8 @@
-<style src="./data_list_options.css"/>
-
 <script setup lang="ts">
-import { apiServer } from "../../../utils/AppInit";
-import type { Movie } from "../../../interfaces/Movie";
-import openPlayerWindow from "../../../utils/openPlayerWindow";
-import en_US from "../../../locale/en_US";
+import { apiServer } from "../utils/AppInit";
+import type { Movie } from "../interfaces/Movie";
+import openPlayerWindow from "../utils/openPlayerWindow";
+import en_US from "../locale/en_US";
 
 const emit = defineEmits<{
 	entryDelete: [string[]]
@@ -57,6 +55,7 @@ function idsAsArray() {
 		props.entry :
 		[ props.entry.id ];
 }
+
 </script>
 
 <template>
@@ -90,3 +89,8 @@ function idsAsArray() {
 		</a>
 	</div>
 </template>
+
+<style scoped>
+@import url(../css/data_list_options.css);
+
+</style>

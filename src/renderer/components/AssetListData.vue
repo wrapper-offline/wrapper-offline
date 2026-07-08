@@ -1,19 +1,13 @@
-<script lang="ts">
-export default {
-	optionsComponent: AssetListOptions
-};
-</script>
-
-<script setup lang="ts" generic="T extends Asset">
-import type { Asset } from "../../../interfaces/Asset";
-import AssetListOptions from "../options/AssetListOptions.vue";
-import AssetImage from "../../AssetImage.vue";
-import AssetInfoModal from "../../AssetInfoModal.vue";
-import { genericColumnIdKey } from "../../../keys/listTreeKeys";
+<script setup lang="ts">
+import type { Asset } from "../interfaces/Asset";
+import AssetListOptions from "./AssetListOptions.vue";
+import AssetImage from "./AssetImage.vue";
+import AssetInfoModal from "./AssetInfoModal.vue";
 import { inject, ref, toValue } from "vue";
-import type { FieldId } from "../../../interfaces/DataList";
-import { flattenAssetType } from "../../../utils/flattenAssetType";
-import locale from "../../../locale/en_US";
+import { type EntryKey } from "../interfaces/DataList";
+import { flattenAssetType } from "../utils/flattenAssetType";
+import locale from "../locale/en_US";
+import CheckboxInput from "./controls/CheckboxInput.vue";
 
 const emit = defineEmits<{
 	entryDelete: [string],
@@ -24,12 +18,11 @@ const emit = defineEmits<{
 }>();
 const props = defineProps<{
 	checked: boolean,
-	entry: T
+	entry: Asset
 }>();
 defineExpose({ id:props.entry.id });
 
-/** list of columns to be displayed */
-const columns = inject(genericColumnIdKey<T>(), []);
+const columns = inject<EntryKey<Asset>[]>("columnKeys", []);
 const key = ref("assetlist-entry" + props.entry.id);
 const showPreview = ref(false);
 
@@ -77,10 +70,10 @@ function assetPreviewClose_click() {
  * called when the asset info has been updated in the preview modal
  * @param param0 object containing new asset info
  */
-function assetInfoUpdated({ name }:Partial<T>) {
-	props.entry.name = name;
+function assetInfoUpdated({ name }:Partial<Asset>) {
+	props.entry.name = name || "";
 	const origKey = toValue(key);
-	key.value = null;
+	key.value = "";
 	key.value = origKey;
 }
 
@@ -88,43 +81,41 @@ function assetInfoUpdated({ name }:Partial<T>) {
  * returns normalized asset info to be displayed
  * @param field id of field to return
  */
-function assetInfo(field:FieldId<T>): string {
+function entryInfo(field:EntryKey<Asset>): string {
 	switch (field) {
 		case "index": {}
 		case "type": {
 			const flatType = flattenAssetType(props.entry);
+			//@ts-ignore
 			return locale.asset.flat_type_map[flatType];
 		}
-		default: return props.entry[field].toString();
+		default: return (props.entry[field] || "").toString();
 	}
 }
+
 </script>
 
 <template>
 	<tr
 		:key="key"
+		class="dl_row asset"
 		:class="{ checked }"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
 		@click.shift.exact="entryElem_shiftClick"
 		@click.exact="entryElem_click">
-		<!-- :class="{
-			movie: true,
-			sel: (selection['movie'] || []).includes(movie.id)
-		}"
-		draggable="true"
-		@mousedown.exact="clearSelection(); select('movie', movie.id)"
-		@mousedown.ctrl="select('movie', movie.id)"
-		@dragstart="onMovieDrag($event, movie.id)"> -->
 		<td class="hidden">
-			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
+			<CheckboxInput
+				v-bind:model-value="checked"
+				@update:model-value="entryElem_ctrlClick"
+				@dblclick.stop
+				@click.stop/>
 		</td>
-		<td v-for="columnId in columns" :class="{ title:columnId=='name' }">
-			<!-- thumbnail block for title column -->
+		<td v-for="columnId in columns" :class="{ title:columnId == 'name' }">
 			<template v-if="columnId == 'name'">
 				<AssetImage :asset="entry"/>
 			</template>
-			<span>{{ assetInfo(columnId) }}</span>
+			<span>{{ entryInfo(columnId) }}</span>
 		</td>
 		<td class="hidden">
 			<AssetListOptions :entry="entry"/>
@@ -136,3 +127,9 @@ function assetInfo(field:FieldId<T>): string {
 			@update="assetInfoUpdated"/>
 	</tr>
 </template>
+
+<style scoped>
+@import url(../css/data_list_data.css);
+
+</style>
+

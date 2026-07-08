@@ -64,11 +64,15 @@ if (!IS_DEV) {
 			return;
 		}
 		await handler(req, res, {
-			public: join(__dirname, "renderer"),
-			headers: {
-				"Cache-Control": "no-store"
-			}
+			public: join(__dirname, "renderer")
 		});
+	});
+} else {
+	group.route("*", "*", async (req, res) => {
+		if (res.writableEnded) {
+			return;
+		}
+		res.status(404).end();
 	});
 }
 

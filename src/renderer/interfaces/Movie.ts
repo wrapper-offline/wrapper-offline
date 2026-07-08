@@ -5,5 +5,5 @@ export interface Movie {
 	title: string,
 	sceneCount: string,
 	watermark?: string,
-	parent_id?: string,
+	folder?: string,
 };

@@ -108,6 +108,7 @@ links
 .app_sidebar .link>a {
 	color: #fff;
 	text-decoration: none;
+	-webkit-user-drag: none;
 	display: flex;
 	padding: 5px 8px;
 	height: 100%;
@@ -439,7 +440,7 @@ async function movieInput_input(e:Event) {
 			break;
 		case "none":
 		default:
-			pendingRefresh.set(true);
+			// pendingRefresh.set(true);
 	}
 }
 
@@ -561,14 +562,14 @@ defineExpose({ width });
 					<div class="link_text">Characters</div>
 				</RouterLink>
 			</li>
-			<li class="link" :class="{sel:router.currentRoute.value.name == 'movie_list'}">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'movie_list' && !router.currentRoute.value.params.folderId}">
 				<RouterLink to="/movies">
 					<i class="ico film"></i>
 					<div class="link_text">Videos</div>
 				</RouterLink>
 			</li>
-			<li class="link" :class="{sel:router.currentRoute.value.name == 'starter_list'}">
-				<RouterLink to="/starters">
+			<li class="link" :class="{sel:router.currentRoute.value.name == 'movie_list' && router.currentRoute.value.params.folderId == 'starters'}">
+				<RouterLink to="/movies/starters">
 					<i class="ico briefcase"></i>
 					<div class="link_text">Starters</div>
 				</RouterLink>
@@ -583,7 +584,7 @@ defineExpose({ width });
 		<ul class="page_specific">
 			<h3>Starred</h3>
 			<li class="link">
-				<RouterLink to="/">
+				<RouterLink to="/fgdf">
 					<i class="ico folder"></i>
 					<div class="link_text">Example folder</div>
 				</RouterLink>

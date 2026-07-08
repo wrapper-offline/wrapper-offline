@@ -1,7 +1,45 @@
-<style lang="css" scoped>
+<script setup lang="ts">
+const emit = defineEmits<{
+	downloadClick: [],
+	newFolderClick: []
+	saveClick: [],
+}>();
+defineProps<{
+	/** display a number at the end of a final link */
+	count?: number,
+	/** specify supported features to show */
+	supported?: {
+		/**	displays a download button */
+		download?: boolean,
+		/** displays a new folder icon */
+		newFolder?: boolean,
+		/** display a save button */
+		save?: boolean,
+		/** display a search box */
+		search?: boolean,
+		/** display view mode toggle (list or grid) */
+		viewMode?: boolean,
+		/** display a zoom slider */
+		zoom?: boolean,
+	}
+}>();
+
+</script>
+
+<template>
+	<header>
+		<div class="head_left">
+			<slot name="left"></slot>
+		</div>
+		<div class="head_right">
+			<slot name="right"></slot>
+		</div>
+	</header>
+</template>
+
+<style lang="css">
 header {
 	background: hsl(255 13% 88% / 1);
-	border-bottom: 1px solid hsl(240 12% 76% / 1);
 	border-radius: 10px 0 0;
 	display: flex;
 	flex-shrink: 0;
@@ -98,7 +136,6 @@ dark mode
 **/
 html.dark header {
 	background: hsl(250 9% 13% / 1);
-	border-color: hsl(250 9% 24% / 1);
 }
 html.dark header .nav_btn {
 	color: hsl(0deg 0% 82%);
@@ -121,178 +158,5 @@ html.dark header .search_box {
 html.dark header .search_box:focus {
 	border-color: #5589d8;
 }
+
 </style>
-
-<script setup lang="ts">
-import Dropdown from "./controls/DropdownMenu.vue";
-import DropdownItem from "./controls/DropdownItem.vue";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
-import useListStore from "../composables/useListStore";
-import { useNavbar } from "../composables/useNavbar";
-import { ViewMode } from "../interfaces/DataList";
-
-const emit = defineEmits<{
-	downloadClick: [],
-	newFolderClick: []
-	saveClick: [],
-}>();
-defineProps<{
-	/** display a number at the end of a final link */
-	count?: number,
-	/** specify supported features to show */
-	supported?: {
-		/**	displays a download button */
-		download?: boolean,
-		/** displays a new folder icon */
-		newFolder?: boolean,
-		/** display a save button */
-		save?: boolean,
-		/** display a search box */
-		search?: boolean,
-		/** display view mode toggle (list or grid) */
-		viewMode?: boolean,
-		/** display a zoom slider */
-		zoom?: boolean,
-	}
-}>();
-
-const router = useRouter();
-const { search, viewMode, zoomLevel } = useListStore();
-const navbar = useNavbar();
-let entries = navbar.currentState.entries;
-
-function backButtonClick() {
-	router.back();
-}
-function forwardButtonClick() {
-	router.forward();
-}
-
-function onSearchInput(e:InputEvent) {
-	const target = e.currentTarget as HTMLInputElement;
-	search.set(target.value);
-}
-
-/**
- * called when the save button is clicked, emits event for it
- */
-function saveButton_click() {
-	emit("saveClick");
-}
-
-/**
- * called when the download button is clicked, emits event for it
- */
-function downloadButton_click() {
-	emit("downloadClick");
-}
-
-/**
- * called when the new folder icon is clicked, emits event for it
- */
-function newFolderClick() {
-	emit("newFolderClick");
-}
-
-/**
- * called when the user clicks the view buttons
- * @param newView view to switch to
- */
-function changeView(newView:ViewMode) {
-	viewMode.set(newView);
-}
-
-/**
- * called when the user adjusts the zoom slider
- */
-function zoomSliderMoved(e:InputEvent) {
-	const target = e.currentTarget as HTMLInputElement;
-	const newVal = target.valueAsNumber;
-	zoomLevel.set(newVal);
-}
-
-onBeforeRouteLeave(() => {
-	navbar.resetState();
-});
-</script>
-
-<template>
-	<header>
-		<div class="head_left">
-			<div class="nav_btn" v-tooltip="'Back'" @click="backButtonClick"><i class="ico left"></i></div>
-			<div class="nav_btn" v-tooltip="'Forward'" @click="forwardButtonClick"><i class="ico right"></i></div>
-			<div class="link_container">
-				<template v-for="parent in entries.slice(0, -1)">
-					<RouterLink v-if="parent.path" :to="parent.path" class="link parent_link">
-						{{ parent.title }}
-						<div class="caret"><i class="ico right"></i></div>
-					</RouterLink>
-					<div v-else class="link parent_link">
-						{{ parent.title }}
-						<div class="caret"><i class="ico right"></i></div>
-					</div>
-				</template>
-				
-				<span v-if="entries.length > 0" class="link final_link">
-					{{ entries[entries.length - 1].title }}
-					<template v-if="count">
-						({{ count }})
-					</template>
-				</span>
-			</div>
-		</div>
-		<div class="head_right">
-			<!-- save button -->
-			<div v-if="supported?.save"
-				class="nav_btn"
-				title="Save"
-				@click="saveButton_click">
-				<i class="ico save"></i>
-			</div>
-			<!-- download button -->
-			<div v-if="supported?.download"
-				class="nav_btn"
-				title="Download"
-				@click="downloadButton_click">
-				<i class="ico download"></i>
-			</div>
-			<!-- new folder button -->
-			<!-- <div v-if="supported?.newFolder"
-				class="nav_btn"
-				title="New folder"
-				@click="newFolderClick">
-				<i class="ico newfolder"></i>
-			</div> -->
-			<!-- search box -->
-			<input v-if="supported?.search"
-				class="search_box"
-				type="text"
-				placeholder="Search"
-				@input="onSearchInput"/>
-			<!-- zoom slider -->
-			<Dropdown v-if="supported?.zoom" align="right">
-				<template #toggle>
-					<div class="nav_btn" v-tooltip="'Zoom'">
-						<i class="ico magnify"></i>
-					</div>
-				</template>
-				<DropdownItem>
-					<input type="range" min="42" max="70" :value="zoomLevel.get()" @input="zoomSliderMoved"/>
-				</DropdownItem>
-			</Dropdown>
-			<!-- view options -->
-			<div v-if="supported?.viewMode && viewMode.value == ViewMode.List"
-				class="nav_btn"
-				v-tooltip="'Display as grid'"
-				@click="() => changeView(ViewMode.Grid)">
-				<i class="ico grid"></i>
-			</div>
-			<div v-if="supported?.viewMode && viewMode.value == ViewMode.Grid"
-				class="nav_btn"
-				v-tooltip="'Display as list'"
-				@click="() => changeView(ViewMode.List)">
-				<i class="ico blist"></i>
-			</div>
-		</div>
-	</header>
-</template>

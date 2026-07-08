@@ -1,30 +1,14 @@
-import type { Ref } from "vue";
-import DataListRow from "../components/list/rows/DataListRow.vue";
-import DataListOptions from "../components/list/options/DataListOptions.vue";
-
-export type DataListRow2<E extends DataListEntry> = typeof DataListRow<E> & {
-	optionsComponent: typeof DataListOptions<E>
-};
-
 /** required values in a list entry */
 export type DataListEntry = {
-	id: string,
-	title: string
-};
-/** column to be displayed on a list */
-export interface ListFieldColumn<T extends DataListEntry> {
-	id: FieldId<T>,
-	width: Ref<number>,
-};
-/* field id of a list entry */
-export type FieldId<T extends DataListEntry> = keyof T | "index";
-
-export interface SelectedListSort<T extends DataListEntry> {
-	id: FieldId<T>,
-	descending: boolean,
+	id: string
 };
 
-export enum ViewMode {
+export type EntryKey<T extends DataListEntry> = keyof T | "index";
+
+/** object containing column widths indexed by the entry key */
+export type Columns<T extends DataListEntry> = Partial<Record<EntryKey<T>, number>>;
+
+export enum Flow {
 	Grid,
 	List
 };

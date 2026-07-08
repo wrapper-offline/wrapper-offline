@@ -1,23 +1,11 @@
-<style>
-tr.movie td.title img {
-	width: initial;
-}
-</style>
-
-<script lang="ts">
-export default {
-	optionsComponent: MovieListOptions
-};
-</script>
-
 <script setup lang="ts">
-import { apiServer } from "../../../utils/AppInit";
-import { ViewMode, type FieldId } from "../../../interfaces/DataList";
-import { genericColumnIdKey, modeKey } from "../../../keys/listTreeKeys";
+import { apiServer } from "../utils/AppInit";
+import CheckboxInput from "./controls/CheckboxInput.vue";
+import { Flow, type EntryKey } from "../interfaces/DataList";
 import { inject } from "vue";
-import type { Movie } from "../../../interfaces/Movie";
-import MovieListOptions from "../options/MovieListOptions.vue";
-import openPlayerWindow from "../../../utils/openPlayerWindow";
+import type { Movie } from "../interfaces/Movie";
+import MovieListOptions from "./MovieListOptions.vue";
+import openPlayerWindow from "../utils/openPlayerWindow";
 import { useRouter } from "vue-router";
 import { useStorage } from "@vueuse/core";
 
@@ -34,7 +22,8 @@ const props = defineProps<{
 }>();
 defineExpose({ id:props.entry.id });
 
-const columns = inject(genericColumnIdKey<Movie>(), []);
+const columns = inject<EntryKey<Movie>[]>("columnKeys", []);
+const flow = inject<Flow>("flow", Flow.List);
 const onMovieDblclick = useStorage("onMovieDblclick", "play");
 const router = useRouter();
 
@@ -93,75 +82,90 @@ function deleteBtn_click() {
  * returns a fixed date string for a movie
  * @param entry movie object
  */
-function movieInfo(field:FieldId<Movie>) {
-	switch (field) {
-		case "index": {}
-		case "date": {
-			const split = props.entry.date.split("T");
-			const date = split[0];
-			const time = split[1].substring(0, 8);
-			return `${date}, ${time}`;
+function entryInfo(key:EntryKey<Movie>) {
+	switch (key) {
+		case "index": {
+			return "0";
 		}
-		default: return props.entry[field];
+		case "date": {
+			const date = new Date(props.entry[key]);
+			const now = new Date();
+			const todayMatch = date.getDate() == now.getDate();
+			const yestMatch = date.getDate() == (now.getDate() - 1);
+			if (
+				(todayMatch || yestMatch) &&
+				date.getMonth() == now.getMonth() &&
+				date.getFullYear() == now.getFullYear()
+			) {
+				const start = todayMatch ? "Today at " : "Yesterday at ";
+				return start + date.toLocaleTimeString(undefined, {
+					timeStyle: "short"
+				});
+			}
+			return date.toLocaleDateString() + " at " + date.toLocaleTimeString(undefined, {
+				timeStyle: "short",
+			})
+		}
+		default: return props.entry[key];
 	}
-}
-
-const mode = inject(modeKey);
-if (!mode) {
-	throw "ummmmm";
 }
 </script>
 
 <template>
-	<div v-if="mode() == ViewMode.Grid"
-		:class="{
-			checked,
-			dl_cell: true,
-			movie: true
-		}"
+	<div
+		v-if="flow == Flow.Grid"
+		class="dl_cell movie"
+		:class="{ checked }"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
 		@click.shift.exact="entryElem_shiftClick"
-		@click.exact="entryElem_click"
-	>
+		@click.exact="entryElem_click">
 			<img
-				:src="`${apiServer}/file/movie/thumb/${movieInfo('id')}`"
+				:src="`${apiServer}/file/movie/thumb/${entryInfo('id')}`"
 				alt="thumbnail"/>
-			<span class="duration">{{ movieInfo('duration') }}</span>
+			<span class="duration">{{ entryInfo('duration') }}</span>
 			<div class="actions hidden">
 				<MovieListOptions :entry="entry" @entry-delete="deleteBtn_click"/>
 			</div>
 			<div class="data">
-				<span :title="movieInfo('title')" v-html="movieInfo('title')"></span>
-				<span>{{ movieInfo('date') }}</span>
+				<span :title="entryInfo('title')" v-html="entryInfo('title')"></span>
+				<span>{{ entryInfo('date') }}</span>
 			</div>
 	</div>
-	<tr v-else
-		:class="{
-			checked,
-			dl_row: true,
-			movie: true
-		}"
+	<tr
+		v-else
+		class="dl_row movie"
+		:class="{ checked }"
+		draggable="true"
 		@dblclick="entryElem_dblClick"
 		@click.ctrl.exact="entryElem_ctrlClick"
 		@click.shift.exact="entryElem_shiftClick"
-		@click.exact="entryElem_click"
-	>
-		<!-- 
-		draggable="true"
-		@dragstart="onMovieDrag($event, movie.id)"> -->
+		@click.exact="entryElem_click">
+	<!--@dragstart="onMovieDrag($event, movie.id)"-->
 		<td class="hidden">
-			<input ref="select-box" type="checkbox" @input="entryElem_ctrlClick" @click.stop :checked="checked"/>
+			<CheckboxInput
+				v-bind:model-value="checked"
+				@update:model-value="entryElem_ctrlClick"
+				@dblclick.stop
+				@click.stop/>
 		</td>
 		<td v-for="columnId in columns" :class="{ title:columnId == 'title' }">
 			<img
 				v-if="columnId == 'title'"
-				:src="`${apiServer}/file/movie/thumb/${movieInfo('id')}`"
+				:src="`${apiServer}/file/movie/thumb/${entryInfo('id')}`"
 				alt="thumbnail"/>
-			<span :title="movieInfo(columnId)" v-html="movieInfo(columnId)"></span>
+			<span :title="entryInfo(columnId)" v-html="entryInfo(columnId)"></span>
 		</td>
 		<td class="actions hidden" @click.stop>
 			<MovieListOptions :entry="entry" @entry-delete="deleteBtn_click"/>
 		</td>
 	</tr>
 </template>
+
+<style scoped>
+@import url(../css/data_list_data.css);
+
+tr.movie td.title img {
+	width: initial;
+}
+</style>

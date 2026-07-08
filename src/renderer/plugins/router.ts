@@ -88,20 +88,6 @@ const routes:RouteRecordRaw[] = [
 		},
 	},
 	{
-		path: "/starters",
-		component: DefaultLayout,
-		children: [
-			{
-				name: "starter_list",
-				path: "",
-				component: UserMovies,
-			},
-		],
-		meta: {
-			title: "Starters"
-		},
-	},
-	{
 		path: "/:pathMatch(.*)*",
 		component: DefaultLayout,
 		children: [
